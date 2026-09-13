@@ -13,7 +13,7 @@ Both source documents were read in full. **The Addendum changes twelve engineeri
 | # | Topic | v1.0 said | Addendum said | **RESOLUTION** |
 |---|---|---|---|---|
 | 1 | Session workflow engine | XState v5 in-process | XState is TypeScript, backend is Python — an error | **Plain Python FSM**: transition table + guard functions, persisted to `session_states`. XState permitted client-side for UI state only |
-| 2 | LangGraph rationale | "LlangGraph lets the LLM choose the path" | Inaccurate; LangGraph supports deterministic routing | **Still not adopted**, but for the correct reasons: small static graph, need for queryable audit rows, latency, dependency cost. Revisit on durable multi-day interrupts or a genuinely dynamic tool-selecting agent |
+| 2 | LangGraph rationale | "LangGraph lets the LLM choose the path" | Inaccurate; LangGraph supports deterministic routing | **Still not adopted**, but for the correct reasons: small static graph, need for queryable audit rows, latency, dependency cost. Revisit on durable multi-day interrupts or a genuinely dynamic tool-selecting agent |
 | 3 | Runtime models | Sonnet 5 / Opus 5 / Haiku 4.5 | NVIDIA-hosted open models | **NVIDIA is the runtime provider.** Anthropic adapter retained behind `LLMProvider` as a config-swap |
 | 4 | SDK | Anthropic SDK | `openai` SDK with NVIDIA `base_url` | **`openai` SDK, base_url override.** `anthropic` SDK confined to `tools/authoring/` |
 | 5 | Database | Aurora Serverless v2 | RDS `db.t4g.micro` + pgvector | **RDS t4g.micro** through Production V1; Aurora only under sustained load |
