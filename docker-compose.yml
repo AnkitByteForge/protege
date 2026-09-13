@@ -1,0 +1,62 @@
+name: protege
+
+services:
+  db:
+    image: pgvector/pgvector:pg17
+    container_name: protege-db
+    environment:
+      POSTGRES_USER: protege
+      POSTGRES_PASSWORD: protege
+      POSTGRES_DB: protege
+    ports:
+      # Host 5433 (not the default 5432) so the stack coexists with other
+      # local projects that already use 5432.
+      - "5433:5432"
+    volumes:
+      - protege_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U protege -d protege"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  # Observability stack (roadmap P0: "Langfuse container up"). Opt-in so the
+  # default dev loop stays light: `make observability` or
+  # `docker compose --profile observability up -d`.
+  langfuse-db:
+    image: pgvector/pgvector:pg17
+    container_name: protege-langfuse-db
+    profiles: ["observability"]
+    environment:
+      POSTGRES_USER: langfuse
+      POSTGRES_PASSWORD: langfuse
+      POSTGRES_DB: langfuse
+    volumes:
+      - langfuse_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U langfuse -d langfuse"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  langfuse:
+    image: langfuse/langfuse:2
+    container_name: protege-langfuse
+    profiles: ["observability"]
+    depends_on:
+      langfuse-db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://langfuse:langfuse@langfuse-db:5432/langfuse
+      NEXTAUTH_URL: http://localhost:3200
+      # Dev-only values; Langfuse refuses to boot with empty secrets.
+      NEXTAUTH_SECRET: protege-local-dev-secret-not-for-production
+      SALT: protege-local-dev-salt-not-for-production
+      TELEMETRY_ENABLED: "false"
+    ports:
+      # Host 3200 (container 3000) to avoid collisions with other local projects.
+      - "3200:3000"
+
+volumes:
+  protege_pgdata:
+  langfuse_pgdata:

@@ -1,0 +1,114 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  backend:
+    name: Backend (lint, typecheck, tests, migrations, pgvector)
+    runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: postgresql+asyncpg://protege:protege@localhost:5433/protege?ssl=disable
+    services:
+      postgres:
+        image: pgvector/pgvector:pg17
+        env:
+          POSTGRES_USER: protege
+          POSTGRES_PASSWORD: protege
+          POSTGRES_DB: protege
+        ports:
+          # 5433 on the runner too, matching the local/docker-compose default.
+          - 5433:5432
+        options: >-
+          --health-cmd "pg_isready -U protege -d protege"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          python-version: "3.12"
+          enable-cache: true
+
+      - name: Sync workspace
+        run: uv sync --locked
+
+      - name: Ruff (lint + format check)
+        run: |
+          uv run ruff check .
+          uv run ruff format --check .
+
+      - name: mypy (strict)
+        run: uv run mypy
+        env:
+          MYPYPATH: services/session/src:packages/contracts/src:tools/authoring/src
+
+      - name: Pytest
+        run: uv run pytest
+
+      - name: Alembic baseline migration
+        run: uv run alembic -c services/session/alembic.ini upgrade head
+
+      - name: Verify pgvector extension
+        run: |
+          uv run python - <<'PY'
+          import asyncio
+
+          import asyncpg
+
+
+          async def main() -> None:
+              conn = await asyncpg.connect(
+                  "postgresql://protege:protege@localhost:5433/protege"
+              )
+              rows = await conn.fetch("SELECT extname FROM pg_extension")
+              names = {r["extname"] for r in rows}
+              assert "vector" in names, f"pgvector extension missing: {names}"
+              print("pgvector OK:", sorted(names))
+              await conn.close()
+
+
+          asyncio.run(main())
+          PY
+
+  frontend:
+    name: Frontend (lint, typecheck, build, Playwright smoke)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/web
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: apps/web/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: ESLint
+        run: npm run lint
+
+      - name: Prettier check
+        run: npm run format:check
+
+      - name: TypeScript
+        run: npm run typecheck
+
+      - name: Install Playwright browser
+        run: npx playwright install --with-deps chromium
+
+      - name: Playwright smoke test (builds + starts the app)
+        run: npx playwright test
