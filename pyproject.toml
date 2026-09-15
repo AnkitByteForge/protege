@@ -9,6 +9,8 @@ dependencies = [
     "protege-session",
     "protege-contracts",
     "protege-authoring",
+    "protege-learning-engine",
+    "protege-llm",
 ]
 
 [tool.uv]
@@ -19,12 +21,16 @@ members = [
     "services/session",
     "packages/contracts",
     "tools/authoring",
+    "packages/learning-engine",
+    "packages/llm",
 ]
 
 [tool.uv.sources]
 protege-session = { workspace = true }
 protege-contracts = { workspace = true }
 protege-authoring = { workspace = true }
+protege-learning-engine = { workspace = true }
+protege-llm = { workspace = true }
 
 [dependency-groups]
 dev = [
@@ -35,7 +41,12 @@ dev = [
 ]
 
 [tool.pytest.ini_options]
-testpaths = ["services/session/tests", "packages/contracts/tests"]
+testpaths = [
+    "services/session/tests",
+    "packages/contracts/tests",
+    "packages/learning-engine/tests",
+    "packages/llm/tests",
+]
 addopts = "-q"
 
 [tool.ruff]
@@ -58,6 +69,8 @@ files = [
     "services/session/src",
     "packages/contracts/src",
     "tools/authoring/src",
+    "packages/learning-engine/src",
+    "packages/llm/src",
 ]
 explicit_package_bases = true
 exclude = ["migrations"]
