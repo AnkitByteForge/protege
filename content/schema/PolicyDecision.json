@@ -1,0 +1,220 @@
+{
+  "$defs": {
+    "PolicyAction": {
+      "description": "The 13-action set (ARCHITECTURE.md §11.2).",
+      "enum": [
+        "NEW_CONCEPT",
+        "GUIDED_EXAMPLE",
+        "VISUALIZATION",
+        "PRACTICE",
+        "RETRIEVAL",
+        "TEACH_BACK",
+        "HINT",
+        "ANALOGY",
+        "TRANSFER",
+        "REVIEW",
+        "DIFFICULTY_UP",
+        "DIFFICULTY_DOWN",
+        "HUMAN_TUTOR"
+      ],
+      "title": "PolicyAction",
+      "type": "string"
+    },
+    "PolicyDecisionAction": {
+      "description": "The chosen action, its source, and the logged counterfactual (§11.3).",
+      "properties": {
+        "counterfactual_bandit_choice": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PolicyAction"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "params": {
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "boolean"
+              },
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "items": {},
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "title": "Params",
+          "type": "object"
+        },
+        "shield_overrode": {
+          "default": false,
+          "title": "Shield Overrode",
+          "type": "boolean"
+        },
+        "source": {
+          "default": "rules",
+          "enum": [
+            "rules",
+            "bandit"
+          ],
+          "title": "Source",
+          "type": "string"
+        },
+        "type": {
+          "$ref": "#/$defs/PolicyAction"
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "title": "PolicyDecisionAction",
+      "type": "object"
+    },
+    "PolicyDecisionReward": {
+      "description": "Immediate reward plus deferred components (§11.3).\n\nTime-on-task has coefficient zero by construction (§11.2).",
+      "properties": {
+        "deferred_pending": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Deferred Pending",
+          "type": "array"
+        },
+        "immediate": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Immediate"
+        }
+      },
+      "title": "PolicyDecisionReward",
+      "type": "object"
+    },
+    "PolicyDecisionState": {
+      "description": "The 14-dim context vector at decision time (§11.2, §11.3).",
+      "properties": {
+        "schema_version": {
+          "default": "state.v1",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "vector": {
+          "items": {
+            "type": "number"
+          },
+          "maxItems": 14,
+          "minItems": 14,
+          "title": "Vector",
+          "type": "array"
+        }
+      },
+      "required": [
+        "vector"
+      ],
+      "title": "PolicyDecisionState",
+      "type": "object"
+    }
+  },
+  "description": "One policy trajectory step — the RL training substrate (§11.3, §22).\n\nLogged for a future policy from day one while shipping today's rules.",
+  "properties": {
+    "action": {
+      "$ref": "#/$defs/PolicyDecisionAction"
+    },
+    "next_state_ref": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Next State Ref"
+    },
+    "observation": {
+      "additionalProperties": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "integer"
+          },
+          {
+            "type": "number"
+          },
+          {
+            "type": "boolean"
+          },
+          {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          {
+            "items": {},
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "title": "Observation",
+      "type": "object"
+    },
+    "reward": {
+      "$ref": "#/$defs/PolicyDecisionReward"
+    },
+    "state": {
+      "$ref": "#/$defs/PolicyDecisionState"
+    },
+    "step": {
+      "minimum": 0,
+      "title": "Step",
+      "type": "integer"
+    },
+    "trajectory_id": {
+      "examples": [
+        "traj_..."
+      ],
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Trajectory Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "trajectory_id",
+    "step",
+    "state",
+    "action"
+  ],
+  "title": "PolicyDecision",
+  "type": "object"
+}

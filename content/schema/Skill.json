@@ -1,0 +1,57 @@
+{
+  "description": "Skill graph node (§38; §22 ``skills`` table).",
+  "properties": {
+    "code": {
+      "examples": [
+        "S004",
+        "S001_identify_fraction"
+      ],
+      "pattern": "^S\\d{3}(_[a-z][a-z0-9_]*)?$",
+      "title": "Code",
+      "type": "string"
+    },
+    "grade_band": {
+      "examples": [
+        "3-4"
+      ],
+      "pattern": "^[K0-9]+-[K0-9]+$",
+      "title": "Grade Band",
+      "type": "string"
+    },
+    "prerequisites": {
+      "items": {
+        "examples": [
+          "S004",
+          "S001_identify_fraction"
+        ],
+        "pattern": "^S\\d{3}(_[a-z][a-z0-9_]*)?$",
+        "type": "string"
+      },
+      "title": "Prerequisites",
+      "type": "array"
+    },
+    "standard": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Standard"
+    },
+    "title": {
+      "title": "Title",
+      "type": "string"
+    }
+  },
+  "required": [
+    "code",
+    "title",
+    "grade_band"
+  ],
+  "title": "Skill",
+  "type": "object"
+}

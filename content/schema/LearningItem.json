@@ -1,0 +1,142 @@
+{
+  "$defs": {
+    "Distractor": {
+      "description": "One wrong answer option, mapped to the misconception it predicts (§38).",
+      "properties": {
+        "likelihood": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Likelihood",
+          "type": "number"
+        },
+        "maps_to": {
+          "examples": [
+            "M003"
+          ],
+          "pattern": "^M\\d{3}$",
+          "title": "Maps To",
+          "type": "string"
+        },
+        "value": {
+          "title": "Value",
+          "type": "string"
+        }
+      },
+      "required": [
+        "value",
+        "maps_to",
+        "likelihood"
+      ],
+      "title": "Distractor",
+      "type": "object"
+    },
+    "ItemRole": {
+      "description": "Where an item may be used (roadmap P3 item split).",
+      "enum": [
+        "diagnostic",
+        "practice",
+        "verification",
+        "transfer"
+      ],
+      "title": "ItemRole",
+      "type": "string"
+    },
+    "RepresentationType": {
+      "description": "Item representation. Extensible; seeded from §38 + roadmap P3.",
+      "enum": [
+        "area_model",
+        "number_line",
+        "set_model",
+        "symbolic"
+      ],
+      "title": "RepresentationType",
+      "type": "string"
+    }
+  },
+  "description": "A learning/assessment item (§22 ``learning_items``; §38 diagnostic item).\n\n``correct_answer`` carries the §22 database name; the §38 wire key\n``correct`` is accepted via alias. ``skill_code`` is optional because the\n§38 example attaches the skill at the package level.",
+  "properties": {
+    "content_version": {
+      "anyOf": [
+        {
+          "examples": [
+            "v1"
+          ],
+          "pattern": "^v\\d+(-[\\w.]+)?$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Content Version"
+    },
+    "correct_answer": {
+      "title": "Correct Answer",
+      "type": "string"
+    },
+    "distractors": {
+      "items": {
+        "$ref": "#/$defs/Distractor"
+      },
+      "title": "Distractors",
+      "type": "array"
+    },
+    "elo": {
+      "anyOf": [
+        {
+          "maximum": 3000,
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Elo"
+    },
+    "id": {
+      "maxLength": 64,
+      "minLength": 1,
+      "title": "Id",
+      "type": "string"
+    },
+    "representation": {
+      "$ref": "#/$defs/RepresentationType"
+    },
+    "role": {
+      "$ref": "#/$defs/ItemRole",
+      "default": "practice"
+    },
+    "skill_code": {
+      "anyOf": [
+        {
+          "examples": [
+            "S004",
+            "S001_identify_fraction"
+          ],
+          "pattern": "^S\\d{3}(_[a-z][a-z0-9_]*)?$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Skill Code"
+    },
+    "stem": {
+      "title": "Stem",
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "stem",
+    "representation",
+    "correct_answer"
+  ],
+  "title": "LearningItem",
+  "type": "object"
+}

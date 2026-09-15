@@ -1,0 +1,108 @@
+{
+  "description": "The moat: one authored misconception record (§22, §38, roadmap P3).\n\n``distractor_likelihood`` is the authored ``P(d | M_k)`` table that the\nmisconception Bayes update consumes (§10.2) — authored, never learned.\nKeys are distractor-behavior slugs (§38: ``picks_1_8``, ``says_equal``).",
+  "properties": {
+    "citation": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Citation"
+    },
+    "code": {
+      "examples": [
+        "M003"
+      ],
+      "pattern": "^M\\d{3}$",
+      "title": "Code",
+      "type": "string"
+    },
+    "cognitive_origin": {
+      "title": "Cognitive Origin",
+      "type": "string"
+    },
+    "content_version": {
+      "anyOf": [
+        {
+          "examples": [
+            "v1"
+          ],
+          "pattern": "^v\\d+(-[\\w.]+)?$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Content Version"
+    },
+    "description": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Description"
+    },
+    "distractor_likelihood": {
+      "additionalProperties": {
+        "maximum": 1.0,
+        "minimum": 0.0,
+        "type": "number"
+      },
+      "title": "Distractor Likelihood",
+      "type": "object"
+    },
+    "prevalence_prior": {
+      "default": 0.2,
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Prevalence Prior",
+      "type": "number"
+    },
+    "skill_code": {
+      "anyOf": [
+        {
+          "examples": [
+            "S004",
+            "S001_identify_fraction"
+          ],
+          "pattern": "^S\\d{3}(_[a-z][a-z0-9_]*)?$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Skill Code"
+    },
+    "sprout_forbidden": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Sprout Forbidden",
+      "type": "array"
+    },
+    "title": {
+      "title": "Title",
+      "type": "string"
+    }
+  },
+  "required": [
+    "code",
+    "title",
+    "cognitive_origin"
+  ],
+  "title": "Misconception",
+  "type": "object"
+}

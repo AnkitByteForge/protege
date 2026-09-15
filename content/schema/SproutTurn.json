@@ -1,0 +1,55 @@
+{
+  "$defs": {
+    "SproutConfidenceShown": {
+      "description": "Confidence Sprout displays about his (wrong) belief (addendum §7.3).",
+      "enum": [
+        "high",
+        "medium",
+        "low"
+      ],
+      "title": "SproutConfidenceShown",
+      "type": "string"
+    },
+    "SproutPresentationEmotion": {
+      "description": "Rig presentation state, driven by resolution belief (§8.3).\n\nSprout is never `delighted` before the misconception clears — the\nfrontend maps this enum straight onto the SVG rig.",
+      "enum": [
+        "confused",
+        "thinking",
+        "dawning",
+        "delighted"
+      ],
+      "title": "SproutPresentationEmotion",
+      "type": "string"
+    }
+  },
+  "description": "One in-character Sprout line (addendum §2.5; §7.3).\n\nThe addendum sample types ``exhibits``/``emotion``/``confidence_shown``\nas bare ``str``; the contracts use the closed enums instead. Sprout may\nnot state the correct answer while the misconception is unresolved —\nthat check is the deterministic answer-leak validator's job, not this\nschema's.",
+  "properties": {
+    "confidence_shown": {
+      "$ref": "#/$defs/SproutConfidenceShown"
+    },
+    "emotion": {
+      "$ref": "#/$defs/SproutPresentationEmotion"
+    },
+    "exhibits": {
+      "examples": [
+        "M003"
+      ],
+      "pattern": "^M\\d{3}$",
+      "title": "Exhibits",
+      "type": "string"
+    },
+    "utterance": {
+      "description": "At most 30 words (§7.3).",
+      "title": "Utterance",
+      "type": "string"
+    }
+  },
+  "required": [
+    "utterance",
+    "exhibits",
+    "emotion",
+    "confidence_shown"
+  ],
+  "title": "SproutTurn",
+  "type": "object"
+}

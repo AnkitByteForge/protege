@@ -1,0 +1,29 @@
+{
+  "description": "Directed skill-graph edge ``prereq_of`` (§14 ERD; §22 ``skill_prereq``).",
+  "properties": {
+    "prereq_code": {
+      "examples": [
+        "S004",
+        "S001_identify_fraction"
+      ],
+      "pattern": "^S\\d{3}(_[a-z][a-z0-9_]*)?$",
+      "title": "Prereq Code",
+      "type": "string"
+    },
+    "skill_code": {
+      "examples": [
+        "S004",
+        "S001_identify_fraction"
+      ],
+      "pattern": "^S\\d{3}(_[a-z][a-z0-9_]*)?$",
+      "title": "Skill Code",
+      "type": "string"
+    }
+  },
+  "required": [
+    "skill_code",
+    "prereq_code"
+  ],
+  "title": "Prerequisite",
+  "type": "object"
+}

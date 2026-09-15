@@ -1,0 +1,66 @@
+{
+  "$defs": {
+    "InterventionType": {
+      "description": "Authored intervention categories (§38; Coach never invents pedagogy).",
+      "enum": [
+        "VISUALIZATION",
+        "ANALOGY",
+        "HINT",
+        "WORKED_EXAMPLE"
+      ],
+      "title": "InterventionType",
+      "type": "string"
+    }
+  },
+  "description": "Authored intervention the Coach selects — never invents pedagogy (§38).\n\n``historical_success_rate`` seeds Coach retrieval ranking; it is updated\nfrom outcomes, never from model self-assessment.",
+  "properties": {
+    "historical_success_rate": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Historical Success Rate",
+      "type": "number"
+    },
+    "id": {
+      "maxLength": 64,
+      "minLength": 1,
+      "title": "Id",
+      "type": "string"
+    },
+    "misconception_code": {
+      "anyOf": [
+        {
+          "examples": [
+            "M003"
+          ],
+          "pattern": "^M\\d{3}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Misconception Code"
+    },
+    "script": {
+      "title": "Script",
+      "type": "string"
+    },
+    "strategy": {
+      "title": "Strategy",
+      "type": "string"
+    },
+    "type": {
+      "$ref": "#/$defs/InterventionType"
+    }
+  },
+  "required": [
+    "id",
+    "type",
+    "strategy",
+    "script",
+    "historical_success_rate"
+  ],
+  "title": "Intervention",
+  "type": "object"
+}

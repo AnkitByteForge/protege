@@ -1,0 +1,824 @@
+{
+  "$defs": {
+    "DiagnosisLabel": {
+      "description": "One closed-set label from the Diagnostician (§7.3, §38).\n\nThe wire key is ``misconception_id`` (§7.3); the value is the library\ncode (``M003``).",
+      "properties": {
+        "confidence": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Confidence",
+          "type": "number"
+        },
+        "evidence_span": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Evidence Span"
+        },
+        "misconception_id": {
+          "examples": [
+            "M003"
+          ],
+          "pattern": "^M\\d{3}$",
+          "title": "Misconception Id",
+          "type": "string"
+        },
+        "state": {
+          "$ref": "#/$defs/MisconceptionState",
+          "default": "unresolved"
+        }
+      },
+      "required": [
+        "misconception_id",
+        "confidence"
+      ],
+      "title": "DiagnosisLabel",
+      "type": "object"
+    },
+    "DiagnosisResult": {
+      "description": "Diagnostician output — closed set only, abstention over guessing (§7.3).",
+      "properties": {
+        "abstained": {
+          "default": false,
+          "title": "Abstained",
+          "type": "boolean"
+        },
+        "asr_reliable": {
+          "default": true,
+          "title": "Asr Reliable",
+          "type": "boolean"
+        },
+        "labels": {
+          "items": {
+            "$ref": "#/$defs/DiagnosisLabel"
+          },
+          "maxItems": 8,
+          "title": "Labels",
+          "type": "array"
+        },
+        "model_run_id": {
+          "anyOf": [
+            {
+              "maxLength": 128,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Model Run Id"
+        },
+        "understanding_signals": {
+          "items": {
+            "$ref": "#/$defs/UnderstandingSignal"
+          },
+          "title": "Understanding Signals",
+          "type": "array"
+        }
+      },
+      "title": "DiagnosisResult",
+      "type": "object"
+    },
+    "Distractor": {
+      "description": "One wrong answer option, mapped to the misconception it predicts (§38).",
+      "properties": {
+        "likelihood": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Likelihood",
+          "type": "number"
+        },
+        "maps_to": {
+          "examples": [
+            "M003"
+          ],
+          "pattern": "^M\\d{3}$",
+          "title": "Maps To",
+          "type": "string"
+        },
+        "value": {
+          "title": "Value",
+          "type": "string"
+        }
+      },
+      "required": [
+        "value",
+        "maps_to",
+        "likelihood"
+      ],
+      "title": "Distractor",
+      "type": "object"
+    },
+    "Intervention": {
+      "description": "Authored intervention the Coach selects — never invents pedagogy (§38).\n\n``historical_success_rate`` seeds Coach retrieval ranking; it is updated\nfrom outcomes, never from model self-assessment.",
+      "properties": {
+        "historical_success_rate": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Historical Success Rate",
+          "type": "number"
+        },
+        "id": {
+          "maxLength": 64,
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "misconception_code": {
+          "anyOf": [
+            {
+              "examples": [
+                "M003"
+              ],
+              "pattern": "^M\\d{3}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Misconception Code"
+        },
+        "script": {
+          "title": "Script",
+          "type": "string"
+        },
+        "strategy": {
+          "title": "Strategy",
+          "type": "string"
+        },
+        "type": {
+          "$ref": "#/$defs/InterventionType"
+        }
+      },
+      "required": [
+        "id",
+        "type",
+        "strategy",
+        "script",
+        "historical_success_rate"
+      ],
+      "title": "Intervention",
+      "type": "object"
+    },
+    "InterventionType": {
+      "description": "Authored intervention categories (§38; Coach never invents pedagogy).",
+      "enum": [
+        "VISUALIZATION",
+        "ANALOGY",
+        "HINT",
+        "WORKED_EXAMPLE"
+      ],
+      "title": "InterventionType",
+      "type": "string"
+    },
+    "ItemRole": {
+      "description": "Where an item may be used (roadmap P3 item split).",
+      "enum": [
+        "diagnostic",
+        "practice",
+        "verification",
+        "transfer"
+      ],
+      "title": "ItemRole",
+      "type": "string"
+    },
+    "LearnerEvidence": {
+      "description": "What the child did, exactly as §38 records it.\n\n§38 predates the ``Explanation`` modality discriminator, so the envelope\ncarries the raw fields; the session layer (P10) emits the union form.\nThe §38 wire key is ``explanation``; ``explanation_text`` is the\ncanonical field name (matching the ``text`` naming used elsewhere in the\nsession layer), accepted via the same alias-choice pattern as\n``LearningItem.correct_answer``/``correct``.",
+      "properties": {
+        "asr_confidence": {
+          "anyOf": [
+            {
+              "maximum": 1.0,
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Asr Confidence"
+        },
+        "diagnosis": {
+          "$ref": "#/$defs/DiagnosisResult"
+        },
+        "explanation_text": {
+          "title": "Explanation Text",
+          "type": "string"
+        },
+        "manipulative_trace": {
+          "items": {
+            "$ref": "#/$defs/ManipulativeAction"
+          },
+          "title": "Manipulative Trace",
+          "type": "array"
+        }
+      },
+      "required": [
+        "explanation_text",
+        "diagnosis"
+      ],
+      "title": "LearnerEvidence",
+      "type": "object"
+    },
+    "LearningItem": {
+      "description": "A learning/assessment item (§22 ``learning_items``; §38 diagnostic item).\n\n``correct_answer`` carries the §22 database name; the §38 wire key\n``correct`` is accepted via alias. ``skill_code`` is optional because the\n§38 example attaches the skill at the package level.",
+      "properties": {
+        "content_version": {
+          "anyOf": [
+            {
+              "examples": [
+                "v1"
+              ],
+              "pattern": "^v\\d+(-[\\w.]+)?$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Content Version"
+        },
+        "correct_answer": {
+          "title": "Correct Answer",
+          "type": "string"
+        },
+        "distractors": {
+          "items": {
+            "$ref": "#/$defs/Distractor"
+          },
+          "title": "Distractors",
+          "type": "array"
+        },
+        "elo": {
+          "anyOf": [
+            {
+              "maximum": 3000,
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Elo"
+        },
+        "id": {
+          "maxLength": 64,
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "representation": {
+          "$ref": "#/$defs/RepresentationType"
+        },
+        "role": {
+          "$ref": "#/$defs/ItemRole",
+          "default": "practice"
+        },
+        "skill_code": {
+          "anyOf": [
+            {
+              "examples": [
+                "S004",
+                "S001_identify_fraction"
+              ],
+              "pattern": "^S\\d{3}(_[a-z][a-z0-9_]*)?$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Skill Code"
+        },
+        "stem": {
+          "title": "Stem",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "stem",
+        "representation",
+        "correct_answer"
+      ],
+      "title": "LearningItem",
+      "type": "object"
+    },
+    "ManipulativeAction": {
+      "description": "One manipulative interaction in a trace (§38: ``{t, action, target}``).\n\nThe trace is a first-class diagnostic input, equal in standing to speech\n(roadmap P13): a child who aligns two bars has demonstrated understanding\nwithout a word.",
+      "properties": {
+        "action": {
+          "examples": [
+            "drag",
+            "align",
+            "snap"
+          ],
+          "title": "Action",
+          "type": "string"
+        },
+        "t": {
+          "description": "Seconds since the item was presented.",
+          "minimum": 0,
+          "title": "T",
+          "type": "number"
+        },
+        "target": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Target"
+        },
+        "targets": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Targets"
+        }
+      },
+      "required": [
+        "t",
+        "action"
+      ],
+      "title": "ManipulativeAction",
+      "type": "object"
+    },
+    "MasteryOutcome": {
+      "description": "The §38 ``mastery_outcome`` closing record for a session.\n\nThe §38 document keys misconception posteriors flat\n(``\"misconception_M003_after\": 0.04``); a before-validator lifts any key\nmatching that pattern into ``misconception_posteriors`` so the worked\nexample validates verbatim while new code uses the structured field.",
+      "properties": {
+        "caveats": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Caveats",
+          "type": "array"
+        },
+        "claim": {
+          "title": "Claim",
+          "type": "string"
+        },
+        "evidence_ids": {
+          "items": {
+            "examples": [
+              "e_901"
+            ],
+            "maxLength": 128,
+            "minLength": 1,
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "misconception_posteriors": {
+          "additionalProperties": {
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "type": "number"
+          },
+          "title": "Misconception Posteriors",
+          "type": "object"
+        },
+        "next_review": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "ISO date (§38); scheduling semantics arrive with FSRS (P23).",
+          "title": "Next Review"
+        },
+        "p_known_after": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "P Known After",
+          "type": "number"
+        },
+        "p_known_before": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "P Known Before",
+          "type": "number"
+        },
+        "transfer_verified": {
+          "title": "Transfer Verified",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "p_known_before",
+        "p_known_after",
+        "transfer_verified",
+        "claim",
+        "evidence_ids"
+      ],
+      "title": "MasteryOutcome",
+      "type": "object"
+    },
+    "Misconception": {
+      "description": "The moat: one authored misconception record (§22, §38, roadmap P3).\n\n``distractor_likelihood`` is the authored ``P(d | M_k)`` table that the\nmisconception Bayes update consumes (§10.2) — authored, never learned.\nKeys are distractor-behavior slugs (§38: ``picks_1_8``, ``says_equal``).",
+      "properties": {
+        "citation": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Citation"
+        },
+        "code": {
+          "examples": [
+            "M003"
+          ],
+          "pattern": "^M\\d{3}$",
+          "title": "Code",
+          "type": "string"
+        },
+        "cognitive_origin": {
+          "title": "Cognitive Origin",
+          "type": "string"
+        },
+        "content_version": {
+          "anyOf": [
+            {
+              "examples": [
+                "v1"
+              ],
+              "pattern": "^v\\d+(-[\\w.]+)?$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Content Version"
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        },
+        "distractor_likelihood": {
+          "additionalProperties": {
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "type": "number"
+          },
+          "title": "Distractor Likelihood",
+          "type": "object"
+        },
+        "prevalence_prior": {
+          "default": 0.2,
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Prevalence Prior",
+          "type": "number"
+        },
+        "skill_code": {
+          "anyOf": [
+            {
+              "examples": [
+                "S004",
+                "S001_identify_fraction"
+              ],
+              "pattern": "^S\\d{3}(_[a-z][a-z0-9_]*)?$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Skill Code"
+        },
+        "sprout_forbidden": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Sprout Forbidden",
+          "type": "array"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        }
+      },
+      "required": [
+        "code",
+        "title",
+        "cognitive_origin"
+      ],
+      "title": "Misconception",
+      "type": "object"
+    },
+    "MisconceptionState": {
+      "enum": [
+        "unresolved",
+        "resolved"
+      ],
+      "title": "MisconceptionState",
+      "type": "string"
+    },
+    "RepresentationType": {
+      "description": "Item representation. Extensible; seeded from §38 + roadmap P3.",
+      "enum": [
+        "area_model",
+        "number_line",
+        "set_model",
+        "symbolic"
+      ],
+      "title": "RepresentationType",
+      "type": "string"
+    },
+    "Skill": {
+      "description": "Skill graph node (§38; §22 ``skills`` table).",
+      "properties": {
+        "code": {
+          "examples": [
+            "S004",
+            "S001_identify_fraction"
+          ],
+          "pattern": "^S\\d{3}(_[a-z][a-z0-9_]*)?$",
+          "title": "Code",
+          "type": "string"
+        },
+        "grade_band": {
+          "examples": [
+            "3-4"
+          ],
+          "pattern": "^[K0-9]+-[K0-9]+$",
+          "title": "Grade Band",
+          "type": "string"
+        },
+        "prerequisites": {
+          "items": {
+            "examples": [
+              "S004",
+              "S001_identify_fraction"
+            ],
+            "pattern": "^S\\d{3}(_[a-z][a-z0-9_]*)?$",
+            "type": "string"
+          },
+          "title": "Prerequisites",
+          "type": "array"
+        },
+        "standard": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Standard"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        }
+      },
+      "required": [
+        "code",
+        "title",
+        "grade_band"
+      ],
+      "title": "Skill",
+      "type": "object"
+    },
+    "SproutScript": {
+      "description": "Pre-authored Sprout candidate utterance (§38; §8.1 candidate pool).\n\nThe 30-word cap is the §7.3 Sprout output contract, applied at authoring\ntime so the pool itself can never violate it.",
+      "properties": {
+        "emotion": {
+          "$ref": "#/$defs/SproutScriptEmotion"
+        },
+        "id": {
+          "maxLength": 64,
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "misconception_code": {
+          "anyOf": [
+            {
+              "examples": [
+                "M003"
+              ],
+              "pattern": "^M\\d{3}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Misconception Code"
+        },
+        "utterance": {
+          "title": "Utterance",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "utterance",
+        "emotion"
+      ],
+      "title": "SproutScript",
+      "type": "object"
+    },
+    "SproutScriptEmotion": {
+      "description": "Tone of an authored candidate utterance (§38 worked example).",
+      "enum": [
+        "confident",
+        "curious",
+        "confused",
+        "uncertain"
+      ],
+      "title": "SproutScriptEmotion",
+      "type": "string"
+    },
+    "TransferObservation": {
+      "description": "Runtime observation of one attempted transfer probe (§38 verification;\nARCHITECTURE.md §1.3, §9 TRANSFER state).\n\nDeliberately distinct from the authored ``TransferItem`` content record\n(content.py): verification observes *which* item was attempted, in what\nrepresentation, and whether it passed — it never carries the authored\nstem/answer. A failed transfer downgrades the transfer *claim*; it does\nnot require (or allow) re-deriving the content record here (§1.3\ncorrection 3: transfer failure never erases local mastery). This mirrors\nthe addendum §4 TRANSFER row, whose only recorded data is `responses`\nplus the `transfer_verified` flag — not a duplicated content row.",
+      "properties": {
+        "id": {
+          "maxLength": 64,
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "representation": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/RepresentationType"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "result": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Result"
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "title": "TransferObservation",
+      "type": "object"
+    },
+    "UnderstandingSignal": {
+      "description": "Closed-set positive signals (§38 attested; extended via P3/P6 review).",
+      "enum": [
+        "inverse_denominator_relationship",
+        "partitioning_language"
+      ],
+      "title": "UnderstandingSignal",
+      "type": "string"
+    },
+    "VerificationRecord": {
+      "description": "Independent verification + transfer observations (§38 verification).\n\nVerification is LLM-free by rule; this record carries its results. The\ntransfer result lives inside ``transfer_item`` (§38) — a failed transfer\ndowngrades the transfer claim, never local mastery (§1.3).",
+      "properties": {
+        "results": {
+          "items": {
+            "type": "boolean"
+          },
+          "title": "Results",
+          "type": "array"
+        },
+        "transfer_item": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/TransferObservation"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "unaided_items": {
+          "items": {
+            "maxLength": 64,
+            "minLength": 1,
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Unaided Items",
+          "type": "array"
+        }
+      },
+      "required": [
+        "unaided_items",
+        "results"
+      ],
+      "title": "VerificationRecord",
+      "type": "object"
+    }
+  },
+  "description": "One complete authored pipeline record (§38). \"Author 8 of these.\"\n\nThat JSON object, x8, is the intellectual property of the submission\n(§38 closing note) — the misconception library (P3) is exactly this\nenvelope, validated.",
+  "properties": {
+    "diagnostic_item": {
+      "$ref": "#/$defs/LearningItem"
+    },
+    "intervention": {
+      "$ref": "#/$defs/Intervention"
+    },
+    "learner_evidence": {
+      "$ref": "#/$defs/LearnerEvidence"
+    },
+    "mastery_outcome": {
+      "$ref": "#/$defs/MasteryOutcome"
+    },
+    "misconception": {
+      "$ref": "#/$defs/Misconception"
+    },
+    "skill": {
+      "$ref": "#/$defs/Skill"
+    },
+    "sprout_forbidden": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Sprout Forbidden",
+      "type": "array"
+    },
+    "sprout_scripts": {
+      "items": {
+        "$ref": "#/$defs/SproutScript"
+      },
+      "title": "Sprout Scripts",
+      "type": "array"
+    },
+    "verification": {
+      "$ref": "#/$defs/VerificationRecord"
+    }
+  },
+  "required": [
+    "skill",
+    "misconception",
+    "diagnostic_item",
+    "learner_evidence",
+    "intervention",
+    "verification",
+    "mastery_outcome"
+  ],
+  "title": "WorkedExample",
+  "type": "object"
+}

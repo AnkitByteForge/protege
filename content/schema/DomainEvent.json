@@ -1,0 +1,155 @@
+{
+  "$defs": {
+    "EventType": {
+      "description": "Domain event catalogue (ARCHITECTURE.md §24). Additive-only per major.",
+      "enum": [
+        "SESSION_STARTED",
+        "DIAGNOSTIC_COMPLETED",
+        "LEARNING_ITEM_PRESENTED",
+        "ANSWER_SUBMITTED",
+        "HINT_REQUESTED",
+        "EXPLANATION_CREATED",
+        "MISCONCEPTION_DETECTED",
+        "MISCONCEPTION_RESOLVED",
+        "INTERVENTION_SELECTED",
+        "SPROUT_STARTED",
+        "SPROUT_UTTERANCE_EMITTED",
+        "TEACH_BACK_COMPLETED",
+        "MASTERY_UPDATED",
+        "VERIFICATION_COMPLETED",
+        "TRANSFER_PASSED",
+        "TRANSFER_FAILED",
+        "MASTERY_VERIFIED",
+        "REWARD_GRANTED",
+        "SESSION_COMPLETED",
+        "PROOF_CREATED",
+        "TUTOR_BRIEF_CREATED",
+        "RETRIEVAL_SCHEDULED",
+        "SAFETY_FLAG_RAISED",
+        "ESCALATED_TO_HUMAN",
+        "VALIDATOR_FAILED",
+        "FALLBACK_ENGAGED"
+      ],
+      "title": "EventType",
+      "type": "string"
+    }
+  },
+  "description": "Domain event envelope (§24). The event log is the RL substrate and the\naudit trail: append-only, ``schema_version`` on every envelope, consumers\nignore unknown fields. Never mutate a payload shape in place.",
+  "properties": {
+    "event_type": {
+      "$ref": "#/$defs/EventType"
+    },
+    "id": {
+      "examples": [
+        "evt_01J..."
+      ],
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Id",
+      "type": "string"
+    },
+    "learner_id": {
+      "anyOf": [
+        {
+          "examples": [
+            "lrn_01J..."
+          ],
+          "maxLength": 128,
+          "minLength": 1,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Learner Id"
+    },
+    "occurred_at": {
+      "format": "date-time",
+      "title": "Occurred At",
+      "type": "string"
+    },
+    "payload": {
+      "additionalProperties": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "integer"
+          },
+          {
+            "type": "number"
+          },
+          {
+            "type": "boolean"
+          },
+          {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          {
+            "items": {},
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "title": "Payload",
+      "type": "object"
+    },
+    "schema_version": {
+      "default": "1.0",
+      "examples": [
+        "1.0"
+      ],
+      "pattern": "^\\d+\\.\\d+$",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "session_id": {
+      "anyOf": [
+        {
+          "examples": [
+            "ses_01J..."
+          ],
+          "maxLength": 128,
+          "minLength": 1,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Session Id"
+    },
+    "trace_id": {
+      "anyOf": [
+        {
+          "examples": [
+            "otel_..."
+          ],
+          "maxLength": 128,
+          "minLength": 1,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Trace Id"
+    }
+  },
+  "required": [
+    "id",
+    "event_type",
+    "occurred_at"
+  ],
+  "title": "DomainEvent",
+  "type": "object"
+}

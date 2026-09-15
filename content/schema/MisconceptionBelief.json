@@ -1,0 +1,79 @@
+{
+  "$defs": {
+    "MisconceptionState": {
+      "enum": [
+        "unresolved",
+        "resolved"
+      ],
+      "title": "MisconceptionState",
+      "type": "string"
+    }
+  },
+  "description": "Per-learner misconception belief (§22 ``misconception_beliefs``).\n\nA resolved misconception never re-raises without new evidence — the\nlearning engine (P2) owns that rule; this contract carries the state.",
+  "properties": {
+    "learner_id": {
+      "examples": [
+        "lrn_01J..."
+      ],
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Learner Id",
+      "type": "string"
+    },
+    "misconception_code": {
+      "examples": [
+        "M003"
+      ],
+      "pattern": "^M\\d{3}$",
+      "title": "Misconception Code",
+      "type": "string"
+    },
+    "p_holds": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "P Holds",
+      "type": "number"
+    },
+    "resolution_evidence_id": {
+      "anyOf": [
+        {
+          "examples": [
+            "e_901"
+          ],
+          "maxLength": 128,
+          "minLength": 1,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Resolution Evidence Id"
+    },
+    "resolved_at": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Resolved At"
+    },
+    "state": {
+      "$ref": "#/$defs/MisconceptionState",
+      "default": "unresolved"
+    }
+  },
+  "required": [
+    "learner_id",
+    "misconception_code",
+    "p_holds"
+  ],
+  "title": "MisconceptionBelief",
+  "type": "object"
+}

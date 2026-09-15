@@ -1,0 +1,30 @@
+{
+  "description": "One wrong answer option, mapped to the misconception it predicts (§38).",
+  "properties": {
+    "likelihood": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Likelihood",
+      "type": "number"
+    },
+    "maps_to": {
+      "examples": [
+        "M003"
+      ],
+      "pattern": "^M\\d{3}$",
+      "title": "Maps To",
+      "type": "string"
+    },
+    "value": {
+      "title": "Value",
+      "type": "string"
+    }
+  },
+  "required": [
+    "value",
+    "maps_to",
+    "likelihood"
+  ],
+  "title": "Distractor",
+  "type": "object"
+}

@@ -1,0 +1,76 @@
+{
+  "description": "The §38 ``mastery_outcome`` closing record for a session.\n\nThe §38 document keys misconception posteriors flat\n(``\"misconception_M003_after\": 0.04``); a before-validator lifts any key\nmatching that pattern into ``misconception_posteriors`` so the worked\nexample validates verbatim while new code uses the structured field.",
+  "properties": {
+    "caveats": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Caveats",
+      "type": "array"
+    },
+    "claim": {
+      "title": "Claim",
+      "type": "string"
+    },
+    "evidence_ids": {
+      "items": {
+        "examples": [
+          "e_901"
+        ],
+        "maxLength": 128,
+        "minLength": 1,
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Evidence Ids",
+      "type": "array"
+    },
+    "misconception_posteriors": {
+      "additionalProperties": {
+        "maximum": 1.0,
+        "minimum": 0.0,
+        "type": "number"
+      },
+      "title": "Misconception Posteriors",
+      "type": "object"
+    },
+    "next_review": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "ISO date (§38); scheduling semantics arrive with FSRS (P23).",
+      "title": "Next Review"
+    },
+    "p_known_after": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "P Known After",
+      "type": "number"
+    },
+    "p_known_before": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "P Known Before",
+      "type": "number"
+    },
+    "transfer_verified": {
+      "title": "Transfer Verified",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "p_known_before",
+    "p_known_after",
+    "transfer_verified",
+    "claim",
+    "evidence_ids"
+  ],
+  "title": "MasteryOutcome",
+  "type": "object"
+}

@@ -1,0 +1,86 @@
+{
+  "$defs": {
+    "RepresentationType": {
+      "description": "Item representation. Extensible; seeded from §38 + roadmap P3.",
+      "enum": [
+        "area_model",
+        "number_line",
+        "set_model",
+        "symbolic"
+      ],
+      "title": "RepresentationType",
+      "type": "string"
+    }
+  },
+  "description": "Novel-representation probe for the separate transfer claim (§1.3, §38).\n\n``result`` is a runtime observation attached by the verification flow;\ncontent authoring leaves it None. Transfer failure downgrades the\ntransfer claim — it never erases local mastery.",
+  "properties": {
+    "correct_answer": {
+      "title": "Correct Answer",
+      "type": "string"
+    },
+    "elo": {
+      "anyOf": [
+        {
+          "maximum": 3000,
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Elo"
+    },
+    "id": {
+      "maxLength": 64,
+      "minLength": 1,
+      "title": "Id",
+      "type": "string"
+    },
+    "representation": {
+      "$ref": "#/$defs/RepresentationType"
+    },
+    "result": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Result"
+    },
+    "skill_code": {
+      "anyOf": [
+        {
+          "examples": [
+            "S004",
+            "S001_identify_fraction"
+          ],
+          "pattern": "^S\\d{3}(_[a-z][a-z0-9_]*)?$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Skill Code"
+    },
+    "stem": {
+      "title": "Stem",
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "stem",
+    "representation",
+    "correct_answer"
+  ],
+  "title": "TransferItem",
+  "type": "object"
+}

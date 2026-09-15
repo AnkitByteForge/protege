@@ -1,0 +1,54 @@
+{
+  "$defs": {
+    "SproutScriptEmotion": {
+      "description": "Tone of an authored candidate utterance (§38 worked example).",
+      "enum": [
+        "confident",
+        "curious",
+        "confused",
+        "uncertain"
+      ],
+      "title": "SproutScriptEmotion",
+      "type": "string"
+    }
+  },
+  "description": "Pre-authored Sprout candidate utterance (§38; §8.1 candidate pool).\n\nThe 30-word cap is the §7.3 Sprout output contract, applied at authoring\ntime so the pool itself can never violate it.",
+  "properties": {
+    "emotion": {
+      "$ref": "#/$defs/SproutScriptEmotion"
+    },
+    "id": {
+      "maxLength": 64,
+      "minLength": 1,
+      "title": "Id",
+      "type": "string"
+    },
+    "misconception_code": {
+      "anyOf": [
+        {
+          "examples": [
+            "M003"
+          ],
+          "pattern": "^M\\d{3}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Misconception Code"
+    },
+    "utterance": {
+      "title": "Utterance",
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "utterance",
+    "emotion"
+  ],
+  "title": "SproutScript",
+  "type": "object"
+}

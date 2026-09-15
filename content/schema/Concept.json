@@ -1,0 +1,40 @@
+{
+  "description": "Conceptual grouping of skills.\n\nSynthesized shape: the roadmap lists ``Concept`` as a P1 entity and\n§10.1 speaks of \"concept mastery\", but no document defines the fields.\nModeled as a grouping node over skill codes until P33 (multi-domain)\nforces the general form.",
+  "properties": {
+    "code": {
+      "examples": [
+        "C001"
+      ],
+      "pattern": "^C\\d{3}$",
+      "title": "Code",
+      "type": "string"
+    },
+    "description": {
+      "title": "Description",
+      "type": "string"
+    },
+    "skill_codes": {
+      "items": {
+        "examples": [
+          "S004",
+          "S001_identify_fraction"
+        ],
+        "pattern": "^S\\d{3}(_[a-z][a-z0-9_]*)?$",
+        "type": "string"
+      },
+      "title": "Skill Codes",
+      "type": "array"
+    },
+    "title": {
+      "title": "Title",
+      "type": "string"
+    }
+  },
+  "required": [
+    "code",
+    "title",
+    "description"
+  ],
+  "title": "Concept",
+  "type": "object"
+}

@@ -1,0 +1,51 @@
+{
+  "description": "Typed explanation.",
+  "properties": {
+    "id": {
+      "anyOf": [
+        {
+          "maxLength": 128,
+          "minLength": 1,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Id"
+    },
+    "modality": {
+      "const": "text",
+      "default": "text",
+      "title": "Modality",
+      "type": "string"
+    },
+    "skill_code": {
+      "anyOf": [
+        {
+          "examples": [
+            "S004",
+            "S001_identify_fraction"
+          ],
+          "pattern": "^S\\d{3}(_[a-z][a-z0-9_]*)?$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Skill Code"
+    },
+    "text": {
+      "title": "Text",
+      "type": "string"
+    }
+  },
+  "required": [
+    "text"
+  ],
+  "title": "TextExplanation",
+  "type": "object"
+}

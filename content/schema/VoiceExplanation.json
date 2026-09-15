@@ -1,0 +1,58 @@
+{
+  "description": "Spoken explanation; ASR confidence gates diagnosis (§7.3 abstention).",
+  "properties": {
+    "asr_confidence": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Asr Confidence",
+      "type": "number"
+    },
+    "id": {
+      "anyOf": [
+        {
+          "maxLength": 128,
+          "minLength": 1,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Id"
+    },
+    "modality": {
+      "const": "voice",
+      "default": "voice",
+      "title": "Modality",
+      "type": "string"
+    },
+    "skill_code": {
+      "anyOf": [
+        {
+          "examples": [
+            "S004",
+            "S001_identify_fraction"
+          ],
+          "pattern": "^S\\d{3}(_[a-z][a-z0-9_]*)?$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Skill Code"
+    },
+    "text": {
+      "title": "Text",
+      "type": "string"
+    }
+  },
+  "required": [
+    "text",
+    "asr_confidence"
+  ],
+  "title": "VoiceExplanation",
+  "type": "object"
+}

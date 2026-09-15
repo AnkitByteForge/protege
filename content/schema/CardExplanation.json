@@ -1,0 +1,67 @@
+{
+  "description": "Explanation chosen from the 3 authored cards (§19.2).",
+  "properties": {
+    "card_ids": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Card Ids",
+      "type": "array"
+    },
+    "id": {
+      "anyOf": [
+        {
+          "maxLength": 128,
+          "minLength": 1,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Id"
+    },
+    "modality": {
+      "const": "explanation_card",
+      "default": "explanation_card",
+      "title": "Modality",
+      "type": "string"
+    },
+    "skill_code": {
+      "anyOf": [
+        {
+          "examples": [
+            "S004",
+            "S001_identify_fraction"
+          ],
+          "pattern": "^S\\d{3}(_[a-z][a-z0-9_]*)?$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Skill Code"
+    },
+    "text": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Text"
+    }
+  },
+  "required": [
+    "card_ids"
+  ],
+  "title": "CardExplanation",
+  "type": "object"
+}

@@ -1,0 +1,110 @@
+{
+  "$defs": {
+    "Distractor": {
+      "description": "One wrong answer option, mapped to the misconception it predicts (§38).",
+      "properties": {
+        "likelihood": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Likelihood",
+          "type": "number"
+        },
+        "maps_to": {
+          "examples": [
+            "M003"
+          ],
+          "pattern": "^M\\d{3}$",
+          "title": "Maps To",
+          "type": "string"
+        },
+        "value": {
+          "title": "Value",
+          "type": "string"
+        }
+      },
+      "required": [
+        "value",
+        "maps_to",
+        "likelihood"
+      ],
+      "title": "Distractor",
+      "type": "object"
+    },
+    "RepresentationType": {
+      "description": "Item representation. Extensible; seeded from §38 + roadmap P3.",
+      "enum": [
+        "area_model",
+        "number_line",
+        "set_model",
+        "symbolic"
+      ],
+      "title": "RepresentationType",
+      "type": "string"
+    }
+  },
+  "description": "Immutable content snapshot of one item (§22 ``item_versions``).\n\nRollback = flipping the version pointer; versions are never mutated.",
+  "properties": {
+    "content_version": {
+      "examples": [
+        "v1"
+      ],
+      "pattern": "^v\\d+(-[\\w.]+)?$",
+      "title": "Content Version",
+      "type": "string"
+    },
+    "correct_answer": {
+      "title": "Correct Answer",
+      "type": "string"
+    },
+    "distractors": {
+      "items": {
+        "$ref": "#/$defs/Distractor"
+      },
+      "title": "Distractors",
+      "type": "array"
+    },
+    "elo": {
+      "anyOf": [
+        {
+          "maximum": 3000,
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Elo"
+    },
+    "item_id": {
+      "maxLength": 64,
+      "minLength": 1,
+      "title": "Item Id",
+      "type": "string"
+    },
+    "representation": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/RepresentationType"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "stem": {
+      "title": "Stem",
+      "type": "string"
+    }
+  },
+  "required": [
+    "item_id",
+    "content_version",
+    "stem",
+    "correct_answer"
+  ],
+  "title": "ItemVersion",
+  "type": "object"
+}

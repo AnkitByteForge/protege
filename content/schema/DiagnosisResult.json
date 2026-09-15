@@ -1,0 +1,106 @@
+{
+  "$defs": {
+    "DiagnosisLabel": {
+      "description": "One closed-set label from the Diagnostician (§7.3, §38).\n\nThe wire key is ``misconception_id`` (§7.3); the value is the library\ncode (``M003``).",
+      "properties": {
+        "confidence": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Confidence",
+          "type": "number"
+        },
+        "evidence_span": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Evidence Span"
+        },
+        "misconception_id": {
+          "examples": [
+            "M003"
+          ],
+          "pattern": "^M\\d{3}$",
+          "title": "Misconception Id",
+          "type": "string"
+        },
+        "state": {
+          "$ref": "#/$defs/MisconceptionState",
+          "default": "unresolved"
+        }
+      },
+      "required": [
+        "misconception_id",
+        "confidence"
+      ],
+      "title": "DiagnosisLabel",
+      "type": "object"
+    },
+    "MisconceptionState": {
+      "enum": [
+        "unresolved",
+        "resolved"
+      ],
+      "title": "MisconceptionState",
+      "type": "string"
+    },
+    "UnderstandingSignal": {
+      "description": "Closed-set positive signals (§38 attested; extended via P3/P6 review).",
+      "enum": [
+        "inverse_denominator_relationship",
+        "partitioning_language"
+      ],
+      "title": "UnderstandingSignal",
+      "type": "string"
+    }
+  },
+  "description": "Diagnostician output — closed set only, abstention over guessing (§7.3).",
+  "properties": {
+    "abstained": {
+      "default": false,
+      "title": "Abstained",
+      "type": "boolean"
+    },
+    "asr_reliable": {
+      "default": true,
+      "title": "Asr Reliable",
+      "type": "boolean"
+    },
+    "labels": {
+      "items": {
+        "$ref": "#/$defs/DiagnosisLabel"
+      },
+      "maxItems": 8,
+      "title": "Labels",
+      "type": "array"
+    },
+    "model_run_id": {
+      "anyOf": [
+        {
+          "maxLength": 128,
+          "minLength": 1,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Model Run Id"
+    },
+    "understanding_signals": {
+      "items": {
+        "$ref": "#/$defs/UnderstandingSignal"
+      },
+      "title": "Understanding Signals",
+      "type": "array"
+    }
+  },
+  "title": "DiagnosisResult",
+  "type": "object"
+}
