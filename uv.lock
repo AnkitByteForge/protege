@@ -11,6 +11,8 @@ members = [
     "protege",
     "protege-authoring",
     "protege-contracts",
+    "protege-learning-engine",
+    "protege-llm",
     "protege-session",
 ]
 
@@ -676,6 +678,8 @@ source = { virtual = "." }
 dependencies = [
     { name = "protege-authoring" },
     { name = "protege-contracts" },
+    { name = "protege-learning-engine" },
+    { name = "protege-llm" },
     { name = "protege-session" },
 ]
 
@@ -691,6 +695,8 @@ dev = [
 requires-dist = [
     { name = "protege-authoring", editable = "tools/authoring" },
     { name = "protege-contracts", editable = "packages/contracts" },
+    { name = "protege-learning-engine", editable = "packages/learning-engine" },
+    { name = "protege-llm", editable = "packages/llm" },
     { name = "protege-session", editable = "services/session" },
 ]
 
@@ -717,6 +723,16 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [{ name = "pydantic", specifier = ">=2.10" }]
+
+[[package]]
+name = "protege-learning-engine"
+version = "0.1.0"
+source = { editable = "packages/learning-engine" }
+
+[[package]]
+name = "protege-llm"
+version = "0.1.0"
+source = { editable = "packages/llm" }
 
 [[package]]
 name = "protege-session"
