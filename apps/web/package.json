@@ -13,7 +13,8 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "typecheck": "tsc --noEmit",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "generate:types": "node scripts/generate-contract-types.mjs && prettier --write src/generated/contracts"
   },
   "dependencies": {
     "next": "^15.1.0",
@@ -28,6 +29,7 @@
     "@types/react-dom": "^19.0.0",
     "eslint": "^9.18.0",
     "eslint-config-next": "^15.1.0",
+    "json-schema-to-typescript": "^16.0.0",
     "prettier": "^3.4.0",
     "typescript": "^5.7.0"
   }

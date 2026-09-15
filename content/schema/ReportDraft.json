@@ -1,0 +1,62 @@
+{
+  "$defs": {
+    "ReportSentence": {
+      "description": "One sentence of parent/tutor prose with its evidence anchors (§7.3).\n\nEvery sentence must carry at least one ``evidence_id``; the validator\nrejects any sentence without one — that is how \"Ava mastered denominator\nmagnitude\" stays traceable (§17).",
+      "properties": {
+        "evidence_ids": {
+          "items": {
+            "examples": [
+              "e_901"
+            ],
+            "maxLength": 128,
+            "minLength": 1,
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "text": {
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "text",
+        "evidence_ids"
+      ],
+      "title": "ReportSentence",
+      "type": "object"
+    }
+  },
+  "description": "Reporter output: grounded prose from a fixed evidence bundle.\n\nClaims are enum-selected, not free-written (§17); the ``claim_key``\ncarries the selected claim template, and ``audience`` selects the\nparent/tutor surface (§29, §30).",
+  "properties": {
+    "audience": {
+      "enum": [
+        "parent",
+        "tutor"
+      ],
+      "title": "Audience",
+      "type": "string"
+    },
+    "claim_key": {
+      "title": "Claim Key",
+      "type": "string"
+    },
+    "sentences": {
+      "items": {
+        "$ref": "#/$defs/ReportSentence"
+      },
+      "minItems": 1,
+      "title": "Sentences",
+      "type": "array"
+    }
+  },
+  "required": [
+    "audience",
+    "claim_key",
+    "sentences"
+  ],
+  "title": "ReportDraft",
+  "type": "object"
+}

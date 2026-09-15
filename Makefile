@@ -1,4 +1,4 @@
-.PHONY: help dev api web db-up db-down db-migrate observability test test-e2e lint typecheck format eval clean
+.PHONY: help dev api web db-up db-down db-migrate observability test test-e2e lint typecheck format types eval clean
 
 .DEFAULT_GOAL := help
 UV := uv run
@@ -59,6 +59,10 @@ format: ## Auto-format Python (ruff) and web (prettier)
 	$(UV) ruff format .
 	$(UV) ruff check --fix .
 	cd apps/web && npm run format
+
+types: ## Regenerate content/schema/*.json (Pydantic) and apps/web TS types (from that JSON Schema)
+	$(UV) python -m protege.contracts.export content/schema
+	cd apps/web && npm run generate:types
 
 eval: ## Run the evaluation harness (lands in P24; intentional no-op at P0)
 	@echo "evals/ is intentionally empty at P0 - the harness arrives in P24 (roadmap). Nothing to evaluate yet."

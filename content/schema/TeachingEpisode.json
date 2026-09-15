@@ -1,0 +1,83 @@
+{
+  "description": "One teach-back record (§22 ``teaching_episodes``).",
+  "properties": {
+    "id": {
+      "examples": [
+        "te_77"
+      ],
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Id",
+      "type": "string"
+    },
+    "misconception_code": {
+      "examples": [
+        "M003"
+      ],
+      "pattern": "^M\\d{3}$",
+      "title": "Misconception Code",
+      "type": "string"
+    },
+    "quality_score": {
+      "anyOf": [
+        {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Quality Score"
+    },
+    "resolution_turn": {
+      "anyOf": [
+        {
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Resolution Turn"
+    },
+    "resolved": {
+      "title": "Resolved",
+      "type": "boolean"
+    },
+    "session_id": {
+      "anyOf": [
+        {
+          "examples": [
+            "ses_01J..."
+          ],
+          "maxLength": 128,
+          "minLength": 1,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Session Id"
+    },
+    "turns": {
+      "minimum": 0,
+      "title": "Turns",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "id",
+    "misconception_code",
+    "turns",
+    "resolved"
+  ],
+  "title": "TeachingEpisode",
+  "type": "object"
+}

@@ -1,0 +1,33 @@
+{
+  "description": "Coach output: a personalized rewrite of ONE authored intervention.\n\n``unauthored_hint_rate`` must be 0 (roadmap P17): every delivered hint\nmaps to an authored ``intervention_id`` — enforced downstream by\nchecking the id against the content library.",
+  "properties": {
+    "intervention_id": {
+      "maxLength": 64,
+      "minLength": 1,
+      "title": "Intervention Id",
+      "type": "string"
+    },
+    "persona_note": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Persona Note"
+    },
+    "text": {
+      "title": "Text",
+      "type": "string"
+    }
+  },
+  "required": [
+    "intervention_id",
+    "text"
+  ],
+  "title": "CoachHint",
+  "type": "object"
+}

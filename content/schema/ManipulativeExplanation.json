@@ -1,0 +1,122 @@
+{
+  "$defs": {
+    "ManipulativeAction": {
+      "description": "One manipulative interaction in a trace (§38: ``{t, action, target}``).\n\nThe trace is a first-class diagnostic input, equal in standing to speech\n(roadmap P13): a child who aligns two bars has demonstrated understanding\nwithout a word.",
+      "properties": {
+        "action": {
+          "examples": [
+            "drag",
+            "align",
+            "snap"
+          ],
+          "title": "Action",
+          "type": "string"
+        },
+        "t": {
+          "description": "Seconds since the item was presented.",
+          "minimum": 0,
+          "title": "T",
+          "type": "number"
+        },
+        "target": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Target"
+        },
+        "targets": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Targets"
+        }
+      },
+      "required": [
+        "t",
+        "action"
+      ],
+      "title": "ManipulativeAction",
+      "type": "object"
+    }
+  },
+  "description": "Non-verbal teach-back: the child shows it with the manipulative.",
+  "properties": {
+    "id": {
+      "anyOf": [
+        {
+          "maxLength": 128,
+          "minLength": 1,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Id"
+    },
+    "manipulative_trace": {
+      "items": {
+        "$ref": "#/$defs/ManipulativeAction"
+      },
+      "minItems": 1,
+      "title": "Manipulative Trace",
+      "type": "array"
+    },
+    "modality": {
+      "const": "manipulative",
+      "default": "manipulative",
+      "title": "Modality",
+      "type": "string"
+    },
+    "skill_code": {
+      "anyOf": [
+        {
+          "examples": [
+            "S004",
+            "S001_identify_fraction"
+          ],
+          "pattern": "^S\\d{3}(_[a-z][a-z0-9_]*)?$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Skill Code"
+    },
+    "text": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Text"
+    }
+  },
+  "required": [
+    "manipulative_trace"
+  ],
+  "title": "ManipulativeExplanation",
+  "type": "object"
+}

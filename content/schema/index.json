@@ -1,0 +1,33 @@
+{
+  "models": [
+    "Skill",
+    "Concept",
+    "Prerequisite",
+    "Misconception",
+    "Distractor",
+    "LearningItem",
+    "ItemVersion",
+    "Intervention",
+    "SproutScript",
+    "TransferItem",
+    "Evidence",
+    "MasteryEstimate",
+    "MisconceptionBelief",
+    "TeachingEpisode",
+    "MasteryOutcome",
+    "VoiceExplanation",
+    "TextExplanation",
+    "ManipulativeExplanation",
+    "CardExplanation",
+    "DiagnosisResult",
+    "PolicyDecision",
+    "DomainEvent",
+    "SproutTurn",
+    "CoachHint",
+    "ReportDraft",
+    "ProofClaim",
+    "TutorBriefing",
+    "WorkedExample"
+  ],
+  "schema_version": "1.0"
+}

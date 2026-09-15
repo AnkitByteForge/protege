@@ -1,0 +1,77 @@
+{
+  "skill": {
+    "code": "S004",
+    "title": "Compare unit fractions",
+    "grade_band": "3-4",
+    "prerequisites": ["S001_identify_fraction", "S002_equal_parts"],
+    "standard": "CCSS.3.NF.A.3d"
+  },
+
+  "misconception": {
+    "code": "M003",
+    "title": "Larger denominator means larger fraction",
+    "cognitive_origin": "Whole-number bias — the child transfers whole-number ordering to the denominator, since 8 > 4.",
+    "prevalence_prior": 0.42,
+    "distractor_likelihood": { "picks_1_8": 0.82, "says_equal": 0.06, "other": 0.12 },
+    "citation": "Whole-number bias literature; Siegler et al. on fraction magnitude"
+  },
+
+  "sprout_scripts": [
+    { "id": "SS_M003_01", "utterance": "I think 1/8 is bigger! Eight is way more than four.", "emotion": "confident" },
+    { "id": "SS_M003_02", "utterance": "Wait, so 1/8 wins because 8 is the bigger number, right?", "emotion": "curious" },
+    { "id": "SS_M003_03", "utterance": "Hmm, but 8 is more than 4. Doesn't more mean bigger?", "emotion": "confused" }
+  ],
+  "sprout_forbidden": ["stating 1/4 > 1/8 before resolution", "the words numerator/denominator"],
+
+  "diagnostic_item": {
+    "id": "i_0132",
+    "stem": "Which is more pizza: 1/4 or 1/8?",
+    "representation": "area_model",
+    "correct": "1/4",
+    "distractors": [
+      { "value": "1/8",   "maps_to": "M003", "likelihood": 0.82 },
+      { "value": "equal", "maps_to": "M011", "likelihood": 0.06 }
+    ],
+    "elo": 1180
+  },
+
+  "learner_evidence": {
+    "explanation": "no because the bottom is how many pieces you cut it so more pieces are littler",
+    "asr_confidence": 0.88,
+    "manipulative_trace": [
+      { "t": 2.1, "action": "drag", "target": "bar_1_4" },
+      { "t": 4.8, "action": "align", "targets": ["bar_1_4", "bar_1_8"] }
+    ],
+    "diagnosis": {
+      "labels": [{ "misconception_id": "M003", "state": "resolved", "confidence": 0.91,
+                   "evidence_span": "more pieces are littler" }],
+      "understanding_signals": ["inverse_denominator_relationship", "partitioning_language"],
+      "asr_reliable": true
+    }
+  },
+
+  "intervention": {
+    "id": "INT_M003_A",
+    "type": "VISUALIZATION",
+    "strategy": "same_whole_partition_contrast",
+    "script": "Let's cut the SAME pizza two ways and lay them on top of each other.",
+    "historical_success_rate": 0.78
+  },
+
+  "verification": {
+    "unaided_items": ["i_0148", "i_0155", "i_0161"],
+    "results": [true, true, true],
+    "transfer_item": { "id": "i_0201", "representation": "number_line", "result": true }
+  },
+
+  "mastery_outcome": {
+    "p_known_before": 0.31,
+    "p_known_after": 0.91,
+    "misconception_M003_after": 0.04,
+    "transfer_verified": true,
+    "claim": "Ava can compare unit fractions",
+    "evidence_ids": ["e_901","e_902","e_903","e_904","e_905"],
+    "caveats": ["transfer confirmed on number line only"],
+    "next_review": "2026-09-19"
+  }
+}

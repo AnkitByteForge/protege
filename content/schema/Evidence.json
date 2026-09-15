@@ -1,0 +1,93 @@
+{
+  "$defs": {
+    "EvidenceKind": {
+      "description": "Provenance atom kinds (ARCHITECTURE.md §22 evidence table).",
+      "enum": [
+        "response",
+        "teaching_episode",
+        "transfer"
+      ],
+      "title": "EvidenceKind",
+      "type": "string"
+    }
+  },
+  "description": "Provenance atom (§22 ``evidence`` table; §17 provenance chain).\n\nAppend-only: you cannot retroactively improve a child's history\n(§43 principle 15). Every parent-facing claim resolves to these rows.",
+  "properties": {
+    "created_at": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Created At"
+    },
+    "id": {
+      "examples": [
+        "e_901"
+      ],
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Id",
+      "type": "string"
+    },
+    "kind": {
+      "$ref": "#/$defs/EvidenceKind"
+    },
+    "payload": {
+      "additionalProperties": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "integer"
+          },
+          {
+            "type": "number"
+          },
+          {
+            "type": "boolean"
+          },
+          {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          {
+            "items": {},
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "title": "Payload",
+      "type": "object"
+    },
+    "source_event_id": {
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Source Event Id",
+      "type": "string"
+    },
+    "weight": {
+      "default": 1.0,
+      "maximum": 3.0,
+      "minimum": 0.0,
+      "title": "Weight",
+      "type": "number"
+    }
+  },
+  "required": [
+    "id",
+    "kind",
+    "source_event_id"
+  ],
+  "title": "Evidence",
+  "type": "object"
+}

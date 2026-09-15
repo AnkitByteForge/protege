@@ -1,0 +1,71 @@
+{
+  "description": "One claim on the parent proof card (§17 provenance chain).\n\nClaims are enum-selected, not free-written (§17); each resolves through\n``mastery_estimate_id`` to its evidence tree. ``caveats`` carry the\nmandatory uncertainty (e.g. \"transfer confirmed on number line only\").",
+  "properties": {
+    "caveats": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Caveats",
+      "type": "array"
+    },
+    "evidence_ids": {
+      "items": {
+        "examples": [
+          "e_901"
+        ],
+        "maxLength": 128,
+        "minLength": 1,
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Evidence Ids",
+      "type": "array"
+    },
+    "id": {
+      "examples": [
+        "c_88"
+      ],
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Id",
+      "type": "string"
+    },
+    "mastery_estimate_id": {
+      "anyOf": [
+        {
+          "maxLength": 128,
+          "minLength": 1,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Mastery Estimate Id"
+    },
+    "text": {
+      "title": "Text",
+      "type": "string"
+    },
+    "threshold_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Threshold Id"
+    }
+  },
+  "required": [
+    "id",
+    "text",
+    "evidence_ids"
+  ],
+  "title": "ProofClaim",
+  "type": "object"
+}

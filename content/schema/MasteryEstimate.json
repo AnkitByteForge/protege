@@ -1,0 +1,71 @@
+{
+  "description": "Authoritative per-skill mastery state (§22 ``mastery_estimates`` DDL).",
+  "properties": {
+    "computed_at": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Computed At"
+    },
+    "evidence_count": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Evidence Count",
+      "type": "integer"
+    },
+    "learner_id": {
+      "examples": [
+        "lrn_01J..."
+      ],
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Learner Id",
+      "type": "string"
+    },
+    "model_version": {
+      "title": "Model Version",
+      "type": "string"
+    },
+    "p_known": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "P Known",
+      "type": "number"
+    },
+    "skill_code": {
+      "examples": [
+        "S004",
+        "S001_identify_fraction"
+      ],
+      "pattern": "^S\\d{3}(_[a-z][a-z0-9_]*)?$",
+      "title": "Skill Code",
+      "type": "string"
+    },
+    "transfer_verified": {
+      "default": false,
+      "title": "Transfer Verified",
+      "type": "boolean"
+    },
+    "unaided_correct": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Unaided Correct",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "learner_id",
+    "skill_code",
+    "p_known",
+    "model_version"
+  ],
+  "title": "MasteryEstimate",
+  "type": "object"
+}

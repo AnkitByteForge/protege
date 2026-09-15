@@ -1,9 +1,9 @@
 [project]
 name = "protege-contracts"
 version = "0.1.0"
-description = "PROTÉGÉ shared contracts — Pydantic models + generated TS types (scaffold at P0; domain models land in P1)."
+description = "PROTÉGÉ shared contracts — Pydantic models + generated TS types."
 requires-python = ">=3.12"
-dependencies = []
+dependencies = ["pydantic>=2.10"]
 
 [build-system]
 requires = ["hatchling"]
