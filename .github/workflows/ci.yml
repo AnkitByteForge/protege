@@ -80,6 +80,45 @@ jobs:
           asyncio.run(main())
           PY
 
+  types:
+    name: Contract types (JSON Schema + generated TypeScript drift check)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          python-version: "3.12"
+          enable-cache: true
+
+      - name: Sync workspace
+        run: uv sync --locked
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: apps/web/package-lock.json
+
+      - name: Install frontend dependencies
+        working-directory: apps/web
+        run: npm ci
+
+      - name: Regenerate JSON Schema (packages/contracts -> content/schema)
+        run: uv run python -m protege.contracts.export content/schema
+
+      - name: Regenerate TypeScript types (content/schema -> apps/web/src/generated)
+        working-directory: apps/web
+        run: npm run generate:types
+
+      - name: Fail on generated-type drift
+        run: |
+          if ! git diff --exit-code -- content/schema apps/web/src/generated; then
+            echo "::error::content/schema/ and/or apps/web/src/generated/ are stale relative to packages/contracts. Run 'make types' and commit the result."
+            exit 1
+          fi
+
   frontend:
     name: Frontend (lint, typecheck, build, Playwright smoke)
     runs-on: ubuntu-latest
