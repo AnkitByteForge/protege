@@ -17,10 +17,7 @@ from dataclasses import dataclass
 
 from pydantic import BaseModel
 
-# packages/contracts ships no `py.typed` marker (a pre-existing P1 packaging
-# gap, out of P4's scope — see the final report); mypy would otherwise treat
-# this workspace-internal import as untyped.
-from protege.contracts import (  # type: ignore[import-untyped]
+from protege.contracts import (
     CoachHint,
     DiagnosisResult,
     PedagogicalRole,
