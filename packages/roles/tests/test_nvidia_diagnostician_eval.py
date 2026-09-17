@@ -45,7 +45,11 @@ import pytest
 from protege.authoring.loader import load_content_pack
 from protege.contracts import Misconception, PedagogicalRole
 from protege.llm import ModelRouter, NvidiaProvider
-from protege.roles.eval import evaluate_rule_based_only, run_nvidia_diagnostician_evaluation
+from protege.roles.eval import (
+    PerClassMetrics,
+    evaluate_rule_based_only,
+    run_nvidia_diagnostician_evaluation,
+)
 from protege.roles.golden_set import DATASET_STATUS, load_golden_set
 
 _FLAG = "PROTEGE_RUN_DIAGNOSTICIAN_EVAL"
@@ -66,6 +70,15 @@ def _print_confusion(confusion: dict[tuple[str, str], int]) -> None:
     print("\nConfusion matrix (true_code, predicted_code) -> count:")
     for (true_code, predicted_code), count in sorted(confusion.items()):
         print(f"  {true_code:>6} -> {predicted_code:<8} : {count}")
+
+
+def _print_per_class(per_class: dict[str, PerClassMetrics]) -> None:
+    print("\nPer-misconception precision / recall / F1 / support:")
+    for code in sorted(per_class):
+        m = per_class[code]
+        line = f"  {code}: precision={m.precision:.4f}  recall={m.recall:.4f}"
+        line += f"  f1={m.f1:.4f}  support={m.support}"
+        print(line)
 
 
 def test_real_nvidia_diagnostician_evaluation() -> None:
@@ -105,12 +118,14 @@ def test_real_nvidia_diagnostician_evaluation() -> None:
     print(f"  ece      = {nvidia_report.report.ece:.4f}  (gate: <= 0.10)")
     print(f"  brier    = {nvidia_report.report.brier:.4f}  (gate: <= 0.18)")
     _print_confusion(nvidia_report.report.confusion)
+    _print_per_class(nvidia_report.report.per_class)
 
     print("\nRule-based baseline (full 120-item set, for comparison):")
     print(f"  abstention_rate = {rule_based_report.abstention_rate:.4f}")
     print(f"  macro_f1 = {rule_based_report.macro_f1:.4f}")
     print(f"  ece      = {rule_based_report.ece:.4f}")
     print(f"  brier    = {rule_based_report.brier:.4f}")
+    _print_per_class(rule_based_report.per_class)
 
     gate_note = (
         "MEETS the numeric gate values, but the dataset is development/provisional "
@@ -150,11 +165,29 @@ def test_real_nvidia_diagnostician_evaluation() -> None:
                 "confusion": {
                     f"{t}->{p}": c for (t, p), c in nvidia_report.report.confusion.items()
                 },
+                "per_class": {
+                    code: {
+                        "precision": m.precision,
+                        "recall": m.recall,
+                        "f1": m.f1,
+                        "support": m.support,
+                    }
+                    for code, m in nvidia_report.report.per_class.items()
+                },
                 "rule_based_baseline": {
                     "abstention_rate": rule_based_report.abstention_rate,
                     "macro_f1": rule_based_report.macro_f1,
                     "ece": rule_based_report.ece,
                     "brier": rule_based_report.brier,
+                    "per_class": {
+                        code: {
+                            "precision": m.precision,
+                            "recall": m.recall,
+                            "f1": m.f1,
+                            "support": m.support,
+                        }
+                        for code, m in rule_based_report.per_class.items()
+                    },
                 },
                 "gate_note": gate_note,
                 "gate_values": {"macro_f1_min": 0.75, "ece_max": 0.10, "brier_max": 0.18},

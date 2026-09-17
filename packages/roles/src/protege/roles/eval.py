@@ -47,14 +47,17 @@ Entry points:
   module never constructs one itself and never runs unprompted (see
   ``packages/roles/tests/test_nvidia_diagnostician_eval.py`` for the
   gated, manually-invoked test that does).
-- :func:`evaluate` -- the shared metrics core the above all call.
+- :func:`evaluate` -- the shared metrics core the above all call. Every
+  ``EvalReport`` it returns also carries ``per_class``
+  (:func:`per_class_metrics`) -- precision/recall/F1/support broken out
+  per misconception code, the per-class detail :func:`macro_f1` averages.
 """
 
 from __future__ import annotations
 
 from collections import Counter
 from collections.abc import Callable, Sequence
-from dataclasses import dataclass, replace
+from dataclasses import dataclass, field, replace
 from typing import Literal
 
 from protege.contracts import DiagnosisResult, Distractor, Misconception, PedagogicalRole
@@ -92,6 +95,7 @@ class EvalReport:
     brier: float
     abstention_rate: float
     confusion: dict[tuple[str, str], int]
+    per_class: dict[str, PerClassMetrics] = field(default_factory=dict)
     dataset_status: str = DATASET_STATUS
 
     @property
@@ -198,6 +202,46 @@ def confusion_matrix(records: Sequence[PredictionRecord]) -> dict[tuple[str, str
     return dict(counts)
 
 
+@dataclass(frozen=True)
+class PerClassMetrics:
+    """One misconception code's precision/recall/F1/support -- the
+    per-misconception breakdown ``macro_f1`` averages over, made explicit
+    rather than left implicit in the raw ``confusion_matrix`` pairs.
+    ``support`` is the number of golden examples whose true label is this
+    code (independent of how the classifier did)."""
+
+    code: str
+    precision: float
+    recall: float
+    f1: float
+    support: int
+
+
+def per_class_metrics(records: Sequence[PredictionRecord]) -> dict[str, PerClassMetrics]:
+    """Precision/recall/F1/support for every code that appears as ground
+    truth or as a prediction -- the same per-class quantities
+    :func:`macro_f1` averages, reported individually rather than only as
+    the final mean. An abstention (``predicted_code=None``) can never
+    match any code, so it is always a false negative for its true class,
+    matching :func:`macro_f1`'s own treatment."""
+    codes = sorted(
+        {r.true_code for r in records} | {r.predicted_code for r in records if r.predicted_code}
+    )
+    result: dict[str, PerClassMetrics] = {}
+    for code in codes:
+        tp = sum(1 for r in records if r.true_code == code and r.predicted_code == code)
+        fp = sum(1 for r in records if r.predicted_code == code and r.true_code != code)
+        fn = sum(1 for r in records if r.true_code == code and r.predicted_code != code)
+        support = sum(1 for r in records if r.true_code == code)
+        precision = tp / (tp + fp) if (tp + fp) else 0.0
+        recall = tp / (tp + fn) if (tp + fn) else 0.0
+        f1 = (2 * precision * recall / (precision + recall)) if (precision + recall) else 0.0
+        result[code] = PerClassMetrics(
+            code=code, precision=precision, recall=recall, f1=f1, support=support
+        )
+    return result
+
+
 def _report_from_records(records: Sequence[PredictionRecord]) -> EvalReport:
     records = tuple(records)
     abstention_rate = sum(1 for r in records if r.abstained) / len(records) if records else 0.0
@@ -208,6 +252,7 @@ def _report_from_records(records: Sequence[PredictionRecord]) -> EvalReport:
         brier=brier_score(records),
         abstention_rate=abstention_rate,
         confusion=confusion_matrix(records),
+        per_class=per_class_metrics(records),
     )
 
 
@@ -353,6 +398,15 @@ def evaluate_with_router_calibrated_held_out(
 # --- Real-model evaluation (docs/DECISIONS.md D3, D9) ------------------------
 
 AttemptResolution = Literal["primary", "secondary_fallback", "rule_based_fallback", "no_telemetry"]
+"""``"no_telemetry"``: the ASR-abstention gate returned before ``diagnose()``
+ever called the router (roadmap P6: mean ASR confidence below the 0.65
+threshold aborts pre-call, spending no rate-limiter budget) -- there is no
+``ModelRunRecord`` for that example's ``trace_id`` at all, which is a valid,
+expected outcome, not a missing-data bug. The checked-in 120-item golden
+set is text-only (no ``VoiceExplanation`` examples), so this branch is not
+currently exercised by any golden-set evaluation; it exists so a future
+voice-inclusive golden set is accounted for correctly without a code
+change here."""
 
 
 @dataclass(frozen=True)

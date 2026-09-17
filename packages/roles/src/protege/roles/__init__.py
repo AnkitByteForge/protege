@@ -21,9 +21,11 @@ from .eval import (
     EvalReport,
     HeldOutCalibrationReport,
     NvidiaEvalReport,
+    PerClassMetrics,
     evaluate_rule_based_only,
     evaluate_with_router,
     evaluate_with_router_calibrated_held_out,
+    per_class_metrics,
     run_nvidia_diagnostician_evaluation,
 )
 from .evidence_span import describe_explanation, extract_evidence_span
@@ -59,6 +61,7 @@ __all__ = [
     "NoCandidatePoolError",
     "NoClosedSetProvidedError",
     "NvidiaEvalReport",
+    "PerClassMetrics",
     "PromptTemplateError",
     "RoleError",
     "SproutAttemptRecord",
@@ -82,6 +85,7 @@ __all__ = [
     "extract_evidence_span",
     "fit_calibration",
     "load_golden_set",
+    "per_class_metrics",
     "presentation_emotion_for",
     "rule_based_diagnosis",
     "run_nvidia_diagnostician_evaluation",

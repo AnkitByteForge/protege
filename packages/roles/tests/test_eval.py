@@ -40,6 +40,7 @@ from protege.roles.eval import (
     evaluate_rule_based_only,
     evaluate_with_router,
     evaluate_with_router_calibrated_held_out,
+    per_class_metrics,
     run_nvidia_diagnostician_evaluation,
 )
 from protege.roles.golden_set import DATASET_STATUS, load_golden_set, split_golden_set
@@ -112,6 +113,54 @@ def test_rule_based_fallback_full_set_ablation_is_reported(
     # (circular-on-a-subset, but still real on the free-text majority)
     # ceiling of a distractor-only lookup with no free-text signal.
     assert report.macro_f1 < 0.75
+
+
+def test_every_report_carries_per_class_metrics(
+    misconception_set: Sequence[Misconception],
+) -> None:
+    examples = load_golden_set()
+    report = evaluate_rule_based_only(examples, misconception_set=misconception_set)
+    assert set(report.per_class) == {f"M{n:03d}" for n in range(1, 9)}
+    for code, m in report.per_class.items():
+        assert m.code == code
+        assert m.support == 15  # 15 golden examples per misconception code
+
+
+def test_per_class_metrics_is_perfect_on_the_tautological_subset(
+    misconception_set: Sequence[Misconception],
+) -> None:
+    examples = [e for e in load_golden_set() if e.source == "distractor_template"]
+    report = evaluate_rule_based_only(examples, misconception_set=misconception_set)
+    for m in report.per_class.values():
+        assert m.precision == 1.0
+        assert m.recall == 1.0
+        assert m.f1 == 1.0
+        assert m.support == 8  # 8 distractor_template examples per code
+
+
+def test_per_class_metrics_is_zero_recall_when_the_fallback_has_no_signal(
+    misconception_set: Sequence[Misconception],
+) -> None:
+    examples = [e for e in load_golden_set() if e.source != "distractor_template"]
+    report = evaluate_rule_based_only(examples, misconception_set=misconception_set)
+    for m in report.per_class.values():
+        assert m.recall == 0.0  # every example abstained -> zero true positives
+        assert m.f1 == 0.0
+        assert m.support == 7  # 6 sprout_script + 1 worked_example per code
+
+
+def test_per_class_metrics_matches_macro_f1() -> None:
+    from protege.roles.eval import PredictionRecord, macro_f1
+
+    records = [
+        PredictionRecord("a", "M001", "M001", 0.9, False),
+        PredictionRecord("b", "M001", "M002", 0.6, False),
+        PredictionRecord("c", "M002", "M002", 0.8, False),
+        PredictionRecord("d", "M003", None, 0.0, True),
+    ]
+    per_class = per_class_metrics(records)
+    manual_mean = sum(m.f1 for m in per_class.values()) / len(per_class)
+    assert macro_f1(records) == manual_mean
 
 
 def test_evaluate_with_router_is_a_wiring_check_only(
