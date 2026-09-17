@@ -32,8 +32,10 @@ from __future__ import annotations
 
 from collections.abc import Sequence
 
+import pytest
+
 from protege.contracts import Misconception
-from protege.llm import FakeProvider, ModelRouter
+from protege.llm import FakeProvider, ModelRouter, ModelRunRecord
 from protege.llm.rate_limit import TokenBucket
 from protege.roles.calibration import DEFAULT_CALIBRATION
 from protege.roles.eval import (
@@ -290,3 +292,31 @@ def test_run_nvidia_diagnostician_evaluation_records_deterministic_fallback(
     assert report.rule_based_fallback_count == len(examples)
     assert report.primary_success_count == 0
     assert report.fallback_rate == 1.0
+
+
+def test_run_nvidia_diagnostician_evaluation_requires_in_memory_telemetry(
+    misconception_set: Sequence[Misconception],
+) -> None:
+    """Regression test: ``ModelRouter.telemetry`` is typed as the
+    ``TelemetrySink`` Protocol (``packages/llm/src/protege/llm/telemetry.py``),
+    which only declares ``record()`` -- it has no ``.runs``. A router built
+    with a conforming-but-not-``InMemoryTelemetrySink`` sink must fail
+    loudly and specifically, not silently misreport every example as
+    "no_telemetry" and not raise an unrelated ``AttributeError``.
+    """
+
+    class _WriteOnlySink:
+        """Satisfies the ``TelemetrySink`` Protocol (``record`` only) --
+        deliberately does not expose ``.runs``, unlike ``InMemoryTelemetrySink``."""
+
+        def record(self, run: ModelRunRecord) -> None:
+            pass
+
+    router = ModelRouter(
+        {"nvidia": FakeProvider()},
+        rate_limiter=TokenBucket(rate_per_minute=6000.0),
+        telemetry=_WriteOnlySink(),
+    )
+    examples = load_golden_set()[:1]
+    with pytest.raises(TypeError, match="InMemoryTelemetrySink"):
+        run_nvidia_diagnostician_evaluation(examples, router, misconception_set=misconception_set)

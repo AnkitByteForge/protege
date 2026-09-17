@@ -61,7 +61,7 @@ from dataclasses import dataclass, field, replace
 from typing import Literal
 
 from protege.contracts import DiagnosisResult, Distractor, Misconception, PedagogicalRole
-from protege.llm import ROLE_POLICY, ModelRouter, ModelRunRecord
+from protege.llm import ROLE_POLICY, InMemoryTelemetrySink, ModelRouter, ModelRunRecord
 
 from .calibration import (
     DEFAULT_CALIBRATION,
@@ -438,6 +438,38 @@ def _diagnostician_chain_model_ids() -> tuple[str, str]:
     return primary, secondary
 
 
+def _telemetry_runs(router: ModelRouter) -> Sequence[ModelRunRecord]:
+    """The recorded ``ModelRunRecord``s behind ``router.telemetry``.
+
+    ``ModelRouter.telemetry`` is typed as the ``TelemetrySink`` Protocol
+    (``packages/llm/src/protege/llm/telemetry.py``), which -- by design --
+    exposes only ``record()``: P9's future Postgres-backed sink will not
+    hold an in-process list at all, so ``TelemetrySink`` itself must not
+    promise one. ``InMemoryTelemetrySink`` (the concrete class
+    ``ModelRouter`` constructs by default, and the one this eval harness
+    and every test in this package actually use) additionally exposes
+    ``.runs`` -- this narrows to that concrete type explicitly rather than
+    reading an attribute the Protocol does not declare.
+
+    Raises ``TypeError`` if ``router`` was built with a different
+    ``TelemetrySink`` implementation: per-example attempt classification
+    (primary vs. secondary-fallback vs. rule-based-fallback) has no other
+    way to read individual call records back, so failing loudly here is
+    correct -- silently returning no records would misreport every example
+    in this run as ``"no_telemetry"``.
+    """
+    sink = router.telemetry
+    if not isinstance(sink, InMemoryTelemetrySink):
+        raise TypeError(
+            "run_nvidia_diagnostician_evaluation() requires a ModelRouter using "
+            "InMemoryTelemetrySink (the default) so per-example attempt outcomes can be "
+            f"read back; got {type(sink).__name__}. TelemetrySink's public Protocol only "
+            "exposes record() by design -- construct the router with its default telemetry "
+            "sink, or pass telemetry=InMemoryTelemetrySink() explicitly."
+        )
+    return sink.runs
+
+
 def _classify_attempt(
     telemetry_runs: Sequence[ModelRunRecord], example_id: str, primary_model_id: str
 ) -> AttemptOutcome:
@@ -526,7 +558,7 @@ def run_nvidia_diagnostician_evaluation(
                 abstained=result.abstained,
             )
         )
-        attempts.append(_classify_attempt(router.telemetry.runs, example.id, primary_model_id))
+        attempts.append(_classify_attempt(_telemetry_runs(router), example.id, primary_model_id))
 
     n = len(examples)
     primary_count = sum(1 for a in attempts if a.resolution == "primary")
