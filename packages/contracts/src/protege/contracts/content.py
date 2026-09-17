@@ -9,7 +9,10 @@ validates verbatim — that is the P1 exit criterion.
 Where §38 omits a field that §22 requires of the database (``description``,
 ``skill_id``, ``content_version``), the contract keeps it optional: the
 contracts are the permissive core vocabulary, and the content package (P3)
-adds authoring-time strictness on top.
+adds authoring-time strictness on top. ``Misconception`` applies the same
+pattern explicitly (see ``validate_authored``) for
+``distractor_likelihood_if_not_misconception`` — the field D13 (locked on
+``feature/p2-learning``'s ``docs/DECISIONS.md``) requires.
 """
 
 from typing import Annotated
@@ -29,6 +32,28 @@ from .ids import (
     SkillCode,
     SproutScriptId,
 )
+
+
+class MissingComplementLikelihoodError(ValueError):
+    """Raised when a caller needs P(d | not M_k) but a ``Misconception`` has
+    no ``distractor_likelihood_if_not_misconception``.
+
+    D13 (locked on ``feature/p2-learning``'s ``docs/DECISIONS.md``) requires
+    this term to normalize the independent-Bernoulli Bayes update —
+    ``P(M_k | d) = P(d|M_k)P(M_k) / [P(d|M_k)P(M_k) + P(d|¬M_k)(1-P(M_k))]``
+    — and explicitly rejects candidate-set normalization as a substitute. P2's
+    ``mastery_engine`` must let this propagate rather than substituting a
+    default (0, 1, or ``distractor_likelihood``'s ``"other"`` key): a silent
+    substitution would silently corrupt the misconception posterior.
+    """
+
+    def __init__(self, misconception_code: str) -> None:
+        self.misconception_code = misconception_code
+        super().__init__(
+            f"Misconception {misconception_code!r} has no "
+            "distractor_likelihood_if_not_misconception; the §10.2 Bayes update "
+            "requires P(d | not M_k) and must not proceed without it."
+        )
 
 
 class Skill(ProtegeBaseModel):
@@ -69,6 +94,36 @@ class Misconception(ProtegeBaseModel):
     ``distractor_likelihood`` is the authored ``P(d | M_k)`` table that the
     misconception Bayes update consumes (§10.2) — authored, never learned.
     Keys are distractor-behavior slugs (§38: ``picks_1_8``, ``says_equal``).
+    Its ``"other"`` catch-all key belongs only to this ``M_k``-conditional
+    distribution and must never be reused as, or confused with, the
+    complement distribution below — the two are authored independently and
+    need not (and generally will not) share a common normalization.
+
+    ``distractor_likelihood_if_not_misconception`` is the complementary
+    ``P(d | not M_k)`` table required by D13 (locked on
+    ``feature/p2-learning``'s ``docs/DECISIONS.md``): §10.2's misconception
+    beliefs are independent Bernoullis, and a correct binary Bayes update —
+    ``P(M_k | d) = P(d|M_k)P(M_k) / [P(d|M_k)P(M_k) + P(d|¬M_k)(1-P(M_k))]``
+    — needs both the numerator likelihood (``distractor_likelihood``) and
+    this complement to normalize. §10.2's shorthand
+    ``P(M_k | d) ∝ P(d | M_k) · P(M_k)`` elided the complement term; D13
+    locks that it is not optional in an actual update, and explicitly
+    rejects candidate-set normalization as an alternative.
+
+    The field is nullable: the §38 ``M003`` fixture predates this
+    clarification and must keep validating verbatim (P1's exit criterion),
+    so ``None`` is accepted here with no error. ``None`` means "this record
+    has not been authored against the complement-likelihood requirement" —
+    it is never a stand-in for "complement likelihood is zero" or for
+    ``distractor_likelihood``'s ``"other"`` bucket.
+
+    New v1 misconception content must supply it: authoring code should call
+    ``Misconception.validate_authored`` rather than the bare
+    ``model_validate``, and runtime code that needs ``P(d | not M_k)`` (P2's
+    Bayes update) must call ``require_complement_likelihood()`` rather than
+    reading the optional field directly, so an absent complement likelihood
+    raises ``MissingComplementLikelihoodError`` instead of silently
+    proceeding with no update, a zero, or the wrong dict.
     """
 
     code: MisconceptionCode
@@ -77,10 +132,53 @@ class Misconception(ProtegeBaseModel):
     cognitive_origin: str
     skill_code: SkillCode | None = None
     distractor_likelihood: dict[str, Probability] = Field(default_factory=dict)
+    distractor_likelihood_if_not_misconception: dict[str, Probability] | None = Field(
+        default=None,
+        description=(
+            "Authored P(d | not M_k) — the complement of distractor_likelihood, "
+            "required to normalize the §10.2 Bayes update. None only for content "
+            "authored before this field existed (§38's M003 fixture); new v1 "
+            "content must set it (see Misconception.validate_authored)."
+        ),
+    )
     prevalence_prior: Probability = 0.200
     citation: str | None = None
     sprout_forbidden: list[str] = Field(default_factory=list)
     content_version: ContentVersion | None = None
+
+    @classmethod
+    def validate_authored(cls, data: object) -> "Misconception":
+        """Strict entry point for newly authored (P3) misconception content.
+
+        Identical to ``model_validate`` except it additionally requires
+        ``distractor_likelihood_if_not_misconception`` to be present — the
+        §38 fixture is legacy content and uses plain ``model_validate``
+        instead, which keeps accepting ``None`` (P1's §38 exit criterion).
+        Authoring tooling (P3) is expected to call this, not re-implement
+        the check, so the requirement lives exactly once.
+        """
+        model = cls.model_validate(data)
+        if model.distractor_likelihood_if_not_misconception is None:
+            raise ValueError(
+                f"Misconception {model.code!r}: distractor_likelihood_if_not_misconception "
+                "is required for authored v1 content (D13, locked on "
+                "feature/p2-learning's docs/DECISIONS.md) — only the legacy §38 "
+                "fixture may omit it."
+            )
+        return model
+
+    def require_complement_likelihood(self) -> dict[str, Probability]:
+        """Return ``P(d | not M_k)``, raising rather than returning ``None``.
+
+        Runtime consumers of the Bayes update (P2's ``mastery_engine``) must
+        call this instead of reading ``distractor_likelihood_if_not_misconception``
+        directly: a missing complement likelihood must fail loudly, never be
+        treated as zero, as "no update", or as ``distractor_likelihood``'s
+        unrelated ``"other"`` bucket.
+        """
+        if self.distractor_likelihood_if_not_misconception is None:
+            raise MissingComplementLikelihoodError(self.code)
+        return self.distractor_likelihood_if_not_misconception
 
 
 class Distractor(ProtegeBaseModel):

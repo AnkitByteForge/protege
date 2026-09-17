@@ -13,6 +13,10 @@ def test_worked_example_validates_verbatim(worked_example_json: str) -> None:
     assert example.skill.code == "S004"
     assert example.misconception.code == "M003"
     assert example.misconception.distractor_likelihood["picks_1_8"] == 0.82
+    # §38 predates the complement-likelihood field (D13, locked on
+    # feature/p2-learning's docs/DECISIONS.md); the bare envelope must
+    # keep validating with it absent.
+    assert example.misconception.distractor_likelihood_if_not_misconception is None
     assert example.sprout_forbidden == [
         "stating 1/4 > 1/8 before resolution",
         "the words numerator/denominator",
