@@ -1,4 +1,4 @@
-.PHONY: help dev api web db-up db-down db-migrate observability test test-e2e lint typecheck format types eval clean
+.PHONY: help dev api web db-up db-down db-migrate observability test test-web test-e2e lint typecheck format types eval clean
 
 .DEFAULT_GOAL := help
 UV := uv run
@@ -42,6 +42,9 @@ observability: ## Start Langfuse (compose profile "observability") on :3200
 
 test: ## Run backend unit tests (pytest)
 	$(UV) pytest
+
+test-web: ## Run frontend unit/component tests (Vitest)
+	cd apps/web && npm run test
 
 test-e2e: ## Run the Playwright smoke test (builds and starts the web app)
 	cd apps/web && npx playwright test
