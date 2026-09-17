@@ -50,6 +50,7 @@ Critical rules enforced here (roadmap P5):
 
 from __future__ import annotations
 
+import uuid
 from collections.abc import Sequence
 from dataclasses import dataclass, field
 from enum import StrEnum
@@ -439,13 +440,36 @@ def score_fidelity(turn: SproutTurn, *, misconception: Misconception, correct_an
 @dataclass(frozen=True)
 class SproutAttemptRecord:
     """One generation attempt's outcome, for callers that want per-attempt
-    detail (e.g. the fidelity harness)."""
+    detail (e.g. the fidelity harness).
+
+    ``value`` is the raw parsed ``SproutTurn`` for this specific attempt --
+    present whenever the router successfully parsed *something* against the
+    schema, REGARDLESS of whether ``validation.passed`` is ``True`` or
+    ``False``. This is what lets an evaluation harness score a real,
+    validator-rejected generation's fidelity rather than silently dropping
+    it because it didn't make the accept/reject cut (an accept/reject
+    decision this field has no bearing on -- ``validate_generated_turn``'s
+    logic is unchanged). ``None`` exactly when this attempt's
+    ``validation.failed_stage`` is ``SproutValidationStage.SCHEMA`` (the
+    router never produced a parseable value for this attempt).
+
+    ``trace_id`` is the exact id passed to this attempt's
+    ``ModelRouter.call_structured`` call, distinct per attempt (see
+    ``SproutGenerator.generate_turn``), so a caller holding the same
+    ``ModelRouter``'s ``TelemetrySink`` can correlate this attempt to its
+    own ``ModelRunRecord``s precisely -- needed to distinguish a genuine
+    schema-parse failure from a transport-level failure (timeout/5xx/rate
+    limit) or a circuit-breaker skip, none of which are otherwise
+    distinguishable from ``validation`` alone.
+    """
 
     attempt: int
     validation: SproutValidationResult
     structured_mode: str
     provider: str | None
     model_id: str | None
+    value: SproutTurn | None = None
+    trace_id: str = ""
 
 
 @dataclass(frozen=True)
@@ -535,13 +559,16 @@ class SproutGenerator:
             turn_index=state.turn_index,
         )
 
+        generation_trace_id = trace_id if trace_id is not None else str(uuid.uuid4())
+
         attempts: list[SproutAttemptRecord] = []
         for attempt in range(1, max(max_generation_attempts, 1) + 1):
+            attempt_trace_id = f"{generation_trace_id}:{attempt}"
             outcome = self._router.call_structured(
                 PedagogicalRole.SPROUT,
                 messages,
                 model_cls=SproutTurn,
-                trace_id=trace_id,
+                trace_id=attempt_trace_id,
             )
             validation = _run_validation_gate(
                 outcome, misconception=misconception, correct_answer=correct_answer
@@ -553,6 +580,8 @@ class SproutGenerator:
                     structured_mode=str(outcome.structured_mode),
                     provider=outcome.provider,
                     model_id=outcome.model_id,
+                    value=outcome.value if isinstance(outcome.value, SproutTurn) else None,
+                    trace_id=attempt_trace_id,
                 )
             )
             if validation.passed:
