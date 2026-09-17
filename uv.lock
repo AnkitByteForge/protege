@@ -13,6 +13,7 @@ members = [
     "protege-contracts",
     "protege-learning-engine",
     "protege-llm",
+    "protege-roles",
     "protege-session",
 ]
 
@@ -831,6 +832,7 @@ dependencies = [
     { name = "protege-contracts" },
     { name = "protege-learning-engine" },
     { name = "protege-llm" },
+    { name = "protege-roles" },
     { name = "protege-session" },
 ]
 
@@ -848,6 +850,7 @@ requires-dist = [
     { name = "protege-contracts", editable = "packages/contracts" },
     { name = "protege-learning-engine", editable = "packages/learning-engine" },
     { name = "protege-llm", editable = "packages/llm" },
+    { name = "protege-roles", editable = "packages/roles" },
     { name = "protege-session", editable = "services/session" },
 ]
 
@@ -903,6 +906,25 @@ dependencies = [
 requires-dist = [
     { name = "openai", specifier = ">=1.50" },
     { name = "protege-contracts", editable = "packages/contracts" },
+]
+
+[[package]]
+name = "protege-roles"
+version = "0.1.0"
+source = { editable = "packages/roles" }
+dependencies = [
+    { name = "protege-authoring" },
+    { name = "protege-contracts" },
+    { name = "protege-learning-engine" },
+    { name = "protege-llm" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "protege-authoring", editable = "tools/authoring" },
+    { name = "protege-contracts", editable = "packages/contracts" },
+    { name = "protege-learning-engine", editable = "packages/learning-engine" },
+    { name = "protege-llm", editable = "packages/llm" },
 ]
 
 [[package]]

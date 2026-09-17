@@ -144,6 +144,15 @@
 - **References.** `PROTEGE_ARCHITECTURE.md` §10.1, §10.2; `packages/contracts/src/protege/contracts/content.py` (`Misconception.distractor_likelihood`); `packages/contracts/tests/fixtures/worked_example_m003.json`; `packages/learning-engine/src/protege/learning_engine/mastery_engine.py`.
 - **Consequence.** Not yet implemented. This entry locks the target formula and the required content-schema addition; it does **not** itself add the `packages/contracts` field or change `mastery_engine.misconception_belief_update` — those are tracked as separate follow-up work, out of scope for this documentation-only change. The exact numeric values for `distractor_likelihood_if_not_misconception` are P3's responsibility once the field exists, and are not authored here.
 
+## D14 — P5 package home: `packages/roles` as a new uv workspace member
+
+- **Gap.** No canonical document names a parent directory for roadmap P5's `protege/roles/sprout.py` — the roadmap gives only the module path, the same way P4 originally gave only `protege/llm/` before D6 resolved its parent directory.
+- **Decision.** `packages/roles` — package `protege-roles`, module `protege.roles`. Owns P5's `SproutState`, the behaviour-constraint compiler, the candidate-pool selector, the generation call, the four-stage validation gate, and the authored fallback emitter (`sprout.py`). Registered as a `uv` workspace member alongside the other `packages/*` members, following the exact D6 convention (hatchling wheel build, `src/protege/<module>` layout, namespace package under `protege.*`).
+- **Why this follows from the architecture.** D6's reasoning applies unchanged: P24 (Evaluation Harness) and any future session service must be able to import the Sprout role without depending on FastAPI, SQLAlchemy, asyncpg, or uvicorn. `packages/roles` depends only on `protege-contracts`, `protege-learning-engine`, `protege-llm`, and `protege-authoring` (for `load_content_pack`, reusing the existing P3 content loader rather than duplicating JSON parsing) — no framework weight, matching every other `packages/*` member.
+- **Prevents.** Guessing the package location during P6/P7 implementation and having to move `protege.roles` later, which would touch every import site that consumes Sprout's output.
+- **References.** `PROTEGE_IMPLEMENTATION_ROADMAP.md` P5 ("Backend" field: "`protege/roles/sprout.py`"); this document's D6 (identical reasoning for P2/P4).
+- **Consequence.** `packages/roles` exists from this point forward with P5's real logic (not an empty skeleton, unlike D6's P2/P4 placeholders — P5 is being implemented in the same change that adds this entry).
+
 ---
 
 ## Meaning-preserving typo fixes applied

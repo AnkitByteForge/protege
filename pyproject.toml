@@ -11,6 +11,7 @@ dependencies = [
     "protege-authoring",
     "protege-learning-engine",
     "protege-llm",
+    "protege-roles",
 ]
 
 [tool.uv]
@@ -23,6 +24,7 @@ members = [
     "tools/authoring",
     "packages/learning-engine",
     "packages/llm",
+    "packages/roles",
 ]
 
 [tool.uv.sources]
@@ -31,6 +33,7 @@ protege-contracts = { workspace = true }
 protege-authoring = { workspace = true }
 protege-learning-engine = { workspace = true }
 protege-llm = { workspace = true }
+protege-roles = { workspace = true }
 
 [dependency-groups]
 dev = [
@@ -46,6 +49,7 @@ testpaths = [
     "packages/contracts/tests",
     "packages/learning-engine/tests",
     "packages/llm/tests",
+    "packages/roles/tests",
     "tools/authoring/tests",
 ]
 addopts = "-q"
@@ -80,6 +84,7 @@ files = [
     "tools/authoring/src",
     "packages/learning-engine/src",
     "packages/llm/src",
+    "packages/roles/src",
 ]
 explicit_package_bases = true
 exclude = ["migrations"]
@@ -92,6 +97,17 @@ exclude = ["migrations"]
 # path into this config (which conflicts with its entry in `files` above).
 [[tool.mypy.overrides]]
 module = "protege.contracts"
+ignore_missing_imports = true
+
+# Same situation as protege.contracts above, now that packages/roles (P5)
+# is the first package to cross-import protege.authoring, protege.llm, and
+# protege.learning_engine's submodules directly (e.g. protege.llm.router,
+# protege.authoring.loader) rather than only being consumed from their own
+# tests. None of the three has a py.typed marker either, and adding one
+# belongs to packages this branch must not touch (packages/learning-engine,
+# packages/llm) or that predate P5 (tools/authoring).
+[[tool.mypy.overrides]]
+module = ["protege.authoring.*", "protege.learning_engine.*", "protege.llm.*"]
 ignore_missing_imports = true
 
 [tool.pydantic.mypy]

@@ -50,7 +50,7 @@ jobs:
       - name: mypy (strict)
         run: uv run mypy
         env:
-          MYPYPATH: services/session/src:packages/contracts/src:tools/authoring/src:packages/learning-engine/src:packages/llm/src
+          MYPYPATH: services/session/src:packages/contracts/src:tools/authoring/src:packages/learning-engine/src:packages/llm/src:packages/roles/src
 
       - name: Pytest
         run: uv run pytest
