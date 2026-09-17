@@ -1,0 +1,150 @@
+{
+  "dataset_status": "development_not_ratified",
+  "generated_at": "20260917T150900Z",
+  "n": 120,
+  "primary_model_id": "nvidia/nemotron-3-ultra-550b-a55b",
+  "secondary_model_id": "nvidia/nemotron-3-super-120b-a12b",
+  "primary_success_count": 89,
+  "secondary_fallback_count": 22,
+  "rule_based_fallback_count": 9,
+  "no_telemetry_count": 0,
+  "primary_rate": 0.7416666666666667,
+  "fallback_rate": 0.25833333333333336,
+  "abstention_rate": 0.075,
+  "macro_f1": 0.796155306670674,
+  "ece": 0.026306306306306336,
+  "brier": 0.027735135135135137,
+  "confusion": {
+    "M001->M001": 13,
+    "M001->ABSTAIN": 1,
+    "M001->M007": 1,
+    "M002->M002": 11,
+    "M002->ABSTAIN": 4,
+    "M003->M003": 9,
+    "M003->ABSTAIN": 5,
+    "M003->M001": 1,
+    "M004->M004": 14,
+    "M004->ABSTAIN": 1,
+    "M005->ABSTAIN": 8,
+    "M005->M005": 7,
+    "M006->M006": 12,
+    "M006->ABSTAIN": 3,
+    "M007->M007": 9,
+    "M007->ABSTAIN": 5,
+    "M007->M001": 1,
+    "M008->M008": 8,
+    "M008->ABSTAIN": 7
+  },
+  "per_class": {
+    "M001": {
+      "precision": 0.8666666666666667,
+      "recall": 0.8666666666666667,
+      "f1": 0.8666666666666667,
+      "support": 15
+    },
+    "M002": {
+      "precision": 1.0,
+      "recall": 0.7333333333333333,
+      "f1": 0.846153846153846,
+      "support": 15
+    },
+    "M003": {
+      "precision": 1.0,
+      "recall": 0.6,
+      "f1": 0.7499999999999999,
+      "support": 15
+    },
+    "M004": {
+      "precision": 1.0,
+      "recall": 0.9333333333333333,
+      "f1": 0.9655172413793104,
+      "support": 15
+    },
+    "M005": {
+      "precision": 1.0,
+      "recall": 0.4666666666666667,
+      "f1": 0.6363636363636364,
+      "support": 15
+    },
+    "M006": {
+      "precision": 1.0,
+      "recall": 0.8,
+      "f1": 0.888888888888889,
+      "support": 15
+    },
+    "M007": {
+      "precision": 0.9,
+      "recall": 0.6,
+      "f1": 0.7200000000000001,
+      "support": 15
+    },
+    "M008": {
+      "precision": 1.0,
+      "recall": 0.5333333333333333,
+      "f1": 0.6956521739130436,
+      "support": 15
+    }
+  },
+  "rule_based_baseline": {
+    "abstention_rate": 0.4666666666666667,
+    "macro_f1": 0.6956521739130436,
+    "ece": 0.0,
+    "brier": 0.0,
+    "per_class": {
+      "M001": {
+        "precision": 1.0,
+        "recall": 0.5333333333333333,
+        "f1": 0.6956521739130436,
+        "support": 15
+      },
+      "M002": {
+        "precision": 1.0,
+        "recall": 0.5333333333333333,
+        "f1": 0.6956521739130436,
+        "support": 15
+      },
+      "M003": {
+        "precision": 1.0,
+        "recall": 0.5333333333333333,
+        "f1": 0.6956521739130436,
+        "support": 15
+      },
+      "M004": {
+        "precision": 1.0,
+        "recall": 0.5333333333333333,
+        "f1": 0.6956521739130436,
+        "support": 15
+      },
+      "M005": {
+        "precision": 1.0,
+        "recall": 0.5333333333333333,
+        "f1": 0.6956521739130436,
+        "support": 15
+      },
+      "M006": {
+        "precision": 1.0,
+        "recall": 0.5333333333333333,
+        "f1": 0.6956521739130436,
+        "support": 15
+      },
+      "M007": {
+        "precision": 1.0,
+        "recall": 0.5333333333333333,
+        "f1": 0.6956521739130436,
+        "support": 15
+      },
+      "M008": {
+        "precision": 1.0,
+        "recall": 0.5333333333333333,
+        "f1": 0.6956521739130436,
+        "support": 15
+      }
+    }
+  },
+  "gate_note": "MEETS the numeric gate values, but the dataset is development/provisional (see packages/roles/golden_set/PROVENANCE.md) -- this is NOT a ratified ship-gate pass.",
+  "gate_values": {
+    "macro_f1_min": 0.75,
+    "ece_max": 0.1,
+    "brier_max": 0.18
+  }
+}
