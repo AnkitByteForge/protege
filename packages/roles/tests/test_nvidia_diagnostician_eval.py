@@ -45,6 +45,7 @@ import pytest
 from protege.authoring.loader import load_content_pack
 from protege.contracts import Misconception, PedagogicalRole
 from protege.llm import ModelRouter, NvidiaProvider
+from protege.llm.rate_limit import TokenBucket
 from protege.roles.eval import (
     PerClassMetrics,
     evaluate_rule_based_only,
@@ -53,6 +54,21 @@ from protege.roles.eval import (
 from protege.roles.golden_set import DATASET_STATUS, load_golden_set
 
 _FLAG = "PROTEGE_RUN_DIAGNOSTICIAN_EVAL"
+
+_DIAGNOSTICIAN_TIMEOUT_S = 45.0
+"""``ModelRouter``'s ``DEFAULT_TIMEOUT_S`` (2.5 s) is tuned for Sprout's
+turn-taking latency budget (addendum §2.3), not for DIAGNOSTICIAN's primary
+model -- a live diagnostic run against this exact ``ROLE_POLICY`` entry
+measured 11-20 s real latency for a single completion (550B reasoning
+model). Using the 2.5 s default here does not test the model; it
+guarantees a timeout on every call, which then trips the 3-failure circuit
+breaker (``packages/llm/src/protege/llm/circuit_breaker.py``) and cascades
+into `circuit_open` failures for everything after -- exactly what a first
+run against this file, before this constant existed, produced (0/120
+primary successes, 117/120 falling through to the rule-based fallback).
+Not a workaround for a slow model to "make the gate" -- an evaluation
+harness must use a timeout the role's actual configured model can be
+fairly measured against; 2.5 s never gave it that chance."""
 
 pytestmark = pytest.mark.skipif(
     os.environ.get(_FLAG) != "1",
@@ -85,7 +101,14 @@ def test_real_nvidia_diagnostician_evaluation() -> None:
     examples = load_golden_set()
     misconception_set: list[Misconception] = load_content_pack().misconceptions
 
-    router = ModelRouter({"nvidia": NvidiaProvider()})  # real ROLE_POLICY, unmodified
+    router = ModelRouter(
+        {"nvidia": NvidiaProvider()},  # real ROLE_POLICY, unmodified
+        timeout_s=_DIAGNOSTICIAN_TIMEOUT_S,
+        # Real 35 RPM budget, same as ModelRouter's own default (addendum
+        # §2.3) -- named explicitly here, not left implicit, since this
+        # constructor call is the one place in the codebase that spends it.
+        rate_limiter=TokenBucket(rate_per_minute=35.0),
+    )
     nvidia_report = run_nvidia_diagnostician_evaluation(
         examples, router, misconception_set=misconception_set
     )
