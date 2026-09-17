@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { SceneFrame } from "@/components/primitives/SceneFrame";
 import { SoftPanel } from "@/components/primitives/SoftPanel";
 import { Button, PrimaryAction, SecondaryAction } from "@/components/primitives/Button";
@@ -46,6 +47,13 @@ export default function GalleryPage() {
           page is infrastructure, not product — it exists so the visual system can be judged as a
           whole before any scene is built on top of it.
         </Text>
+        <Link
+          href="/gallery/manipulatives"
+          className="inline-block w-fit rounded-full border border-sand-300 bg-surface-raised px-4 py-2 font-sans text-sm font-bold text-sky-700 transition-colors hover:border-sky-700"
+        >
+          → Manipulatives gallery (roadmap P13): FractionBar, NumberLine, AreaModel,
+          ExplanationCards
+        </Link>
       </Stack>
 
       <nav aria-label="Gallery sections" className="mb-10">

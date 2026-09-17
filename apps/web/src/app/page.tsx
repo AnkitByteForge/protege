@@ -10,6 +10,11 @@ const links: { href: string; label: string; note: string }[] = [
     note: "Every primitive, motion preset, and state in one place.",
   },
   {
+    href: "/gallery/manipulatives",
+    label: "Manipulatives gallery",
+    note: "FractionBar, NumberLine, AreaModel, ExplanationCards — roadmap P13.",
+  },
+  {
     href: "/world",
     label: "(child) preview — /world",
     note: "SceneFrame + sample scene transitions.",
