@@ -1,0 +1,1222 @@
+{
+  "schema_version": "1.0",
+  "count": 120,
+  "examples": [
+    {
+      "id": "gs_M001_script_01",
+      "misconception_code": "M001",
+      "state": "unresolved",
+      "text": "Three-fourths? That's easy, it's a three and a four! Two numbers.",
+      "source": "sprout_script",
+      "distractor": null
+    },
+    {
+      "id": "gs_M001_script_02",
+      "misconception_code": "M001",
+      "state": "unresolved",
+      "text": "Wait, is this fraction one thing, or is it really two things, like a 3 and a 4?",
+      "source": "sprout_script",
+      "distractor": null
+    },
+    {
+      "id": "gs_M001_script_03",
+      "misconception_code": "M001",
+      "state": "unresolved",
+      "text": "I don't get how two numbers stuck together make just one amount.",
+      "source": "sprout_script",
+      "distractor": null
+    },
+    {
+      "id": "gs_M001_script_04",
+      "misconception_code": "M001",
+      "state": "unresolved",
+      "text": "Maybe this fraction means 3 things AND 4 things? I'm not totally sure.",
+      "source": "sprout_script",
+      "distractor": null
+    },
+    {
+      "id": "gs_M001_script_05",
+      "misconception_code": "M001",
+      "state": "unresolved",
+      "text": "I'll just say the top number and the bottom number separately, right?",
+      "source": "sprout_script",
+      "distractor": null
+    },
+    {
+      "id": "gs_M001_script_06",
+      "misconception_code": "M001",
+      "state": "unresolved",
+      "text": "So which one matters more, the top three or the bottom four?",
+      "source": "sprout_script",
+      "distractor": null
+    },
+    {
+      "id": "gs_M001_worked_01",
+      "misconception_code": "M001",
+      "state": "resolved",
+      "text": "it's 3/4 because I shaded 3 parts and there are 4 parts total, it's one amount not two numbers",
+      "source": "worked_example",
+      "distractor": null
+    },
+    {
+      "id": "gs_M001_distractor_01",
+      "misconception_code": "M001",
+      "state": "unresolved",
+      "text": "For \"This rectangle is cut into 4 equal parts and 3 are shaded. What fraction of the rectangle is shaded?\" I think the answer is 3 and 4, two separate numbers.",
+      "source": "distractor_template",
+      "distractor": {
+        "value": "3 and 4, two separate numbers",
+        "maps_to": "M001",
+        "likelihood": 0.68
+      }
+    },
+    {
+      "id": "gs_M001_distractor_02",
+      "misconception_code": "M001",
+      "state": "unresolved",
+      "text": "For \"This rectangle is cut into 4 equal parts and 3 are shaded. What fraction of the rectangle is shaded?\" I think the answer is 4 and 3, two separate numbers.",
+      "source": "distractor_template",
+      "distractor": {
+        "value": "4 and 3, two separate numbers",
+        "maps_to": "M001",
+        "likelihood": 0.17
+      }
+    },
+    {
+      "id": "gs_M001_distractor_03",
+      "misconception_code": "M001",
+      "state": "unresolved",
+      "text": "For \"A pizza is cut into 5 equal slices and 2 are gone. What fraction of the pizza is left?\" I think the answer is 2 and 5, two separate numbers.",
+      "source": "distractor_template",
+      "distractor": {
+        "value": "2 and 5, two separate numbers",
+        "maps_to": "M001",
+        "likelihood": 0.68
+      }
+    },
+    {
+      "id": "gs_M001_distractor_04",
+      "misconception_code": "M001",
+      "state": "unresolved",
+      "text": "For \"A pizza is cut into 5 equal slices and 2 are gone. What fraction of the pizza is left?\" I think the answer is 5 and 2, two separate numbers.",
+      "source": "distractor_template",
+      "distractor": {
+        "value": "5 and 2, two separate numbers",
+        "maps_to": "M001",
+        "likelihood": 0.17
+      }
+    },
+    {
+      "id": "gs_M001_distractor_05",
+      "misconception_code": "M001",
+      "state": "unresolved",
+      "text": "For \"What does the fraction 3/4 mean?\" I think the answer is A 3 and a 4 — two separate numbers.",
+      "source": "distractor_template",
+      "distractor": {
+        "value": "A 3 and a 4 — two separate numbers",
+        "maps_to": "M001",
+        "likelihood": 0.68
+      }
+    },
+    {
+      "id": "gs_M001_distractor_06",
+      "misconception_code": "M001",
+      "state": "unresolved",
+      "text": "For \"What does the fraction 3/4 mean?\" I think the answer is The number 3 divided into 4 pieces of its own.",
+      "source": "distractor_template",
+      "distractor": {
+        "value": "The number 3 divided into 4 pieces of its own",
+        "maps_to": "M001",
+        "likelihood": 0.17
+      }
+    },
+    {
+      "id": "gs_M001_distractor_07",
+      "misconception_code": "M001",
+      "state": "unresolved",
+      "text": "For \"Which best describes 2/6?\" I think the answer is Two numbers, a 2 and a 6.",
+      "source": "distractor_template",
+      "distractor": {
+        "value": "Two numbers, a 2 and a 6",
+        "maps_to": "M001",
+        "likelihood": 0.68
+      }
+    },
+    {
+      "id": "gs_M001_distractor_08",
+      "misconception_code": "M001",
+      "state": "unresolved",
+      "text": "For \"Which best describes 2/6?\" I think the answer is A 6 split into 2 groups.",
+      "source": "distractor_template",
+      "distractor": {
+        "value": "A 6 split into 2 groups",
+        "maps_to": "M001",
+        "likelihood": 0.17
+      }
+    },
+    {
+      "id": "gs_M002_script_01",
+      "misconception_code": "M002",
+      "state": "unresolved",
+      "text": "I cut it into 4 pieces, so each piece is 1/4 — the sizes don't matter!",
+      "source": "sprout_script",
+      "distractor": null
+    },
+    {
+      "id": "gs_M002_script_02",
+      "misconception_code": "M002",
+      "state": "unresolved",
+      "text": "Does it matter if the pieces are different sizes, as long as there are 4?",
+      "source": "sprout_script",
+      "distractor": null
+    },
+    {
+      "id": "gs_M002_script_03",
+      "misconception_code": "M002",
+      "state": "unresolved",
+      "text": "These pieces look really different, but I still called it 1/4. Is that wrong?",
+      "source": "sprout_script",
+      "distractor": null
+    },
+    {
+      "id": "gs_M002_script_04",
+      "misconception_code": "M002",
+      "state": "unresolved",
+      "text": "Maybe the pieces need to match somehow? I'm not sure.",
+      "source": "sprout_script",
+      "distractor": null
+    },
+    {
+      "id": "gs_M002_script_05",
+      "misconception_code": "M002",
+      "state": "unresolved",
+      "text": "Four pieces means fourths, no matter how I cut it, right?",
+      "source": "sprout_script",
+      "distractor": null
+    },
+    {
+      "id": "gs_M002_script_06",
+      "misconception_code": "M002",
+      "state": "unresolved",
+      "text": "So counting pieces isn't enough — what else do I check?",
+      "source": "sprout_script",
+      "distractor": null
+    },
+    {
+      "id": "gs_M002_worked_01",
+      "misconception_code": "M002",
+      "state": "resolved",
+      "text": "no, because the parts have to be the same size to call it 1/4, these pieces are all different sizes",
+      "source": "worked_example",
+      "distractor": null
+    },
+    {
+      "id": "gs_M002_distractor_01",
+      "misconception_code": "M002",
+      "state": "unresolved",
+      "text": "For \"A square is cut into 4 parts of clearly different sizes and 1 part is shaded. Is the shaded part 1/4 of the square?\" I think the answer is Yes, 1/4, because 1 out of 4 parts is shaded.",
+      "source": "distractor_template",
+      "distractor": {
+        "value": "Yes, 1/4, because 1 out of 4 parts is shaded",
+        "maps_to": "M002",
+        "likelihood": 0.7
+      }
+    },
+    {
+      "id": "gs_M002_distractor_02",
+      "misconception_code": "M002",
+      "state": "unresolved",
+      "text": "For \"A square is cut into 4 parts of clearly different sizes and 1 part is shaded. Is the shaded part 1/4 of the square?\" I think the answer is No, uneven pieces can never show a fraction at all.",
+      "source": "distractor_template",
+      "distractor": {
+        "value": "No, uneven pieces can never show a fraction at all",
+        "maps_to": "M002",
+        "likelihood": 0.15
+      }
+    },
+    {
+      "id": "gs_M002_distractor_03",
+      "misconception_code": "M002",
+      "state": "unresolved",
+      "text": "For \"A rectangle is split into 3 unequal strips and 2 are shaded. What fraction is shaded?\" I think the answer is 2/3.",
+      "source": "distractor_template",
+      "distractor": {
+        "value": "2/3",
+        "maps_to": "M002",
+        "likelihood": 0.7
+      }
+    },
+    {
+      "id": "gs_M002_distractor_04",
+      "misconception_code": "M002",
+      "state": "unresolved",
+      "text": "For \"A rectangle is split into 3 unequal strips and 2 are shaded. What fraction is shaded?\" I think the answer is This picture shows no fraction at all.",
+      "source": "distractor_template",
+      "distractor": {
+        "value": "This picture shows no fraction at all",
+        "maps_to": "M002",
+        "likelihood": 0.15
+      }
+    },
+    {
+      "id": "gs_M002_distractor_05",
+      "misconception_code": "M002",
+      "state": "unresolved",
+      "text": "For \"6 counters are split into two unequal groups (4 and 2), and one group is circled. Is the circled group 1/2 of the counters?\" I think the answer is Yes, 1/2, because one of the two groups is circled.",
+      "source": "distractor_template",
+      "distractor": {
+        "value": "Yes, 1/2, because one of the two groups is circled",
+        "maps_to": "M002",
+        "likelihood": 0.7
+      }
+    },
+    {
+      "id": "gs_M002_distractor_06",
+      "misconception_code": "M002",
+      "state": "unresolved",
+      "text": "For \"6 counters are split into two unequal groups (4 and 2), and one group is circled. Is the circled group 1/2 of the counters?\" I think the answer is No, unequal groups can't be described with any fraction.",
+      "source": "distractor_template",
+      "distractor": {
+        "value": "No, unequal groups can't be described with any fraction",
+        "maps_to": "M002",
+        "likelihood": 0.15
+      }
+    },
+    {
+      "id": "gs_M002_distractor_07",
+      "misconception_code": "M002",
+      "state": "unresolved",
+      "text": "For \"A pie is cut into 4 pieces of clearly different sizes and 1 piece is shaded. What fraction is shaded?\" I think the answer is 1/4.",
+      "source": "distractor_template",
+      "distractor": {
+        "value": "1/4",
+        "maps_to": "M002",
+        "likelihood": 0.7
+      }
+    },
+    {
+      "id": "gs_M002_distractor_08",
+      "misconception_code": "M002",
+      "state": "unresolved",
+      "text": "For \"A pie is cut into 4 pieces of clearly different sizes and 1 piece is shaded. What fraction is shaded?\" I think the answer is It shows no fraction since the slices differ.",
+      "source": "distractor_template",
+      "distractor": {
+        "value": "It shows no fraction since the slices differ",
+        "maps_to": "M002",
+        "likelihood": 0.15
+      }
+    },
+    {
+      "id": "gs_M003_script_01",
+      "misconception_code": "M003",
+      "state": "unresolved",
+      "text": "I think 1/8 is bigger! Eight is way more than four.",
+      "source": "sprout_script",
+      "distractor": null
+    },
+    {
+      "id": "gs_M003_script_02",
+      "misconception_code": "M003",
+      "state": "unresolved",
+      "text": "Wait, so 1/8 wins because 8 is the bigger number, right?",
+      "source": "sprout_script",
+      "distractor": null
+    },
+    {
+      "id": "gs_M003_script_03",
+      "misconception_code": "M003",
+      "state": "unresolved",
+      "text": "Hmm, but 8 is more than 4. Doesn't more mean bigger?",
+      "source": "sprout_script",
+      "distractor": null
+    },
+    {
+      "id": "gs_M003_script_04",
+      "misconception_code": "M003",
+      "state": "unresolved",
+      "text": "Um, maybe 1/8 is bigger? Eight feels like a bigger number to me.",
+      "source": "sprout_script",
+      "distractor": null
+    },
+    {
+      "id": "gs_M003_script_05",
+      "misconception_code": "M003",
+      "state": "unresolved",
+      "text": "Eight pieces has to beat four pieces, so 1/8 wins, right?",
+      "source": "sprout_script",
+      "distractor": null
+    },
+    {
+      "id": "gs_M003_script_06",
+      "misconception_code": "M003",
+      "state": "unresolved",
+      "text": "If I had 8 friends instead of 4, wouldn't my share be the bigger one?",
+      "source": "sprout_script",
+      "distractor": null
+    },
+    {
+      "id": "gs_M003_worked_01",
+      "misconception_code": "M003",
+      "state": "resolved",
+      "text": "no because the bottom is how many pieces you cut it so more pieces are littler",
+      "source": "worked_example",
+      "distractor": null
+    },
+    {
+      "id": "gs_M003_distractor_01",
+      "misconception_code": "M003",
+      "state": "unresolved",
+      "text": "For \"Which is more pizza: 1/4 or 1/8?\" I think the answer is 1/8.",
+      "source": "distractor_template",
+      "distractor": {
+        "value": "1/8",
+        "maps_to": "M003",
+        "likelihood": 0.82
+      }
+    },
+    {
+      "id": "gs_M003_distractor_02",
+      "misconception_code": "M003",
+      "state": "unresolved",
+      "text": "For \"Which is more pizza: 1/4 or 1/8?\" I think the answer is equal.",
+      "source": "distractor_template",
+      "distractor": {
+        "value": "equal",
+        "maps_to": "M003",
+        "likelihood": 0.06
+      }
+    },
+    {
+      "id": "gs_M003_distractor_03",
+      "misconception_code": "M003",
+      "state": "unresolved",
+      "text": "For \"Which is more cake: 1/3 or 1/6?\" I think the answer is 1/6.",
+      "source": "distractor_template",
+      "distractor": {
+        "value": "1/6",
+        "maps_to": "M003",
+        "likelihood": 0.82
+      }
+    },
+    {
+      "id": "gs_M003_distractor_04",
+      "misconception_code": "M003",
+      "state": "unresolved",
+      "text": "For \"Which is more cake: 1/3 or 1/6?\" I think the answer is equal.",
+      "source": "distractor_template",
+      "distractor": {
+        "value": "equal",
+        "maps_to": "M003",
+        "likelihood": 0.06
+      }
+    },
+    {
+      "id": "gs_M003_distractor_05",
+      "misconception_code": "M003",
+      "state": "unresolved",
+      "text": "For \"Without drawing a picture, which is larger: 1/5 or 1/10?\" I think the answer is 1/10.",
+      "source": "distractor_template",
+      "distractor": {
+        "value": "1/10",
+        "maps_to": "M003",
+        "likelihood": 0.82
+      }
+    },
+    {
+      "id": "gs_M003_distractor_06",
+      "misconception_code": "M003",
+      "state": "unresolved",
+      "text": "For \"Without drawing a picture, which is larger: 1/5 or 1/10?\" I think the answer is equal.",
+      "source": "distractor_template",
+      "distractor": {
+        "value": "equal",
+        "maps_to": "M003",
+        "likelihood": 0.06
+      }
+    },
+    {
+      "id": "gs_M003_distractor_07",
+      "misconception_code": "M003",
+      "state": "unresolved",
+      "text": "For \"Order from smallest to largest: 1/2, 1/6, 1/4.\" I think the answer is 1/2, 1/4, 1/6.",
+      "source": "distractor_template",
+      "distractor": {
+        "value": "1/2, 1/4, 1/6",
+        "maps_to": "M003",
+        "likelihood": 0.82
+      }
+    },
+    {
+      "id": "gs_M003_distractor_08",
+      "misconception_code": "M003",
+      "state": "unresolved",
+      "text": "For \"Order from smallest to largest: 1/2, 1/6, 1/4.\" I think the answer is 1/4, 1/6, 1/2.",
+      "source": "distractor_template",
+      "distractor": {
+        "value": "1/4, 1/6, 1/2",
+        "maps_to": "M003",
+        "likelihood": 0.06
+      }
+    },
+    {
+      "id": "gs_M004_script_01",
+      "misconception_code": "M004",
+      "state": "unresolved",
+      "text": "1/2 and 2/4 can't be the same — 2/4 has bigger numbers, so it must be more!",
+      "source": "sprout_script",
+      "distractor": null
+    },
+    {
+      "id": "gs_M004_script_02",
+      "misconception_code": "M004",
+      "state": "unresolved",
+      "text": "Wait, how can two different-looking fractions be the exact same amount?",
+      "source": "sprout_script",
+      "distractor": null
+    },
+    {
+      "id": "gs_M004_script_03",
+      "misconception_code": "M004",
+      "state": "unresolved",
+      "text": "If the numbers are different, doesn't that mean the fractions are different too?",
+      "source": "sprout_script",
+      "distractor": null
+    },
+    {
+      "id": "gs_M004_script_04",
+      "misconception_code": "M004",
+      "state": "unresolved",
+      "text": "Maybe they're close but not really equal? I'm not sure.",
+      "source": "sprout_script",
+      "distractor": null
+    },
+    {
+      "id": "gs_M004_script_05",
+      "misconception_code": "M004",
+      "state": "unresolved",
+      "text": "Bigger top and bottom numbers always means a bigger fraction, right?",
+      "source": "sprout_script",
+      "distractor": null
+    },
+    {
+      "id": "gs_M004_script_06",
+      "misconception_code": "M004",
+      "state": "unresolved",
+      "text": "So if I make the numbers bigger, does the fraction always grow?",
+      "source": "sprout_script",
+      "distractor": null
+    },
+    {
+      "id": "gs_M004_worked_01",
+      "misconception_code": "M004",
+      "state": "resolved",
+      "text": "yes they're the same because you just cut the second one into smaller pieces but it's still the same amount shaded",
+      "source": "worked_example",
+      "distractor": null
+    },
+    {
+      "id": "gs_M004_distractor_01",
+      "misconception_code": "M004",
+      "state": "unresolved",
+      "text": "For \"Two identical circles are shaded the same amount, but one is cut into 2 parts (1 shaded) and the other into 4 parts (2 shaded). Are 1/2 and 2/4 the same amount?\" I think the answer is No, 2/4 is bigger because the numbers are bigger.",
+      "source": "distractor_template",
+      "distractor": {
+        "value": "No, 2/4 is bigger because the numbers are bigger",
+        "maps_to": "M004",
+        "likelihood": 0.66
+      }
+    },
+    {
+      "id": "gs_M004_distractor_02",
+      "misconception_code": "M004",
+      "state": "unresolved",
+      "text": "For \"Two identical circles are shaded the same amount, but one is cut into 2 parts (1 shaded) and the other into 4 parts (2 shaded). Are 1/2 and 2/4 the same amount?\" I think the answer is No, they look different so they can't be equal.",
+      "source": "distractor_template",
+      "distractor": {
+        "value": "No, they look different so they can't be equal",
+        "maps_to": "M004",
+        "likelihood": 0.19
+      }
+    },
+    {
+      "id": "gs_M004_distractor_03",
+      "misconception_code": "M004",
+      "state": "unresolved",
+      "text": "For \"A bar shows 1/3 shaded; an identical bar shows 2/6 shaded the same way. Are these equal?\" I think the answer is No, 2/6 is bigger because the numbers are bigger.",
+      "source": "distractor_template",
+      "distractor": {
+        "value": "No, 2/6 is bigger because the numbers are bigger",
+        "maps_to": "M004",
+        "likelihood": 0.66
+      }
+    },
+    {
+      "id": "gs_M004_distractor_04",
+      "misconception_code": "M004",
+      "state": "unresolved",
+      "text": "For \"A bar shows 1/3 shaded; an identical bar shows 2/6 shaded the same way. Are these equal?\" I think the answer is No, they look different so they can't be equal.",
+      "source": "distractor_template",
+      "distractor": {
+        "value": "No, they look different so they can't be equal",
+        "maps_to": "M004",
+        "likelihood": 0.19
+      }
+    },
+    {
+      "id": "gs_M004_distractor_05",
+      "misconception_code": "M004",
+      "state": "unresolved",
+      "text": "For \"Is 3/4 equal to 6/8?\" I think the answer is No, 6/8 is bigger.",
+      "source": "distractor_template",
+      "distractor": {
+        "value": "No, 6/8 is bigger",
+        "maps_to": "M004",
+        "likelihood": 0.66
+      }
+    },
+    {
+      "id": "gs_M004_distractor_06",
+      "misconception_code": "M004",
+      "state": "unresolved",
+      "text": "For \"Is 3/4 equal to 6/8?\" I think the answer is No, different numbers can't be equal.",
+      "source": "distractor_template",
+      "distractor": {
+        "value": "No, different numbers can't be equal",
+        "maps_to": "M004",
+        "likelihood": 0.19
+      }
+    },
+    {
+      "id": "gs_M004_distractor_07",
+      "misconception_code": "M004",
+      "state": "unresolved",
+      "text": "For \"Is 1/5 equal to 2/10?\" I think the answer is No, 2/10 is bigger.",
+      "source": "distractor_template",
+      "distractor": {
+        "value": "No, 2/10 is bigger",
+        "maps_to": "M004",
+        "likelihood": 0.66
+      }
+    },
+    {
+      "id": "gs_M004_distractor_08",
+      "misconception_code": "M004",
+      "state": "unresolved",
+      "text": "For \"Is 1/5 equal to 2/10?\" I think the answer is No, different numbers can't be equal.",
+      "source": "distractor_template",
+      "distractor": {
+        "value": "No, different numbers can't be equal",
+        "maps_to": "M004",
+        "likelihood": 0.19
+      }
+    },
+    {
+      "id": "gs_M005_script_01",
+      "misconception_code": "M005",
+      "state": "unresolved",
+      "text": "1/4 has to be the biggest — four is such a small bottom number, so the pieces must be huge!",
+      "source": "sprout_script",
+      "distractor": null
+    },
+    {
+      "id": "gs_M005_script_02",
+      "misconception_code": "M005",
+      "state": "unresolved",
+      "text": "Isn't a smaller bottom number always the winner, no matter what's on top?",
+      "source": "sprout_script",
+      "distractor": null
+    },
+    {
+      "id": "gs_M005_script_03",
+      "misconception_code": "M005",
+      "state": "unresolved",
+      "text": "I only looked at the bottom numbers. Was I supposed to look at the top too?",
+      "source": "sprout_script",
+      "distractor": null
+    },
+    {
+      "id": "gs_M005_script_04",
+      "misconception_code": "M005",
+      "state": "unresolved",
+      "text": "Maybe the top number matters sometimes? I'm not sure when.",
+      "source": "sprout_script",
+      "distractor": null
+    },
+    {
+      "id": "gs_M005_script_05",
+      "misconception_code": "M005",
+      "state": "unresolved",
+      "text": "Smaller bottom number, bigger fraction — that's the rule, right?",
+      "source": "sprout_script",
+      "distractor": null
+    },
+    {
+      "id": "gs_M005_script_06",
+      "misconception_code": "M005",
+      "state": "unresolved",
+      "text": "So the top number never changes who wins?",
+      "source": "sprout_script",
+      "distractor": null
+    },
+    {
+      "id": "gs_M005_worked_01",
+      "misconception_code": "M005",
+      "state": "resolved",
+      "text": "5/6 is bigger because I turned 1/2 into 3/6 and 5 is more than 3",
+      "source": "worked_example",
+      "distractor": null
+    },
+    {
+      "id": "gs_M005_distractor_01",
+      "misconception_code": "M005",
+      "state": "unresolved",
+      "text": "For \"Which is bigger: 5/6 or 1/2?\" I think the answer is 1/2.",
+      "source": "distractor_template",
+      "distractor": {
+        "value": "1/2",
+        "maps_to": "M005",
+        "likelihood": 0.68
+      }
+    },
+    {
+      "id": "gs_M005_distractor_02",
+      "misconception_code": "M005",
+      "state": "unresolved",
+      "text": "For \"Which is bigger: 5/6 or 1/2?\" I think the answer is equal.",
+      "source": "distractor_template",
+      "distractor": {
+        "value": "equal",
+        "maps_to": "M005",
+        "likelihood": 0.17
+      }
+    },
+    {
+      "id": "gs_M005_distractor_03",
+      "misconception_code": "M005",
+      "state": "unresolved",
+      "text": "For \"Which is bigger: 7/9 or 1/3?\" I think the answer is 1/3.",
+      "source": "distractor_template",
+      "distractor": {
+        "value": "1/3",
+        "maps_to": "M005",
+        "likelihood": 0.68
+      }
+    },
+    {
+      "id": "gs_M005_distractor_04",
+      "misconception_code": "M005",
+      "state": "unresolved",
+      "text": "For \"Which is bigger: 7/9 or 1/3?\" I think the answer is equal.",
+      "source": "distractor_template",
+      "distractor": {
+        "value": "equal",
+        "maps_to": "M005",
+        "likelihood": 0.17
+      }
+    },
+    {
+      "id": "gs_M005_distractor_05",
+      "misconception_code": "M005",
+      "state": "unresolved",
+      "text": "For \"On a number line, which point is farther right: 3/8 or 1/4?\" I think the answer is 1/4.",
+      "source": "distractor_template",
+      "distractor": {
+        "value": "1/4",
+        "maps_to": "M005",
+        "likelihood": 0.68
+      }
+    },
+    {
+      "id": "gs_M005_distractor_06",
+      "misconception_code": "M005",
+      "state": "unresolved",
+      "text": "For \"On a number line, which point is farther right: 3/8 or 1/4?\" I think the answer is same point.",
+      "source": "distractor_template",
+      "distractor": {
+        "value": "same point",
+        "maps_to": "M005",
+        "likelihood": 0.17
+      }
+    },
+    {
+      "id": "gs_M005_distractor_07",
+      "misconception_code": "M005",
+      "state": "unresolved",
+      "text": "For \"On a number line, which point is farther right: 3/10 or 1/4?\" I think the answer is 1/4.",
+      "source": "distractor_template",
+      "distractor": {
+        "value": "1/4",
+        "maps_to": "M005",
+        "likelihood": 0.68
+      }
+    },
+    {
+      "id": "gs_M005_distractor_08",
+      "misconception_code": "M005",
+      "state": "unresolved",
+      "text": "For \"On a number line, which point is farther right: 3/10 or 1/4?\" I think the answer is same point.",
+      "source": "distractor_template",
+      "distractor": {
+        "value": "same point",
+        "maps_to": "M005",
+        "likelihood": 0.17
+      }
+    },
+    {
+      "id": "gs_M006_script_01",
+      "misconception_code": "M006",
+      "state": "unresolved",
+      "text": "That fraction can't be right — the top number can't be bigger than the bottom!",
+      "source": "sprout_script",
+      "distractor": null
+    },
+    {
+      "id": "gs_M006_script_02",
+      "misconception_code": "M006",
+      "state": "unresolved",
+      "text": "Wait, can a fraction ever be bigger than one whole thing?",
+      "source": "sprout_script",
+      "distractor": null
+    },
+    {
+      "id": "gs_M006_script_03",
+      "misconception_code": "M006",
+      "state": "unresolved",
+      "text": "I thought fractions were always pieces smaller than one whole.",
+      "source": "sprout_script",
+      "distractor": null
+    },
+    {
+      "id": "gs_M006_script_04",
+      "misconception_code": "M006",
+      "state": "unresolved",
+      "text": "Maybe that's just a mistake and should really be a whole number instead?",
+      "source": "sprout_script",
+      "distractor": null
+    },
+    {
+      "id": "gs_M006_script_05",
+      "misconception_code": "M006",
+      "state": "unresolved",
+      "text": "Fractions have to stay under 1, so this one must be wrong, right?",
+      "source": "sprout_script",
+      "distractor": null
+    },
+    {
+      "id": "gs_M006_script_06",
+      "misconception_code": "M006",
+      "state": "unresolved",
+      "text": "So what does a fraction like that even mean if it's more than a whole pizza?",
+      "source": "sprout_script",
+      "distractor": null
+    },
+    {
+      "id": "gs_M006_worked_01",
+      "misconception_code": "M006",
+      "state": "resolved",
+      "text": "it's 5/4 because the first circle is a whole one which is 4/4 and then one more piece makes 5/4",
+      "source": "worked_example",
+      "distractor": null
+    },
+    {
+      "id": "gs_M006_distractor_01",
+      "misconception_code": "M006",
+      "state": "unresolved",
+      "text": "For \"Is 5/4 a real fraction?\" I think the answer is No, the top can't be bigger than the bottom.",
+      "source": "distractor_template",
+      "distractor": {
+        "value": "No, the top can't be bigger than the bottom",
+        "maps_to": "M006",
+        "likelihood": 0.64
+      }
+    },
+    {
+      "id": "gs_M006_distractor_02",
+      "misconception_code": "M006",
+      "state": "unresolved",
+      "text": "For \"Is 5/4 a real fraction?\" I think the answer is It just means the number 1.",
+      "source": "distractor_template",
+      "distractor": {
+        "value": "It just means the number 1",
+        "maps_to": "M006",
+        "likelihood": 0.21
+      }
+    },
+    {
+      "id": "gs_M006_distractor_03",
+      "misconception_code": "M006",
+      "state": "unresolved",
+      "text": "For \"Is 7/3 a real number?\" I think the answer is No, that's not allowed.",
+      "source": "distractor_template",
+      "distractor": {
+        "value": "No, that's not allowed",
+        "maps_to": "M006",
+        "likelihood": 0.64
+      }
+    },
+    {
+      "id": "gs_M006_distractor_04",
+      "misconception_code": "M006",
+      "state": "unresolved",
+      "text": "For \"Is 7/3 a real number?\" I think the answer is It just means the number 2.",
+      "source": "distractor_template",
+      "distractor": {
+        "value": "It just means the number 2",
+        "maps_to": "M006",
+        "likelihood": 0.21
+      }
+    },
+    {
+      "id": "gs_M006_distractor_05",
+      "misconception_code": "M006",
+      "state": "unresolved",
+      "text": "For \"These pictures show 1 whole circle fully shaded and one more circle with 1/4 shaded. What fraction is shaded overall?\" I think the answer is You can't shade more than one whole circle.",
+      "source": "distractor_template",
+      "distractor": {
+        "value": "You can't shade more than one whole circle",
+        "maps_to": "M006",
+        "likelihood": 0.64
+      }
+    },
+    {
+      "id": "gs_M006_distractor_06",
+      "misconception_code": "M006",
+      "state": "unresolved",
+      "text": "For \"These pictures show 1 whole circle fully shaded and one more circle with 1/4 shaded. What fraction is shaded overall?\" I think the answer is 1 (just the whole one counts).",
+      "source": "distractor_template",
+      "distractor": {
+        "value": "1 (just the whole one counts)",
+        "maps_to": "M006",
+        "likelihood": 0.21
+      }
+    },
+    {
+      "id": "gs_M006_distractor_07",
+      "misconception_code": "M006",
+      "state": "unresolved",
+      "text": "For \"Two whole rectangles are shaded plus 1/3 of a third rectangle. What is the total, as a fraction?\" I think the answer is That's impossible, fractions stop at 1 whole.",
+      "source": "distractor_template",
+      "distractor": {
+        "value": "That's impossible, fractions stop at 1 whole",
+        "maps_to": "M006",
+        "likelihood": 0.64
+      }
+    },
+    {
+      "id": "gs_M006_distractor_08",
+      "misconception_code": "M006",
+      "state": "unresolved",
+      "text": "For \"Two whole rectangles are shaded plus 1/3 of a third rectangle. What is the total, as a fraction?\" I think the answer is 2 (the extra third doesn't count).",
+      "source": "distractor_template",
+      "distractor": {
+        "value": "2 (the extra third doesn't count)",
+        "maps_to": "M006",
+        "likelihood": 0.21
+      }
+    },
+    {
+      "id": "gs_M007_script_01",
+      "misconception_code": "M007",
+      "state": "unresolved",
+      "text": "2/3 of 12? Easy, just divide by the top number: 12 divided by 2 is 6!",
+      "source": "sprout_script",
+      "distractor": null
+    },
+    {
+      "id": "gs_M007_script_02",
+      "misconception_code": "M007",
+      "state": "unresolved",
+      "text": "Wait, which number tells me how many groups to split into, the top or the bottom?",
+      "source": "sprout_script",
+      "distractor": null
+    },
+    {
+      "id": "gs_M007_script_03",
+      "misconception_code": "M007",
+      "state": "unresolved",
+      "text": "I keep mixing up which number I'm supposed to divide by.",
+      "source": "sprout_script",
+      "distractor": null
+    },
+    {
+      "id": "gs_M007_script_04",
+      "misconception_code": "M007",
+      "state": "unresolved",
+      "text": "Maybe I use the bottom number sometimes? I'm not sure when.",
+      "source": "sprout_script",
+      "distractor": null
+    },
+    {
+      "id": "gs_M007_script_05",
+      "misconception_code": "M007",
+      "state": "unresolved",
+      "text": "The top number is what I divide by, right? That's what I always do.",
+      "source": "sprout_script",
+      "distractor": null
+    },
+    {
+      "id": "gs_M007_script_06",
+      "misconception_code": "M007",
+      "state": "unresolved",
+      "text": "So the bottom number is just... extra?",
+      "source": "sprout_script",
+      "distractor": null
+    },
+    {
+      "id": "gs_M007_worked_01",
+      "misconception_code": "M007",
+      "state": "resolved",
+      "text": "you split the 12 into 3 equal groups first, that's 4 each, then you take 2 of the groups so it's 8",
+      "source": "worked_example",
+      "distractor": null
+    },
+    {
+      "id": "gs_M007_distractor_01",
+      "misconception_code": "M007",
+      "state": "unresolved",
+      "text": "For \"What is 2/3 of 12 counters?\" I think the answer is 6 counters (12 divided by the top number, 2).",
+      "source": "distractor_template",
+      "distractor": {
+        "value": "6 counters (12 divided by the top number, 2)",
+        "maps_to": "M007",
+        "likelihood": 0.62
+      }
+    },
+    {
+      "id": "gs_M007_distractor_02",
+      "misconception_code": "M007",
+      "state": "unresolved",
+      "text": "For \"What is 2/3 of 12 counters?\" I think the answer is 2 counters (just the top number).",
+      "source": "distractor_template",
+      "distractor": {
+        "value": "2 counters (just the top number)",
+        "maps_to": "M007",
+        "likelihood": 0.23
+      }
+    },
+    {
+      "id": "gs_M007_distractor_03",
+      "misconception_code": "M007",
+      "state": "unresolved",
+      "text": "For \"What is 3/4 of 16 stickers?\" I think the answer is About 5 stickers (16 divided by the top number, 3).",
+      "source": "distractor_template",
+      "distractor": {
+        "value": "About 5 stickers (16 divided by the top number, 3)",
+        "maps_to": "M007",
+        "likelihood": 0.62
+      }
+    },
+    {
+      "id": "gs_M007_distractor_04",
+      "misconception_code": "M007",
+      "state": "unresolved",
+      "text": "For \"What is 3/4 of 16 stickers?\" I think the answer is 3 stickers (just the top number).",
+      "source": "distractor_template",
+      "distractor": {
+        "value": "3 stickers (just the top number)",
+        "maps_to": "M007",
+        "likelihood": 0.23
+      }
+    },
+    {
+      "id": "gs_M007_distractor_05",
+      "misconception_code": "M007",
+      "state": "unresolved",
+      "text": "For \"To find 2/5 of 20, what do you do first?\" I think the answer is Divide 20 by 2 (the top number).",
+      "source": "distractor_template",
+      "distractor": {
+        "value": "Divide 20 by 2 (the top number)",
+        "maps_to": "M007",
+        "likelihood": 0.62
+      }
+    },
+    {
+      "id": "gs_M007_distractor_06",
+      "misconception_code": "M007",
+      "state": "unresolved",
+      "text": "For \"To find 2/5 of 20, what do you do first?\" I think the answer is Just use the top number, 2, as the answer.",
+      "source": "distractor_template",
+      "distractor": {
+        "value": "Just use the top number, 2, as the answer",
+        "maps_to": "M007",
+        "likelihood": 0.23
+      }
+    },
+    {
+      "id": "gs_M007_distractor_07",
+      "misconception_code": "M007",
+      "state": "unresolved",
+      "text": "For \"To find 3/4 of 24, what do you do first?\" I think the answer is Divide 24 by 3 (the top number).",
+      "source": "distractor_template",
+      "distractor": {
+        "value": "Divide 24 by 3 (the top number)",
+        "maps_to": "M007",
+        "likelihood": 0.62
+      }
+    },
+    {
+      "id": "gs_M007_distractor_08",
+      "misconception_code": "M007",
+      "state": "unresolved",
+      "text": "For \"To find 3/4 of 24, what do you do first?\" I think the answer is Just use the top number, 3, as the answer.",
+      "source": "distractor_template",
+      "distractor": {
+        "value": "Just use the top number, 3, as the answer",
+        "maps_to": "M007",
+        "likelihood": 0.23
+      }
+    },
+    {
+      "id": "gs_M008_script_01",
+      "misconception_code": "M008",
+      "state": "unresolved",
+      "text": "1/4 plus 1/4 is 2/8 — just add the tops and add the bottoms!",
+      "source": "sprout_script",
+      "distractor": null
+    },
+    {
+      "id": "gs_M008_script_02",
+      "misconception_code": "M008",
+      "state": "unresolved",
+      "text": "Wait, do I add the bottom numbers together too, or just the top ones?",
+      "source": "sprout_script",
+      "distractor": null
+    },
+    {
+      "id": "gs_M008_script_03",
+      "misconception_code": "M008",
+      "state": "unresolved",
+      "text": "Adding fractions feels just like adding regular numbers, top and bottom both.",
+      "source": "sprout_script",
+      "distractor": null
+    },
+    {
+      "id": "gs_M008_script_04",
+      "misconception_code": "M008",
+      "state": "unresolved",
+      "text": "Maybe the bottom number should stay the same? I'm not totally sure.",
+      "source": "sprout_script",
+      "distractor": null
+    },
+    {
+      "id": "gs_M008_script_05",
+      "misconception_code": "M008",
+      "state": "unresolved",
+      "text": "Adding is adding — tops together, bottoms together, that's the rule!",
+      "source": "sprout_script",
+      "distractor": null
+    },
+    {
+      "id": "gs_M008_script_06",
+      "misconception_code": "M008",
+      "state": "unresolved",
+      "text": "So why wouldn't the bottom numbers add up too?",
+      "source": "sprout_script",
+      "distractor": null
+    },
+    {
+      "id": "gs_M008_worked_01",
+      "misconception_code": "M008",
+      "state": "resolved",
+      "text": "the pieces are already fourths so the bottom stays 4, you just add 1 plus 1 on top to get 2/4",
+      "source": "worked_example",
+      "distractor": null
+    },
+    {
+      "id": "gs_M008_distractor_01",
+      "misconception_code": "M008",
+      "state": "unresolved",
+      "text": "For \"What is 1/4 + 1/4?\" I think the answer is 2/8.",
+      "source": "distractor_template",
+      "distractor": {
+        "value": "2/8",
+        "maps_to": "M008",
+        "likelihood": 0.75
+      }
+    },
+    {
+      "id": "gs_M008_distractor_02",
+      "misconception_code": "M008",
+      "state": "unresolved",
+      "text": "For \"What is 1/4 + 1/4?\" I think the answer is 1/8.",
+      "source": "distractor_template",
+      "distractor": {
+        "value": "1/8",
+        "maps_to": "M008",
+        "likelihood": 0.1
+      }
+    },
+    {
+      "id": "gs_M008_distractor_03",
+      "misconception_code": "M008",
+      "state": "unresolved",
+      "text": "For \"What is 2/6 + 1/6?\" I think the answer is 3/12.",
+      "source": "distractor_template",
+      "distractor": {
+        "value": "3/12",
+        "maps_to": "M008",
+        "likelihood": 0.75
+      }
+    },
+    {
+      "id": "gs_M008_distractor_04",
+      "misconception_code": "M008",
+      "state": "unresolved",
+      "text": "For \"What is 2/6 + 1/6?\" I think the answer is 2/12.",
+      "source": "distractor_template",
+      "distractor": {
+        "value": "2/12",
+        "maps_to": "M008",
+        "likelihood": 0.1
+      }
+    },
+    {
+      "id": "gs_M008_distractor_05",
+      "misconception_code": "M008",
+      "state": "unresolved",
+      "text": "For \"Two bars, each split into 5 equal parts. First bar has 2 parts shaded, second bar has 1 part shaded (same size bars). Combined, what fraction of one bar is that?\" I think the answer is 3/10.",
+      "source": "distractor_template",
+      "distractor": {
+        "value": "3/10",
+        "maps_to": "M008",
+        "likelihood": 0.75
+      }
+    },
+    {
+      "id": "gs_M008_distractor_06",
+      "misconception_code": "M008",
+      "state": "unresolved",
+      "text": "For \"Two bars, each split into 5 equal parts. First bar has 2 parts shaded, second bar has 1 part shaded (same size bars). Combined, what fraction of one bar is that?\" I think the answer is 2/10.",
+      "source": "distractor_template",
+      "distractor": {
+        "value": "2/10",
+        "maps_to": "M008",
+        "likelihood": 0.1
+      }
+    },
+    {
+      "id": "gs_M008_distractor_07",
+      "misconception_code": "M008",
+      "state": "unresolved",
+      "text": "For \"Two circles, each split into 6 slices. First circle: 3 slices shaded. Second circle: 2 slices shaded. Combined, what fraction of one circle is shaded?\" I think the answer is 5/12.",
+      "source": "distractor_template",
+      "distractor": {
+        "value": "5/12",
+        "maps_to": "M008",
+        "likelihood": 0.75
+      }
+    },
+    {
+      "id": "gs_M008_distractor_08",
+      "misconception_code": "M008",
+      "state": "unresolved",
+      "text": "For \"Two circles, each split into 6 slices. First circle: 3 slices shaded. Second circle: 2 slices shaded. Combined, what fraction of one circle is shaded?\" I think the answer is 3/12.",
+      "source": "distractor_template",
+      "distractor": {
+        "value": "3/12",
+        "maps_to": "M008",
+        "likelihood": 0.1
+      }
+    }
+  ]
+}

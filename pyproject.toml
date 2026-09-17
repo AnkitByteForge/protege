@@ -89,14 +89,29 @@ files = [
 explicit_package_bases = true
 exclude = ["migrations"]
 
-# packages/contracts has no py.typed marker yet, so mypy treats it as an
-# untyped installed dependency for any *other* package that imports it
-# (tools/authoring is the first). Adding that marker file belongs to a
-# package this branch must not touch, so the import-untyped warning is
-# suppressed here instead of duplicating packages/contracts's own module
-# path into this config (which conflicts with its entry in `files` above).
+# packages/contracts, packages/llm, and packages/learning-engine have no
+# py.typed marker yet, so mypy treats each as an untyped installed
+# dependency for any *other* package that imports it (tools/authoring was
+# the first, for packages/contracts; packages/roles, P6, is the first to
+# cross-import packages/llm and packages/learning-engine). Adding those
+# marker files belongs to packages this branch must not touch, so the
+# import-untyped warning is suppressed here instead of duplicating each
+# package's own module path into this config (which would conflict with
+# its entry in `files` above).
 [[tool.mypy.overrides]]
-module = "protege.contracts"
+module = ["protege.contracts", "protege.llm", "protege.learning_engine"]
+ignore_missing_imports = true
+
+# protege.authoring has no py.typed marker either, and unlike
+# packages/contracts, tools/authoring/src/protege/authoring/__init__.py
+# does not re-export `load_content_pack`/`ContentPack` at the top level, so
+# packages/roles/src/protege/roles/golden_set.py (P6) must import the
+# `.loader` submodule directly -- every other cross-package import in this
+# workspace goes through a top-level `__init__.py` instead, which the
+# `protege.contracts` override above already covers without needing a
+# submodule-specific entry.
+[[tool.mypy.overrides]]
+module = "protege.authoring.loader"
 ignore_missing_imports = true
 
 # Same situation as protege.contracts above, now that packages/roles (P5)

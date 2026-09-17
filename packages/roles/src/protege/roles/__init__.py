@@ -1,11 +1,25 @@
-"""PROTÉGÉ bounded LLM roles (ARCHITECTURE.md §7; roadmap P5+).
+"""PROTÉGÉ bounded LLM roles (roadmap P5-P6, P17, P20-P21).
 
-Only the Sprout Generator (roadmap P5) exists in this package today. Each
-role in this family proposes only -- it never has authority over mastery,
-verification, reward, or session transitions (AGENTS.md non-negotiable
-principles).
+Roles in this package propose bounded outputs only. They never have authority
+over mastery, verification, reward, or session transitions.
 """
 
+from .beliefs import apply_diagnosis_to_beliefs
+from .calibration import CalibrationParams, calibrate_confidence, fit_calibration
+from .diagnostician import DiagnosticContext, diagnose
+from .errors import (
+    DiagnosticianError,
+    DistractorNotInClosedSetError,
+    NoCandidatePoolError,
+    NoClosedSetProvidedError,
+    PromptTemplateError,
+    RoleError,
+    UnknownMisconceptionError,
+)
+from .eval import EvalReport, evaluate_rule_based_only, evaluate_with_router
+from .evidence_span import describe_explanation, extract_evidence_span
+from .golden_set import GoldenExample, load_golden_set
+from .rule_based import rule_based_diagnosis
 from .sprout import (
     SproutAttemptRecord,
     SproutConstraints,
@@ -24,6 +38,16 @@ from .sprout import (
 )
 
 __all__ = [
+    "CalibrationParams",
+    "DiagnosticContext",
+    "DiagnosticianError",
+    "DistractorNotInClosedSetError",
+    "EvalReport",
+    "GoldenExample",
+    "NoCandidatePoolError",
+    "NoClosedSetProvidedError",
+    "PromptTemplateError",
+    "RoleError",
     "SproutAttemptRecord",
     "SproutConstraints",
     "SproutDialogueTurn",
@@ -32,9 +56,20 @@ __all__ = [
     "SproutState",
     "SproutValidationResult",
     "SproutValidationStage",
+    "UnknownMisconceptionError",
+    "apply_diagnosis_to_beliefs",
+    "calibrate_confidence",
     "compile_constraints",
+    "describe_explanation",
+    "diagnose",
     "emit_authored_fallback",
+    "evaluate_rule_based_only",
+    "evaluate_with_router",
+    "extract_evidence_span",
+    "fit_calibration",
+    "load_golden_set",
     "presentation_emotion_for",
+    "rule_based_diagnosis",
     "score_fidelity",
     "select_candidate_pool",
     "validate_generated_turn",
