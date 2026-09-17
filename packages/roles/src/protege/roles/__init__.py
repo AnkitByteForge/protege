@@ -16,9 +16,18 @@ from .errors import (
     RoleError,
     UnknownMisconceptionError,
 )
-from .eval import EvalReport, evaluate_rule_based_only, evaluate_with_router
+from .eval import (
+    AttemptOutcome,
+    EvalReport,
+    HeldOutCalibrationReport,
+    NvidiaEvalReport,
+    evaluate_rule_based_only,
+    evaluate_with_router,
+    evaluate_with_router_calibrated_held_out,
+    run_nvidia_diagnostician_evaluation,
+)
 from .evidence_span import describe_explanation, extract_evidence_span
-from .golden_set import GoldenExample, load_golden_set
+from .golden_set import DATASET_STATUS, GoldenExample, load_golden_set, split_golden_set
 from .rule_based import rule_based_diagnosis
 from .sprout import (
     SproutAttemptRecord,
@@ -38,14 +47,18 @@ from .sprout import (
 )
 
 __all__ = [
+    "DATASET_STATUS",
+    "AttemptOutcome",
     "CalibrationParams",
     "DiagnosticContext",
     "DiagnosticianError",
     "DistractorNotInClosedSetError",
     "EvalReport",
     "GoldenExample",
+    "HeldOutCalibrationReport",
     "NoCandidatePoolError",
     "NoClosedSetProvidedError",
+    "NvidiaEvalReport",
     "PromptTemplateError",
     "RoleError",
     "SproutAttemptRecord",
@@ -65,12 +78,15 @@ __all__ = [
     "emit_authored_fallback",
     "evaluate_rule_based_only",
     "evaluate_with_router",
+    "evaluate_with_router_calibrated_held_out",
     "extract_evidence_span",
     "fit_calibration",
     "load_golden_set",
     "presentation_emotion_for",
     "rule_based_diagnosis",
+    "run_nvidia_diagnostician_evaluation",
     "score_fidelity",
     "select_candidate_pool",
+    "split_golden_set",
     "validate_generated_turn",
 ]

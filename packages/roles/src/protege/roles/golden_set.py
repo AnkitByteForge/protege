@@ -11,6 +11,20 @@ NOT-RATIFIED status the underlying P3 content itself has
 (``content/math/fractions/v1/RATIFICATION.md``: "Status: NOT RATIFIED").**
 This module never claims otherwise; nothing here sets a ratified status.
 
+**This is not merely "unratified" -- it is not independently labelled at
+all.** Every example's ``misconception_code`` ground truth is copied
+verbatim from the exact same authored field that produced the example's
+text in the first place (``SproutScript.misconception_code`` for
+``sprout_script`` examples; the worked example's own file identity for
+``worked_example`` examples; ``Distractor.maps_to`` for
+``distractor_template`` examples -- and that third field is also what
+:func:`~protege.roles.rule_based.rule_based_diagnosis` reads to answer, so
+a perfect score against it is circular, not diagnostic, evidence -- see
+:mod:`protege.roles.eval`'s module docstring). No independent rater has
+ever looked at this text and assigned a label separately from its source.
+:data:`DATASET_STATUS` names this precisely so no report can silently
+present these numbers as the roadmap's ship-gate measurement.
+
 Each of the 8 misconceptions contributes exactly 15 examples (120 total,
 balanced for a meaningful macro-F1):
 
@@ -44,6 +58,12 @@ from protege.authoring.loader import ContentPack, load_content_pack
 from protege.contracts import TextExplanation
 
 GoldenSource = Literal["sprout_script", "worked_example", "distractor_template"]
+
+DATASET_STATUS = "development_not_ratified"
+"""Machine-readable status carried into every :class:`~protege.roles.eval.EvalReport`
+built from this set. Not "ratified", not "human-labelled", not a ship-gate
+measurement -- see this module's docstring and ``golden_set/PROVENANCE.md``
+for exactly what independent human ratification would still require."""
 
 _GOLDEN_SET_DIR = Path(__file__).resolve().parents[3] / "golden_set"
 """``packages/roles/src/protege/roles/golden_set.py`` -> ``packages/roles/golden_set/``."""
@@ -169,6 +189,7 @@ def _example_from_json(data: dict[str, object]) -> GoldenExample:
 def save_golden_set(examples: Sequence[GoldenExample], path: Path = _DEFAULT_SNAPSHOT) -> None:
     payload = {
         "schema_version": "1.0",
+        "status": DATASET_STATUS,
         "count": len(examples),
         "examples": [_example_to_json(e) for e in examples],
     }
@@ -180,3 +201,36 @@ def load_golden_set(path: Path = _DEFAULT_SNAPSHOT) -> list[GoldenExample]:
     ``protege.authoring`` -- this is what tests and the eval harness use."""
     data = json.loads(path.read_text(encoding="utf-8"))
     return [_example_from_json(record) for record in data["examples"]]
+
+
+def split_golden_set(
+    examples: Sequence[GoldenExample], *, calibration_fraction: float = 0.5
+) -> tuple[list[GoldenExample], list[GoldenExample]]:
+    """Deterministically split ``examples`` into a calibration-fitting
+    subset and a disjoint held-out subset, stratified per
+    ``misconception_code`` so both subsets stay class-balanced.
+
+    This exists specifically so :func:`~protege.roles.calibration.fit_calibration`
+    is never fit and evaluated on the same cases: fit it only on the first
+    tuple element, and compute ECE/Brier only on the second
+    (:func:`protege.roles.eval.evaluate_with_router_calibrated_held_out`
+    does exactly this). The split is a fixed function of each
+    misconception's own authored example order (no RNG, no seed to manage)
+    -- ``load_golden_set()`` followed by this function always produces the
+    same two subsets.
+    """
+    if not 0.0 <= calibration_fraction <= 1.0:
+        raise ValueError(f"calibration_fraction must be in [0, 1], got {calibration_fraction}")
+
+    by_code: dict[str, list[GoldenExample]] = {}
+    for example in examples:
+        by_code.setdefault(example.misconception_code, []).append(example)
+
+    calibration: list[GoldenExample] = []
+    held_out: list[GoldenExample] = []
+    for code in sorted(by_code):
+        group = by_code[code]
+        cut = round(len(group) * calibration_fraction)
+        calibration.extend(group[:cut])
+        held_out.extend(group[cut:])
+    return calibration, held_out
