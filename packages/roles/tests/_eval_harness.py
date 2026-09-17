@@ -255,8 +255,24 @@ class MisconceptionFidelityReport:
     """How many times the evaluator detected every real chain entry was
     breaker-open and waited before calling ``generate_turn`` at all."""
     leak_count: int = 0
-    """Over every FINAL EMITTED turn (generated or fallback) -- the
-    end-to-end, zero-tolerance child-facing safety measurement."""
+    """``emitted_answer_leaks``: over every FINAL EMITTED turn (generated
+    or fallback) -- the end-to-end, zero-tolerance child-facing safety
+    measurement. This being 0 does NOT mean the model never produced
+    leaking text; it means the validator caught every one before emission.
+    See ``raw_model_answer_leak_attempts`` for the pre-filter number."""
+    raw_model_answer_leak_attempts: int = 0
+    """Every REAL, parseable attempt (regardless of ``kind``/which stage
+    the four-stage gate reported as the first failure) whose utterance
+    independently triggers the P2 ``answer_leaked`` check. Computed
+    separately from ``classify_attempt``'s stage-ordered classification,
+    because ``validate_generated_turn`` short-circuits at the FIRST failing
+    stage: an attempt that fails misconception-consistency AND also leaks
+    is classified only as a consistency failure, which would silently
+    undercount true leak attempts if this were derived from
+    ``reason_counts`` alone. This is the number task instruction 5 means
+    by "raw_model_answer_leak_attempts" -- never conflate it with
+    ``leak_count``/``emitted_answer_leaks``, which measures a completely
+    different, already-filtered thing."""
     fidelities: list[float] = field(default_factory=list)
     reason_counts: dict[str, int] = field(default_factory=dict)
     samples: dict[str, list[str]] = field(default_factory=dict)
@@ -295,9 +311,13 @@ class MisconceptionFidelityReport:
             "real_model_outputs_scored": self.real_model_outputs_scored,
             "validator_rejections": self.validator_rejections,
             "fallback_count": self.fallback_count,
+            "fallback_outputs": self.fallback_count,
+            "accepted_model_outputs": self.reason_counts.get(AttemptOutcomeKind.ACCEPTED.value, 0),
             "fallback_rate": self.fallback_rate,
             "circuit_open_wait_events": self.circuit_open_wait_events,
             "leak_count": self.leak_count,
+            "emitted_answer_leaks": self.leak_count,
+            "raw_model_answer_leak_attempts": self.raw_model_answer_leak_attempts,
             "answer_leak_rate": self.answer_leak_rate,
             "mean_fidelity": self.mean_fidelity,
             "reason_counts": dict(self.reason_counts),
@@ -314,6 +334,7 @@ class MisconceptionFidelityReport:
         report.fallback_count = int(data["fallback_count"])  # type: ignore[arg-type]
         report.circuit_open_wait_events = int(data["circuit_open_wait_events"])  # type: ignore[arg-type]
         report.leak_count = int(data["leak_count"])  # type: ignore[arg-type]
+        report.raw_model_answer_leak_attempts = int(data.get("raw_model_answer_leak_attempts", 0))  # type: ignore[arg-type]
         mean_fidelity = data.get("mean_fidelity")
         n_scored = report.real_model_outputs_scored
         if isinstance(mean_fidelity, int | float) and n_scored:
@@ -458,6 +479,14 @@ def evaluate_misconception(
             )
             sample = _sanitize_utterance(attempt.value.utterance) if attempt.value else ""
             report.record_attempt(kind, fidelity, sample)
+            # Independent of `kind` (which reports only the FIRST stage that
+            # failed): count every real, parseable attempt whose own text
+            # leaks, even one that was already rejected for a different,
+            # earlier-checked reason (e.g. misconception inconsistency).
+            # Task instruction 5: never let emitted_answer_leak_rate==0
+            # stand in for "the model never produced leaking text."
+            if attempt.value is not None and answer_leaked(attempt.value.utterance, correct_answer):
+                report.raw_model_answer_leak_attempts += 1
 
         if answer_leaked(result.turn.utterance, correct_answer):
             report.leak_count += 1
@@ -478,9 +507,18 @@ def aggregate_reports(reports: Sequence[MisconceptionFidelityReport]) -> dict[st
     is computed here, NOT redefined: mean fidelity >= 0.90 over
     ``real_model_outputs_scored`` (accepted + validator-rejected +
     schema-failures-at-0.0, never fallback), leak rate == 0.000 over every
-    emitted turn."""
+    emitted turn.
+
+    ``overall_raw_model_answer_leak_attempts`` and
+    ``overall_emitted_answer_leaks`` are reported side by side and must
+    never be conflated (task instruction 5): a 0 for the latter is a
+    statement about the validator's effectiveness, not about whether the
+    raw model ever produced leaking text.
+    """
     total_calls = sum(r.generate_turn_calls for r in reports)
     total_leaks = sum(r.leak_count for r in reports)
+    total_raw_leak_attempts = sum(r.raw_model_answer_leak_attempts for r in reports)
+    total_accepted = sum(r.reason_counts.get(AttemptOutcomeKind.ACCEPTED.value, 0) for r in reports)
     total_fallback = sum(r.fallback_count for r in reports)
     total_attempts = sum(r.real_model_attempts for r in reports)
     total_scored = sum(r.real_model_outputs_scored for r in reports)
@@ -493,10 +531,14 @@ def aggregate_reports(reports: Sequence[MisconceptionFidelityReport]) -> dict[st
             "total_real_model_attempts": total_attempts,
             "total_real_model_outputs_scored": total_scored,
             "total_validator_rejections": sum(r.validator_rejections for r in reports),
+            "accepted_model_outputs": total_accepted,
+            "fallback_outputs": total_fallback,
             "total_fallback_count": total_fallback,
             "overall_fallback_rate": total_fallback / total_calls if total_calls else 0.0,
             "total_circuit_open_wait_events": sum(r.circuit_open_wait_events for r in reports),
             "total_leak_count": total_leaks,
+            "emitted_answer_leaks": total_leaks,
+            "raw_model_answer_leak_attempts": total_raw_leak_attempts,
             "overall_answer_leak_rate": total_leaks / total_calls if total_calls else 1.0,
             "overall_mean_fidelity": mean_fidelity,
         },

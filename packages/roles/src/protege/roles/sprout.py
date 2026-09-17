@@ -33,7 +33,8 @@ Critical rules enforced here (roadmap P5):
   ``correct_answer`` parameter at all, so the answer cannot leak into a
   prompt by construction, not merely by discipline.
 - The prompt is versioned at ``prompts/sprout/vN.md``; this module loads
-  ``v1.md`` by default.
+  ``v2.md`` by default (see ``SproutGenerator``'s docstring for what
+  changed from ``v1`` and why).
 - Temperature 0.7 and the 30-word cap are not re-implemented here: the
   ``ModelRouter``'s ``DEFAULT_TEMPERATURE`` is already 0.7
   (``packages/llm/src/protege/llm/router.py``) and this module never
@@ -205,7 +206,7 @@ def default_prompt_root() -> Path:
     return _DEFAULT_PROMPT_ROOT
 
 
-def load_prompt_template(version: str = "v1", *, root: Path | None = None) -> str:
+def load_prompt_template(version: str = "v2", *, root: Path | None = None) -> str:
     """Load the versioned Sprout system-prompt template (roadmap P5:
     "Prompt must be versioned under prompts/sprout/vN.md")."""
     base = root if root is not None else _DEFAULT_PROMPT_ROOT
@@ -496,6 +497,31 @@ class SproutGenerator:
     (already wired to real or fake providers by the caller -- this class
     never instantiates a provider itself, per the critical rule "never
     directly instantiate an NVIDIA client") and an optional content pack.
+
+    Default prompt version is ``v2`` (see ``prompts/sprout/v2.md``), which
+    adds two evidence-based rules over ``v1`` -- found by inspecting real
+    NVIDIA model output from the P5 fidelity pilot, never by loosening the
+    P2 validator that flagged the problem in the first place:
+
+    1. Short, punctuation-broken sentences instead of one long
+       "because...so...even though" sentence. The pilot's rejected samples
+       were overwhelmingly one long sentence (grade 4.7-9.5 on the P2
+       Flesch-Kincaid heuristic); its accepted samples were several short,
+       exclamatory sentences conveying the same content (grade -2.2 to
+       3.4) -- the FK formula's words-per-sentence term, not vocabulary
+       difficulty, was driving the rejections.
+    2. When comparing two named amounts, state your own (mistaken) answer
+       by its number but refer to the OTHER amount in words only. The
+       pilot's answer-leak rejections were, without exception, an
+       utterance writing BOTH compared fractions in digit/slash form --
+       and since the correct answer is withheld from Sprout's context
+       entirely, Sprout cannot know which of the two is the one to avoid;
+       the rule is deliberately content-blind (own answer vs. the other
+       one), so it generalizes to any comparison-shaped misconception
+       rather than encoding one item's specific numbers.
+
+    ``v1`` remains on disk, frozen, for reproducibility of anything that
+    already measured against it.
     """
 
     def __init__(
@@ -503,7 +529,7 @@ class SproutGenerator:
         router: ModelRouter,
         *,
         content: ContentPack | None = None,
-        prompt_version: str = "v1",
+        prompt_version: str = "v2",
         prompt_root: Path | None = None,
     ) -> None:
         self._router = router

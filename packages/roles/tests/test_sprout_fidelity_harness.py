@@ -337,5 +337,38 @@ def test_answer_leakage_is_zero_tolerance_on_the_final_emitted_turn(
     # emitted (fallback) turn never leaks.
     assert report.leak_count == 0
     assert report.answer_leak_rate == 0.0
-    # But the rejection itself is faithfully recorded as a leak failure.
+    # But the rejection itself is faithfully recorded as a leak failure,
+    # and the raw (pre-filter) leak count matches it here.
     assert report.reason_counts.get(AttemptOutcomeKind.ANSWER_LEAKAGE_FAILURE) == 2
+    assert report.raw_model_answer_leak_attempts == 2
+
+
+def test_raw_leak_count_is_not_undercounted_by_an_earlier_stage_short_circuit(
+    content_pack: ContentPack,
+) -> None:
+    """Task instruction 5: emitted_answer_leak_rate==0 must never be read
+    as proof the model never produced leaking text. This reproduces the
+    exact undercounting risk: an attempt that fails an EARLIER stage
+    (misconception consistency) but would ALSO leak must still be counted
+    by ``raw_model_answer_leak_attempts``, even though ``reason_counts``
+    -- which reports only the first stage the gate actually checked --
+    classifies it solely as a consistency failure."""
+    # Wrong exhibits code (M001, not the assigned M003) AND leaks M003's
+    # correct answer "1/4". validate_generated_turn's stage order means
+    # this is classified ONLY as a consistency failure -- it never reaches
+    # the leak check at all.
+    wrong_and_leaking = sprout_turn_json(utterance="I bet 1/4 is bigger, easy.", exhibits="M001")
+    provider = FakeProvider(
+        script=[FakeOutcome.ok(wrong_and_leaking), FakeOutcome.ok(wrong_and_leaking)]
+    )
+    generator, breaker, telemetry = _evaluator(provider, content_pack)
+
+    report = evaluate_misconception(
+        generator, content_pack, _CODE, n_generations=1, breaker=breaker, telemetry=telemetry
+    )
+
+    assert report.reason_counts.get(AttemptOutcomeKind.MISCONCEPTION_CONSISTENCY_FAILURE) == 2
+    assert report.reason_counts.get(AttemptOutcomeKind.ANSWER_LEAKAGE_FAILURE) is None
+    # The independent raw check still catches it.
+    assert report.raw_model_answer_leak_attempts == 2
+    assert report.leak_count == 0  # never reached emission either way
