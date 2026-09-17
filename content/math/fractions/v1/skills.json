@@ -1,0 +1,78 @@
+{
+  "skills": [
+    {
+      "code": "S001_identify_fraction",
+      "grade_band": "1-2",
+      "prerequisites": [],
+      "standard": "CCSS.1.G.A.3",
+      "title": "Identify a fraction as a part of a whole"
+    },
+    {
+      "code": "S002_equal_parts",
+      "grade_band": "1-2",
+      "prerequisites": [
+        "S001_identify_fraction"
+      ],
+      "standard": "CCSS.2.G.A.3",
+      "title": "Partition shapes into equal parts"
+    },
+    {
+      "code": "S003_equivalent_fractions",
+      "grade_band": "3-4",
+      "prerequisites": [
+        "S002_equal_parts"
+      ],
+      "standard": "CCSS.3.NF.A.3",
+      "title": "Recognize equivalent fractions"
+    },
+    {
+      "code": "S004_compare_unit_fractions",
+      "grade_band": "3-4",
+      "prerequisites": [
+        "S001_identify_fraction",
+        "S002_equal_parts"
+      ],
+      "standard": "CCSS.3.NF.A.3d",
+      "title": "Compare unit fractions"
+    },
+    {
+      "code": "S005_add_fractions",
+      "grade_band": "4-5",
+      "prerequisites": [
+        "S003_equivalent_fractions",
+        "S004_compare_unit_fractions"
+      ],
+      "standard": "CCSS.4.NF.B.3a",
+      "title": "Add fractions with like denominators"
+    },
+    {
+      "code": "S006_compare_unlike_fractions",
+      "grade_band": "4-5",
+      "prerequisites": [
+        "S004_compare_unit_fractions",
+        "S003_equivalent_fractions"
+      ],
+      "standard": "CCSS.4.NF.A.2",
+      "title": "Compare fractions with unlike numerators and denominators"
+    },
+    {
+      "code": "S007_improper_fractions",
+      "grade_band": "4-5",
+      "prerequisites": [
+        "S001_identify_fraction"
+      ],
+      "standard": "CCSS.4.NF.B.3c",
+      "title": "Represent fractions greater than one whole"
+    },
+    {
+      "code": "S008_fraction_of_a_set",
+      "grade_band": "3-4",
+      "prerequisites": [
+        "S001_identify_fraction",
+        "S002_equal_parts"
+      ],
+      "standard": "CCSS.3.NF.A.1",
+      "title": "Find a fraction of a set of objects"
+    }
+  ]
+}

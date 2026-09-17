@@ -1,0 +1,708 @@
+{
+  "items": [
+    {
+      "content_version": "v1",
+      "correct_answer": "3/4",
+      "distractors": [
+        {
+          "likelihood": 0.68,
+          "maps_to": "M001",
+          "value": "3 and 4, two separate numbers"
+        },
+        {
+          "likelihood": 0.17,
+          "maps_to": "M001",
+          "value": "4 and 3, two separate numbers"
+        }
+      ],
+      "elo": 1100,
+      "id": "i_1101",
+      "representation": "area_model",
+      "role": "diagnostic",
+      "skill_code": "S001_identify_fraction",
+      "stem": "This rectangle is cut into 4 equal parts and 3 are shaded. What fraction of the rectangle is shaded?"
+    },
+    {
+      "content_version": "v1",
+      "correct_answer": "3/5",
+      "distractors": [
+        {
+          "likelihood": 0.68,
+          "maps_to": "M001",
+          "value": "2 and 5, two separate numbers"
+        },
+        {
+          "likelihood": 0.17,
+          "maps_to": "M001",
+          "value": "5 and 2, two separate numbers"
+        }
+      ],
+      "elo": 1120,
+      "id": "i_1102",
+      "representation": "area_model",
+      "role": "diagnostic",
+      "skill_code": "S001_identify_fraction",
+      "stem": "A pizza is cut into 5 equal slices and 2 are gone. What fraction of the pizza is left?"
+    },
+    {
+      "content_version": "v1",
+      "correct_answer": "3 equal parts out of 4 total parts",
+      "distractors": [
+        {
+          "likelihood": 0.68,
+          "maps_to": "M001",
+          "value": "A 3 and a 4 — two separate numbers"
+        },
+        {
+          "likelihood": 0.17,
+          "maps_to": "M001",
+          "value": "The number 3 divided into 4 pieces of its own"
+        }
+      ],
+      "elo": 1140,
+      "id": "i_1103",
+      "representation": "symbolic",
+      "role": "diagnostic",
+      "skill_code": "S001_identify_fraction",
+      "stem": "What does the fraction 3/4 mean?"
+    },
+    {
+      "content_version": "v1",
+      "correct_answer": "2 out of 6 equal parts, one quantity",
+      "distractors": [
+        {
+          "likelihood": 0.68,
+          "maps_to": "M001",
+          "value": "Two numbers, a 2 and a 6"
+        },
+        {
+          "likelihood": 0.17,
+          "maps_to": "M001",
+          "value": "A 6 split into 2 groups"
+        }
+      ],
+      "elo": 1160,
+      "id": "i_1104",
+      "representation": "symbolic",
+      "role": "diagnostic",
+      "skill_code": "S001_identify_fraction",
+      "stem": "Which best describes 2/6?"
+    },
+    {
+      "content_version": "v1",
+      "correct_answer": "No — the parts must be equal size for 1/4 to be correct",
+      "distractors": [
+        {
+          "likelihood": 0.7,
+          "maps_to": "M002",
+          "value": "Yes, 1/4, because 1 out of 4 parts is shaded"
+        },
+        {
+          "likelihood": 0.15,
+          "maps_to": "M002",
+          "value": "No, uneven pieces can never show a fraction at all"
+        }
+      ],
+      "elo": 1080,
+      "id": "i_1201",
+      "representation": "area_model",
+      "role": "diagnostic",
+      "skill_code": "S002_equal_parts",
+      "stem": "A square is cut into 4 parts of clearly different sizes and 1 part is shaded. Is the shaded part 1/4 of the square?"
+    },
+    {
+      "content_version": "v1",
+      "correct_answer": "Cannot say 2/3 — the strips are not equal size",
+      "distractors": [
+        {
+          "likelihood": 0.7,
+          "maps_to": "M002",
+          "value": "2/3"
+        },
+        {
+          "likelihood": 0.15,
+          "maps_to": "M002",
+          "value": "This picture shows no fraction at all"
+        }
+      ],
+      "elo": 1100,
+      "id": "i_1202",
+      "representation": "area_model",
+      "role": "diagnostic",
+      "skill_code": "S002_equal_parts",
+      "stem": "A rectangle is split into 3 unequal strips and 2 are shaded. What fraction is shaded?"
+    },
+    {
+      "content_version": "v1",
+      "correct_answer": "No — the groups must be equal size for 1/2 to apply",
+      "distractors": [
+        {
+          "likelihood": 0.7,
+          "maps_to": "M002",
+          "value": "Yes, 1/2, because one of the two groups is circled"
+        },
+        {
+          "likelihood": 0.15,
+          "maps_to": "M002",
+          "value": "No, unequal groups can't be described with any fraction"
+        }
+      ],
+      "elo": 1120,
+      "id": "i_1203",
+      "representation": "set_model",
+      "role": "diagnostic",
+      "skill_code": "S002_equal_parts",
+      "stem": "6 counters are split into two unequal groups (4 and 2), and one group is circled. Is the circled group 1/2 of the counters?"
+    },
+    {
+      "content_version": "v1",
+      "correct_answer": "Cannot say 1/4 — the pieces must be equal size",
+      "distractors": [
+        {
+          "likelihood": 0.7,
+          "maps_to": "M002",
+          "value": "1/4"
+        },
+        {
+          "likelihood": 0.15,
+          "maps_to": "M002",
+          "value": "It shows no fraction since the slices differ"
+        }
+      ],
+      "elo": 1140,
+      "id": "i_1204",
+      "representation": "set_model",
+      "role": "diagnostic",
+      "skill_code": "S002_equal_parts",
+      "stem": "A pie is cut into 4 pieces of clearly different sizes and 1 piece is shaded. What fraction is shaded?"
+    },
+    {
+      "content_version": "v1",
+      "correct_answer": "1/4",
+      "distractors": [
+        {
+          "likelihood": 0.82,
+          "maps_to": "M003",
+          "value": "1/8"
+        },
+        {
+          "likelihood": 0.06,
+          "maps_to": "M003",
+          "value": "equal"
+        }
+      ],
+      "elo": 1180,
+      "id": "i_0132",
+      "representation": "area_model",
+      "role": "diagnostic",
+      "skill_code": "S004_compare_unit_fractions",
+      "stem": "Which is more pizza: 1/4 or 1/8?"
+    },
+    {
+      "content_version": "v1",
+      "correct_answer": "1/3",
+      "distractors": [
+        {
+          "likelihood": 0.82,
+          "maps_to": "M003",
+          "value": "1/6"
+        },
+        {
+          "likelihood": 0.06,
+          "maps_to": "M003",
+          "value": "equal"
+        }
+      ],
+      "elo": 1150,
+      "id": "i_0133",
+      "representation": "area_model",
+      "role": "diagnostic",
+      "skill_code": "S004_compare_unit_fractions",
+      "stem": "Which is more cake: 1/3 or 1/6?"
+    },
+    {
+      "content_version": "v1",
+      "correct_answer": "1/5",
+      "distractors": [
+        {
+          "likelihood": 0.82,
+          "maps_to": "M003",
+          "value": "1/10"
+        },
+        {
+          "likelihood": 0.06,
+          "maps_to": "M003",
+          "value": "equal"
+        }
+      ],
+      "elo": 1200,
+      "id": "i_0134",
+      "representation": "symbolic",
+      "role": "diagnostic",
+      "skill_code": "S004_compare_unit_fractions",
+      "stem": "Without drawing a picture, which is larger: 1/5 or 1/10?"
+    },
+    {
+      "content_version": "v1",
+      "correct_answer": "1/6, 1/4, 1/2",
+      "distractors": [
+        {
+          "likelihood": 0.82,
+          "maps_to": "M003",
+          "value": "1/2, 1/4, 1/6"
+        },
+        {
+          "likelihood": 0.06,
+          "maps_to": "M003",
+          "value": "1/4, 1/6, 1/2"
+        }
+      ],
+      "elo": 1220,
+      "id": "i_0135",
+      "representation": "symbolic",
+      "role": "diagnostic",
+      "skill_code": "S004_compare_unit_fractions",
+      "stem": "Order from smallest to largest: 1/2, 1/6, 1/4."
+    },
+    {
+      "content_version": "v1",
+      "correct_answer": "Yes — they are equivalent, the same amount",
+      "distractors": [
+        {
+          "likelihood": 0.66,
+          "maps_to": "M004",
+          "value": "No, 2/4 is bigger because the numbers are bigger"
+        },
+        {
+          "likelihood": 0.19,
+          "maps_to": "M004",
+          "value": "No, they look different so they can't be equal"
+        }
+      ],
+      "elo": 1120,
+      "id": "i_1401",
+      "representation": "area_model",
+      "role": "diagnostic",
+      "skill_code": "S003_equivalent_fractions",
+      "stem": "Two identical circles are shaded the same amount, but one is cut into 2 parts (1 shaded) and the other into 4 parts (2 shaded). Are 1/2 and 2/4 the same amount?"
+    },
+    {
+      "content_version": "v1",
+      "correct_answer": "Yes — 1/3 and 2/6 are equivalent",
+      "distractors": [
+        {
+          "likelihood": 0.66,
+          "maps_to": "M004",
+          "value": "No, 2/6 is bigger because the numbers are bigger"
+        },
+        {
+          "likelihood": 0.19,
+          "maps_to": "M004",
+          "value": "No, they look different so they can't be equal"
+        }
+      ],
+      "elo": 1140,
+      "id": "i_1402",
+      "representation": "area_model",
+      "role": "diagnostic",
+      "skill_code": "S003_equivalent_fractions",
+      "stem": "A bar shows 1/3 shaded; an identical bar shows 2/6 shaded the same way. Are these equal?"
+    },
+    {
+      "content_version": "v1",
+      "correct_answer": "Yes, equivalent",
+      "distractors": [
+        {
+          "likelihood": 0.66,
+          "maps_to": "M004",
+          "value": "No, 6/8 is bigger"
+        },
+        {
+          "likelihood": 0.19,
+          "maps_to": "M004",
+          "value": "No, different numbers can't be equal"
+        }
+      ],
+      "elo": 1160,
+      "id": "i_1403",
+      "representation": "symbolic",
+      "role": "diagnostic",
+      "skill_code": "S003_equivalent_fractions",
+      "stem": "Is 3/4 equal to 6/8?"
+    },
+    {
+      "content_version": "v1",
+      "correct_answer": "Yes, equivalent",
+      "distractors": [
+        {
+          "likelihood": 0.66,
+          "maps_to": "M004",
+          "value": "No, 2/10 is bigger"
+        },
+        {
+          "likelihood": 0.19,
+          "maps_to": "M004",
+          "value": "No, different numbers can't be equal"
+        }
+      ],
+      "elo": 1180,
+      "id": "i_1404",
+      "representation": "symbolic",
+      "role": "diagnostic",
+      "skill_code": "S003_equivalent_fractions",
+      "stem": "Is 1/5 equal to 2/10?"
+    },
+    {
+      "content_version": "v1",
+      "correct_answer": "5/6",
+      "distractors": [
+        {
+          "likelihood": 0.68,
+          "maps_to": "M005",
+          "value": "1/2"
+        },
+        {
+          "likelihood": 0.17,
+          "maps_to": "M005",
+          "value": "equal"
+        }
+      ],
+      "elo": 1200,
+      "id": "i_1501",
+      "representation": "symbolic",
+      "role": "diagnostic",
+      "skill_code": "S006_compare_unlike_fractions",
+      "stem": "Which is bigger: 5/6 or 1/2?"
+    },
+    {
+      "content_version": "v1",
+      "correct_answer": "7/9",
+      "distractors": [
+        {
+          "likelihood": 0.68,
+          "maps_to": "M005",
+          "value": "1/3"
+        },
+        {
+          "likelihood": 0.17,
+          "maps_to": "M005",
+          "value": "equal"
+        }
+      ],
+      "elo": 1220,
+      "id": "i_1502",
+      "representation": "symbolic",
+      "role": "diagnostic",
+      "skill_code": "S006_compare_unlike_fractions",
+      "stem": "Which is bigger: 7/9 or 1/3?"
+    },
+    {
+      "content_version": "v1",
+      "correct_answer": "3/8",
+      "distractors": [
+        {
+          "likelihood": 0.68,
+          "maps_to": "M005",
+          "value": "1/4"
+        },
+        {
+          "likelihood": 0.17,
+          "maps_to": "M005",
+          "value": "same point"
+        }
+      ],
+      "elo": 1240,
+      "id": "i_1503",
+      "representation": "number_line",
+      "role": "diagnostic",
+      "skill_code": "S006_compare_unlike_fractions",
+      "stem": "On a number line, which point is farther right: 3/8 or 1/4?"
+    },
+    {
+      "content_version": "v1",
+      "correct_answer": "3/10",
+      "distractors": [
+        {
+          "likelihood": 0.68,
+          "maps_to": "M005",
+          "value": "1/4"
+        },
+        {
+          "likelihood": 0.17,
+          "maps_to": "M005",
+          "value": "same point"
+        }
+      ],
+      "elo": 1260,
+      "id": "i_1504",
+      "representation": "number_line",
+      "role": "diagnostic",
+      "skill_code": "S006_compare_unlike_fractions",
+      "stem": "On a number line, which point is farther right: 3/10 or 1/4?"
+    },
+    {
+      "content_version": "v1",
+      "correct_answer": "Yes — it means one whole and one more quarter",
+      "distractors": [
+        {
+          "likelihood": 0.64,
+          "maps_to": "M006",
+          "value": "No, the top can't be bigger than the bottom"
+        },
+        {
+          "likelihood": 0.21,
+          "maps_to": "M006",
+          "value": "It just means the number 1"
+        }
+      ],
+      "elo": 1180,
+      "id": "i_1601",
+      "representation": "symbolic",
+      "role": "diagnostic",
+      "skill_code": "S007_improper_fractions",
+      "stem": "Is 5/4 a real fraction?"
+    },
+    {
+      "content_version": "v1",
+      "correct_answer": "Yes — it's more than 2 wholes (2 and 1/3)",
+      "distractors": [
+        {
+          "likelihood": 0.64,
+          "maps_to": "M006",
+          "value": "No, that's not allowed"
+        },
+        {
+          "likelihood": 0.21,
+          "maps_to": "M006",
+          "value": "It just means the number 2"
+        }
+      ],
+      "elo": 1200,
+      "id": "i_1602",
+      "representation": "symbolic",
+      "role": "diagnostic",
+      "skill_code": "S007_improper_fractions",
+      "stem": "Is 7/3 a real number?"
+    },
+    {
+      "content_version": "v1",
+      "correct_answer": "5/4",
+      "distractors": [
+        {
+          "likelihood": 0.64,
+          "maps_to": "M006",
+          "value": "You can't shade more than one whole circle"
+        },
+        {
+          "likelihood": 0.21,
+          "maps_to": "M006",
+          "value": "1 (just the whole one counts)"
+        }
+      ],
+      "elo": 1220,
+      "id": "i_1603",
+      "representation": "area_model",
+      "role": "diagnostic",
+      "skill_code": "S007_improper_fractions",
+      "stem": "These pictures show 1 whole circle fully shaded and one more circle with 1/4 shaded. What fraction is shaded overall?"
+    },
+    {
+      "content_version": "v1",
+      "correct_answer": "7/3",
+      "distractors": [
+        {
+          "likelihood": 0.64,
+          "maps_to": "M006",
+          "value": "That's impossible, fractions stop at 1 whole"
+        },
+        {
+          "likelihood": 0.21,
+          "maps_to": "M006",
+          "value": "2 (the extra third doesn't count)"
+        }
+      ],
+      "elo": 1240,
+      "id": "i_1604",
+      "representation": "area_model",
+      "role": "diagnostic",
+      "skill_code": "S007_improper_fractions",
+      "stem": "Two whole rectangles are shaded plus 1/3 of a third rectangle. What is the total, as a fraction?"
+    },
+    {
+      "content_version": "v1",
+      "correct_answer": "8 counters",
+      "distractors": [
+        {
+          "likelihood": 0.62,
+          "maps_to": "M007",
+          "value": "6 counters (12 divided by the top number, 2)"
+        },
+        {
+          "likelihood": 0.23,
+          "maps_to": "M007",
+          "value": "2 counters (just the top number)"
+        }
+      ],
+      "elo": 1160,
+      "id": "i_1701",
+      "representation": "set_model",
+      "role": "diagnostic",
+      "skill_code": "S008_fraction_of_a_set",
+      "stem": "What is 2/3 of 12 counters?"
+    },
+    {
+      "content_version": "v1",
+      "correct_answer": "12 stickers",
+      "distractors": [
+        {
+          "likelihood": 0.62,
+          "maps_to": "M007",
+          "value": "About 5 stickers (16 divided by the top number, 3)"
+        },
+        {
+          "likelihood": 0.23,
+          "maps_to": "M007",
+          "value": "3 stickers (just the top number)"
+        }
+      ],
+      "elo": 1180,
+      "id": "i_1702",
+      "representation": "set_model",
+      "role": "diagnostic",
+      "skill_code": "S008_fraction_of_a_set",
+      "stem": "What is 3/4 of 16 stickers?"
+    },
+    {
+      "content_version": "v1",
+      "correct_answer": "Divide 20 by 5 (the denominator), then multiply by 2",
+      "distractors": [
+        {
+          "likelihood": 0.62,
+          "maps_to": "M007",
+          "value": "Divide 20 by 2 (the top number)"
+        },
+        {
+          "likelihood": 0.23,
+          "maps_to": "M007",
+          "value": "Just use the top number, 2, as the answer"
+        }
+      ],
+      "elo": 1200,
+      "id": "i_1703",
+      "representation": "symbolic",
+      "role": "diagnostic",
+      "skill_code": "S008_fraction_of_a_set",
+      "stem": "To find 2/5 of 20, what do you do first?"
+    },
+    {
+      "content_version": "v1",
+      "correct_answer": "Divide 24 by 4 (the denominator), then multiply by 3",
+      "distractors": [
+        {
+          "likelihood": 0.62,
+          "maps_to": "M007",
+          "value": "Divide 24 by 3 (the top number)"
+        },
+        {
+          "likelihood": 0.23,
+          "maps_to": "M007",
+          "value": "Just use the top number, 3, as the answer"
+        }
+      ],
+      "elo": 1220,
+      "id": "i_1704",
+      "representation": "symbolic",
+      "role": "diagnostic",
+      "skill_code": "S008_fraction_of_a_set",
+      "stem": "To find 3/4 of 24, what do you do first?"
+    },
+    {
+      "content_version": "v1",
+      "correct_answer": "2/4 (or 1/2)",
+      "distractors": [
+        {
+          "likelihood": 0.75,
+          "maps_to": "M008",
+          "value": "2/8"
+        },
+        {
+          "likelihood": 0.1,
+          "maps_to": "M008",
+          "value": "1/8"
+        }
+      ],
+      "elo": 1150,
+      "id": "i_1801",
+      "representation": "symbolic",
+      "role": "diagnostic",
+      "skill_code": "S005_add_fractions",
+      "stem": "What is 1/4 + 1/4?"
+    },
+    {
+      "content_version": "v1",
+      "correct_answer": "3/6 (or 1/2)",
+      "distractors": [
+        {
+          "likelihood": 0.75,
+          "maps_to": "M008",
+          "value": "3/12"
+        },
+        {
+          "likelihood": 0.1,
+          "maps_to": "M008",
+          "value": "2/12"
+        }
+      ],
+      "elo": 1170,
+      "id": "i_1802",
+      "representation": "symbolic",
+      "role": "diagnostic",
+      "skill_code": "S005_add_fractions",
+      "stem": "What is 2/6 + 1/6?"
+    },
+    {
+      "content_version": "v1",
+      "correct_answer": "3/5",
+      "distractors": [
+        {
+          "likelihood": 0.75,
+          "maps_to": "M008",
+          "value": "3/10"
+        },
+        {
+          "likelihood": 0.1,
+          "maps_to": "M008",
+          "value": "2/10"
+        }
+      ],
+      "elo": 1190,
+      "id": "i_1803",
+      "representation": "area_model",
+      "role": "diagnostic",
+      "skill_code": "S005_add_fractions",
+      "stem": "Two bars, each split into 5 equal parts. First bar has 2 parts shaded, second bar has 1 part shaded (same size bars). Combined, what fraction of one bar is that?"
+    },
+    {
+      "content_version": "v1",
+      "correct_answer": "5/6",
+      "distractors": [
+        {
+          "likelihood": 0.75,
+          "maps_to": "M008",
+          "value": "5/12"
+        },
+        {
+          "likelihood": 0.1,
+          "maps_to": "M008",
+          "value": "3/12"
+        }
+      ],
+      "elo": 1210,
+      "id": "i_1804",
+      "representation": "area_model",
+      "role": "diagnostic",
+      "skill_code": "S005_add_fractions",
+      "stem": "Two circles, each split into 6 slices. First circle: 3 slices shaded. Second circle: 2 slices shaded. Combined, what fraction of one circle is shaded?"
+    }
+  ]
+}

@@ -1,0 +1,158 @@
+{
+  "diagnostic_item": {
+    "content_version": "v1",
+    "correct_answer": "5/4",
+    "distractors": [
+      {
+        "likelihood": 0.64,
+        "maps_to": "M006",
+        "value": "You can't shade more than one whole circle"
+      },
+      {
+        "likelihood": 0.21,
+        "maps_to": "M006",
+        "value": "1 (just the whole one counts)"
+      }
+    ],
+    "elo": 1220,
+    "id": "i_1603",
+    "representation": "area_model",
+    "role": "diagnostic",
+    "skill_code": "S007_improper_fractions",
+    "stem": "These pictures show 1 whole circle fully shaded and one more circle with 1/4 shaded. What fraction is shaded overall?"
+  },
+  "intervention": {
+    "historical_success_rate": 0.75,
+    "id": "INT_M006_A",
+    "misconception_code": "M006",
+    "script": "Let's shade one WHOLE circle, then start shading a second one — that extra piece is what makes it more than one whole.",
+    "strategy": "second_whole_plus_extra",
+    "type": "VISUALIZATION"
+  },
+  "learner_evidence": {
+    "asr_confidence": 0.83,
+    "diagnosis": {
+      "asr_reliable": true,
+      "labels": [
+        {
+          "confidence": 0.89,
+          "evidence_span": "one more piece makes 5/4",
+          "misconception_id": "M006",
+          "state": "resolved"
+        }
+      ],
+      "understanding_signals": [
+        "partitioning_language"
+      ]
+    },
+    "explanation": "it's 5/4 because the first circle is a whole one which is 4/4 and then one more piece makes 5/4",
+    "manipulative_trace": [
+      {
+        "action": "drag",
+        "t": 2.0,
+        "target": "circle_whole"
+      },
+      {
+        "action": "align",
+        "t": 4.1,
+        "targets": [
+          "circle_whole",
+          "circle_quarter"
+        ]
+      }
+    ]
+  },
+  "mastery_outcome": {
+    "caveats": [
+      "transfer confirmed on a number line only; set-model transfer not yet attempted"
+    ],
+    "claim": "Ava can represent fractions greater than one whole",
+    "evidence_ids": [
+      "e_m006_1",
+      "e_m006_2",
+      "e_m006_3",
+      "e_m006_4",
+      "e_m006_5"
+    ],
+    "misconception_posteriors": {
+      "M006": 0.06
+    },
+    "next_review": "2026-09-21",
+    "p_known_after": 0.9,
+    "p_known_before": 0.24,
+    "transfer_verified": true
+  },
+  "misconception": {
+    "citation": "Literature on the part-whole-only conception of fractions and the transition to fractions greater than one.",
+    "code": "M006",
+    "cognitive_origin": "Early fraction experience is almost entirely parts of a single whole (pizza slices, pie charts), so 'fraction' gets encoded as inherently less than one; a numerator larger than the denominator is treated as an error rather than a quantity greater than one whole.",
+    "content_version": "v1",
+    "distractor_likelihood": {
+      "other": 0.15,
+      "rewrites_as_whole_number_only": 0.21,
+      "says_impossible_or_invalid": 0.64
+    },
+    "distractor_likelihood_if_not_misconception": {
+      "other": 0.78,
+      "rewrites_as_whole_number_only": 0.13,
+      "says_impossible_or_invalid": 0.09
+    },
+    "prevalence_prior": 0.36,
+    "skill_code": "S007_improper_fractions",
+    "sprout_forbidden": [
+      "improper",
+      "stating a fraction can be greater than one whole before resolution"
+    ],
+    "title": "A fraction can never be greater than one whole"
+  },
+  "skill": {
+    "code": "S007_improper_fractions",
+    "grade_band": "4-5",
+    "prerequisites": [
+      "S001_identify_fraction"
+    ],
+    "standard": "CCSS.4.NF.B.3c",
+    "title": "Represent fractions greater than one whole"
+  },
+  "sprout_forbidden": [
+    "improper",
+    "stating a fraction can be greater than one whole before resolution"
+  ],
+  "sprout_scripts": [
+    {
+      "emotion": "confident",
+      "id": "SS_M006_01",
+      "misconception_code": "M006",
+      "utterance": "That fraction can't be right — the top number can't be bigger than the bottom!"
+    },
+    {
+      "emotion": "curious",
+      "id": "SS_M006_02",
+      "misconception_code": "M006",
+      "utterance": "Wait, can a fraction ever be bigger than one whole thing?"
+    },
+    {
+      "emotion": "confused",
+      "id": "SS_M006_03",
+      "misconception_code": "M006",
+      "utterance": "I thought fractions were always pieces smaller than one whole."
+    }
+  ],
+  "verification": {
+    "results": [
+      true,
+      true,
+      true
+    ],
+    "transfer_item": {
+      "id": "i_1691",
+      "representation": "number_line",
+      "result": true
+    },
+    "unaided_items": [
+      "i_2023",
+      "i_2024",
+      "i_2027"
+    ]
+  }
+}

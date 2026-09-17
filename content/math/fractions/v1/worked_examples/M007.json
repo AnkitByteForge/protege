@@ -1,0 +1,159 @@
+{
+  "diagnostic_item": {
+    "content_version": "v1",
+    "correct_answer": "8 counters",
+    "distractors": [
+      {
+        "likelihood": 0.62,
+        "maps_to": "M007",
+        "value": "6 counters (12 divided by the top number, 2)"
+      },
+      {
+        "likelihood": 0.23,
+        "maps_to": "M007",
+        "value": "2 counters (just the top number)"
+      }
+    ],
+    "elo": 1160,
+    "id": "i_1701",
+    "representation": "set_model",
+    "role": "diagnostic",
+    "skill_code": "S008_fraction_of_a_set",
+    "stem": "What is 2/3 of 12 counters?"
+  },
+  "intervention": {
+    "historical_success_rate": 0.77,
+    "id": "INT_M007_C",
+    "misconception_code": "M007",
+    "script": "Watch: 2/3 of 12 -> Step 1: 12 divided by 3 (the bottom) is 4. Step 2: 4 times 2 (the top) is 8.",
+    "strategy": "step_by_step_of",
+    "type": "WORKED_EXAMPLE"
+  },
+  "learner_evidence": {
+    "asr_confidence": 0.87,
+    "diagnosis": {
+      "asr_reliable": true,
+      "labels": [
+        {
+          "confidence": 0.9,
+          "evidence_span": "split the 12 into 3 equal groups first",
+          "misconception_id": "M007",
+          "state": "resolved"
+        }
+      ],
+      "understanding_signals": [
+        "partitioning_language"
+      ]
+    },
+    "explanation": "you split the 12 into 3 equal groups first, that's 4 each, then you take 2 of the groups so it's 8",
+    "manipulative_trace": [
+      {
+        "action": "drag",
+        "t": 2.5,
+        "target": "counter_group_1"
+      },
+      {
+        "action": "align",
+        "t": 5.2,
+        "targets": [
+          "counter_group_1",
+          "counter_group_2"
+        ]
+      }
+    ]
+  },
+  "mastery_outcome": {
+    "caveats": [
+      "transfer confirmed with an area-model garden bed only; a number-line/time version not yet attempted"
+    ],
+    "claim": "Ava can find a fraction of a set of objects",
+    "evidence_ids": [
+      "e_m007_1",
+      "e_m007_2",
+      "e_m007_3",
+      "e_m007_4",
+      "e_m007_5"
+    ],
+    "misconception_posteriors": {
+      "M007": 0.07
+    },
+    "next_review": "2026-09-22",
+    "p_known_after": 0.88,
+    "p_known_before": 0.27,
+    "transfer_verified": true
+  },
+  "misconception": {
+    "citation": "Research on children's difficulty transferring fraction understanding from area models to set/group models.",
+    "code": "M007",
+    "cognitive_origin": "When asked for a fraction of a GROUP of objects rather than a single shape, children map the wrong number in the fraction onto the partitioning step, using the numerator as the divisor instead of the denominator — a failure to transfer the part-whole model from area to a set/group model.",
+    "content_version": "v1",
+    "distractor_likelihood": {
+      "divides_by_numerator": 0.62,
+      "other": 0.15,
+      "uses_numerator_as_the_answer": 0.23
+    },
+    "distractor_likelihood_if_not_misconception": {
+      "divides_by_numerator": 0.1,
+      "other": 0.84,
+      "uses_numerator_as_the_answer": 0.06
+    },
+    "prevalence_prior": 0.31,
+    "skill_code": "S008_fraction_of_a_set",
+    "sprout_forbidden": [
+      "denominator",
+      "stating you divide by the denominator before resolution"
+    ],
+    "title": "Fraction of a set means dividing by the numerator, not the denominator"
+  },
+  "skill": {
+    "code": "S008_fraction_of_a_set",
+    "grade_band": "3-4",
+    "prerequisites": [
+      "S001_identify_fraction",
+      "S002_equal_parts"
+    ],
+    "standard": "CCSS.3.NF.A.1",
+    "title": "Find a fraction of a set of objects"
+  },
+  "sprout_forbidden": [
+    "denominator",
+    "stating you divide by the denominator before resolution"
+  ],
+  "sprout_scripts": [
+    {
+      "emotion": "confident",
+      "id": "SS_M007_01",
+      "misconception_code": "M007",
+      "utterance": "2/3 of 12? Easy, just divide by the top number: 12 divided by 2 is 6!"
+    },
+    {
+      "emotion": "curious",
+      "id": "SS_M007_02",
+      "misconception_code": "M007",
+      "utterance": "Wait, which number tells me how many groups to split into, the top or the bottom?"
+    },
+    {
+      "emotion": "confused",
+      "id": "SS_M007_03",
+      "misconception_code": "M007",
+      "utterance": "I keep mixing up which number I'm supposed to divide by."
+    }
+  ],
+  "verification": {
+    "results": [
+      true,
+      true,
+      true
+    ],
+    "transfer_item": {
+      "id": "i_1791",
+      "representation": "area_model",
+      "result": true
+    },
+    "unaided_items": [
+      "i_2028",
+      "i_2029",
+      "i_2031"
+    ]
+  }
+}

@@ -1,0 +1,196 @@
+{
+  "interventions": [
+    {
+      "historical_success_rate": 0.74,
+      "id": "INT_M001_A",
+      "misconception_code": "M001",
+      "script": "Let's shade ONE shape and count: how many parts did we shade out of how many total? That's our one fraction.",
+      "strategy": "single_shaded_shape",
+      "type": "VISUALIZATION"
+    },
+    {
+      "historical_success_rate": 0.68,
+      "id": "INT_M001_B",
+      "misconception_code": "M001",
+      "script": "It's like a score for one team, not two teams — '3 out of 4' is one idea, not a pair of numbers.",
+      "strategy": "team_score_analogy",
+      "type": "ANALOGY"
+    },
+    {
+      "historical_success_rate": 0.71,
+      "id": "INT_M001_C",
+      "misconception_code": "M001",
+      "script": "Watch me point: this whole circle is cut into 4. I shade 3. I say '3 out of 4' as ONE amount.",
+      "strategy": "point_to_the_whole",
+      "type": "WORKED_EXAMPLE"
+    },
+    {
+      "historical_success_rate": 0.72,
+      "id": "INT_M002_A",
+      "misconception_code": "M002",
+      "script": "Let's cut out the pieces and stack them on top of each other — see how they're not the same size?",
+      "strategy": "overlay_unequal_pieces",
+      "type": "VISUALIZATION"
+    },
+    {
+      "historical_success_rate": 0.66,
+      "id": "INT_M002_B",
+      "misconception_code": "M002",
+      "script": "Before naming the fraction, ask: are ALL the pieces exactly the same size? If not, it's not a fraction of equal parts yet.",
+      "strategy": "same_size_check",
+      "type": "HINT"
+    },
+    {
+      "historical_success_rate": 0.75,
+      "id": "INT_M002_C",
+      "misconception_code": "M002",
+      "script": "Watch me fold the paper in half twice to make four TRULY equal parts — now every piece matches.",
+      "strategy": "fold_to_check_equal",
+      "type": "WORKED_EXAMPLE"
+    },
+    {
+      "historical_success_rate": 0.78,
+      "id": "INT_M003_A",
+      "misconception_code": "M003",
+      "script": "Let's cut the SAME pizza two ways and lay them on top of each other.",
+      "strategy": "same_whole_partition_contrast",
+      "type": "VISUALIZATION"
+    },
+    {
+      "historical_success_rate": 0.71,
+      "id": "INT_M003_B",
+      "misconception_code": "M003",
+      "script": "Imagine the SAME pizza shared with more friends — more friends means each slice gets smaller, not bigger.",
+      "strategy": "same_size_pizza_more_friends",
+      "type": "ANALOGY"
+    },
+    {
+      "historical_success_rate": 0.75,
+      "id": "INT_M003_C",
+      "misconception_code": "M003",
+      "script": "Watch me stack a 1/4 bar and a 1/8 bar on top of each other — see which one is taller.",
+      "strategy": "stack_the_bars",
+      "type": "WORKED_EXAMPLE"
+    },
+    {
+      "historical_success_rate": 0.76,
+      "id": "INT_M004_A",
+      "misconception_code": "M004",
+      "script": "Let's stack a bar split in halves on top of one split in fourths — see how the shaded amount lines up exactly.",
+      "strategy": "stacked_equal_bars",
+      "type": "VISUALIZATION"
+    },
+    {
+      "historical_success_rate": 0.7,
+      "id": "INT_M004_B",
+      "misconception_code": "M004",
+      "script": "It's the same pizza, just sliced differently — cutting it more ways doesn't change how much you have.",
+      "strategy": "same_pizza_cut_differently",
+      "type": "ANALOGY"
+    },
+    {
+      "historical_success_rate": 0.73,
+      "id": "INT_M004_C",
+      "misconception_code": "M004",
+      "script": "Watch: multiply the top AND the bottom by the same number — the amount never changes, only how finely it's cut.",
+      "strategy": "multiply_top_and_bottom",
+      "type": "WORKED_EXAMPLE"
+    },
+    {
+      "historical_success_rate": 0.72,
+      "id": "INT_M005_A",
+      "misconception_code": "M005",
+      "script": "Let's shade 3/8 and 1/4 on same-size rectangles and lay them side by side — see which shaded area is bigger.",
+      "strategy": "shade_both_and_compare",
+      "type": "VISUALIZATION"
+    },
+    {
+      "historical_success_rate": 0.65,
+      "id": "INT_M005_B",
+      "misconception_code": "M005",
+      "script": "Before deciding, check BOTH numbers: how many pieces total, AND how many pieces you actually have.",
+      "strategy": "check_the_top_too",
+      "type": "HINT"
+    },
+    {
+      "historical_success_rate": 0.79,
+      "id": "INT_M005_C",
+      "misconception_code": "M005",
+      "script": "Watch: turn 1/4 into 2/8 so both fractions talk about eighths — now compare 3/8 with 2/8 directly.",
+      "strategy": "convert_to_common_denominator",
+      "type": "WORKED_EXAMPLE"
+    },
+    {
+      "historical_success_rate": 0.75,
+      "id": "INT_M006_A",
+      "misconception_code": "M006",
+      "script": "Let's shade one WHOLE circle, then start shading a second one — that extra piece is what makes it more than one whole.",
+      "strategy": "second_whole_plus_extra",
+      "type": "VISUALIZATION"
+    },
+    {
+      "historical_success_rate": 0.7,
+      "id": "INT_M006_B",
+      "misconception_code": "M006",
+      "script": "It's like ordering more than one whole pizza — you can absolutely have 1 and 1/4 pizzas.",
+      "strategy": "more_than_one_pizza",
+      "type": "ANALOGY"
+    },
+    {
+      "historical_success_rate": 0.74,
+      "id": "INT_M006_C",
+      "misconception_code": "M006",
+      "script": "Watch me count fourths past 4/4: 4/4 is one whole, 5/4 is one whole plus one more quarter.",
+      "strategy": "count_past_the_whole",
+      "type": "WORKED_EXAMPLE"
+    },
+    {
+      "historical_success_rate": 0.71,
+      "id": "INT_M007_A",
+      "misconception_code": "M007",
+      "script": "First split all 12 counters into 3 equal groups (that's the bottom number) — THEN count how many groups, 2, you need.",
+      "strategy": "split_into_denominator_groups",
+      "type": "VISUALIZATION"
+    },
+    {
+      "historical_success_rate": 0.68,
+      "id": "INT_M007_B",
+      "misconception_code": "M007",
+      "script": "The bottom number always tells you how many equal groups to make first. The top number tells you how many of those groups to take.",
+      "strategy": "bottom_number_is_the_split",
+      "type": "HINT"
+    },
+    {
+      "historical_success_rate": 0.77,
+      "id": "INT_M007_C",
+      "misconception_code": "M007",
+      "script": "Watch: 2/3 of 12 -> Step 1: 12 divided by 3 (the bottom) is 4. Step 2: 4 times 2 (the top) is 8.",
+      "strategy": "step_by_step_of",
+      "type": "WORKED_EXAMPLE"
+    },
+    {
+      "historical_success_rate": 0.8,
+      "id": "INT_M008_A",
+      "misconception_code": "M008",
+      "script": "Let's push the shaded pieces from both same-size bars together onto one bar — count how many of the SAME-size pieces you have now.",
+      "strategy": "combine_same_size_pieces",
+      "type": "VISUALIZATION"
+    },
+    {
+      "historical_success_rate": 0.7,
+      "id": "INT_M008_B",
+      "misconception_code": "M008",
+      "script": "The bottom number names how big each piece is. If both bars use the same size piece, that number doesn't change when you combine them.",
+      "strategy": "denominator_names_the_piece_size",
+      "type": "HINT"
+    },
+    {
+      "historical_success_rate": 0.82,
+      "id": "INT_M008_C",
+      "misconception_code": "M008",
+      "script": "Watch: 1/4 + 1/4 — the pieces are already the same size (fourths), so we just add how many pieces: 1 + 1 = 2, giving 2/4.",
+      "strategy": "same_denominator_addition",
+      "type": "WORKED_EXAMPLE"
+    }
+  ]
+}

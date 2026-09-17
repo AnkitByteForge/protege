@@ -1,0 +1,220 @@
+{
+  "transfer_items": [
+    {
+      "correct_answer": "3/4",
+      "elo": 1300,
+      "id": "i_1191",
+      "pool": "misconception",
+      "representation": "number_line",
+      "skill_code": "S001_identify_fraction",
+      "stem": "Place the point that shows 3/4 on a number line from 0 to 1."
+    },
+    {
+      "correct_answer": "3/8",
+      "elo": 1320,
+      "id": "i_1192",
+      "pool": "misconception",
+      "representation": "set_model",
+      "skill_code": "S001_identify_fraction",
+      "stem": "A basket has 8 apples and 3 are red. What fraction of the basket is red?"
+    },
+    {
+      "correct_answer": "No — the marks must be equally spaced for 1/4 to apply",
+      "elo": 1300,
+      "id": "i_1291",
+      "pool": "misconception",
+      "representation": "number_line",
+      "skill_code": "S002_equal_parts",
+      "stem": "A number line from 0 to 1 is marked with 4 unevenly spaced ticks. Can the second tick be called 1/4?"
+    },
+    {
+      "correct_answer": "False — the 3 pieces must be equal size",
+      "elo": 1310,
+      "id": "i_1292",
+      "pool": "misconception",
+      "representation": "symbolic",
+      "skill_code": "S002_equal_parts",
+      "stem": "True or false: any shape split into 3 pieces automatically shows thirds."
+    },
+    {
+      "correct_answer": "1/4",
+      "elo": 1300,
+      "id": "i_0201",
+      "pool": "misconception",
+      "representation": "number_line",
+      "skill_code": "S004_compare_unit_fractions",
+      "stem": "Place 1/4 and 1/8 on the same number line from 0 to 1. Which point is farther right?"
+    },
+    {
+      "correct_answer": "Tray A (1/4)",
+      "elo": 1320,
+      "id": "i_0202",
+      "pool": "misconception",
+      "representation": "set_model",
+      "skill_code": "S004_compare_unit_fractions",
+      "stem": "Two identical trays of 8 cookies each. Tray A gives away 1/4 of its cookies; Tray B gives away 1/8 of its cookies. Which tray gave away more cookies?"
+    },
+    {
+      "correct_answer": "Yes, the same point",
+      "elo": 1300,
+      "id": "i_1491",
+      "pool": "misconception",
+      "representation": "number_line",
+      "skill_code": "S003_equivalent_fractions",
+      "stem": "Do 1/2 and 2/4 land on the exact same point on a number line from 0 to 1?"
+    },
+    {
+      "correct_answer": "Yes, the same amount",
+      "elo": 1320,
+      "id": "i_1492",
+      "pool": "misconception",
+      "representation": "set_model",
+      "skill_code": "S003_equivalent_fractions",
+      "stem": "A group of 8 counters: is 'half the group' the same amount as '4 out of 8 counters'?"
+    },
+    {
+      "correct_answer": "The 3/8 rectangle",
+      "elo": 1330,
+      "id": "i_1591",
+      "pool": "misconception",
+      "representation": "area_model",
+      "skill_code": "S006_compare_unlike_fractions",
+      "stem": "Two identical rectangles: one shows 3/8 shaded, the other shows 1/4 shaded. Which rectangle has more shaded?"
+    },
+    {
+      "correct_answer": "Group A (3/8)",
+      "elo": 1350,
+      "id": "i_1592",
+      "pool": "misconception",
+      "representation": "set_model",
+      "skill_code": "S006_compare_unlike_fractions",
+      "stem": "Group A has 8 marbles, 3 are blue. Group B has 8 marbles, 2 are blue. Which group has more blue marbles?"
+    },
+    {
+      "correct_answer": "5/4 (between 1 and 2, one quarter past 1)",
+      "elo": 1330,
+      "id": "i_1691",
+      "pool": "misconception",
+      "representation": "number_line",
+      "skill_code": "S007_improper_fractions",
+      "stem": "Place 5/4 on a number line that goes from 0 to 2."
+    },
+    {
+      "correct_answer": "5/4 cups",
+      "elo": 1350,
+      "id": "i_1692",
+      "pool": "misconception",
+      "representation": "set_model",
+      "skill_code": "S007_improper_fractions",
+      "stem": "You have 5 quarter-cups of flour. How many cups is that, written as a fraction of a cup?"
+    },
+    {
+      "correct_answer": "8 plots",
+      "elo": 1330,
+      "id": "i_1791",
+      "pool": "misconception",
+      "representation": "area_model",
+      "skill_code": "S008_fraction_of_a_set",
+      "stem": "A garden bed has 20 equal square plots, and 2/5 of it grows tomatoes. How many plots grow tomatoes?"
+    },
+    {
+      "correct_answer": "15 minutes",
+      "elo": 1350,
+      "id": "i_1792",
+      "pool": "misconception",
+      "representation": "number_line",
+      "skill_code": "S008_fraction_of_a_set",
+      "stem": "A 25-minute video is divided into fifths. How many minutes is 3/5 of the video?"
+    },
+    {
+      "correct_answer": "3/5",
+      "elo": 1330,
+      "id": "i_1891",
+      "pool": "misconception",
+      "representation": "number_line",
+      "skill_code": "S005_add_fractions",
+      "stem": "Start at 1/5 on a number line and hop forward 2/5. Where do you land?"
+    },
+    {
+      "correct_answer": "5/7",
+      "elo": 1350,
+      "id": "i_1892",
+      "pool": "misconception",
+      "representation": "set_model",
+      "skill_code": "S005_add_fractions",
+      "stem": "A jar of 7 beads has 2/7 red beads and 3/7 blue beads. What fraction of the jar is red or blue combined?"
+    },
+    {
+      "correct_answer": "1/3",
+      "elo": 1400,
+      "id": "i_3001",
+      "pool": "general",
+      "representation": "number_line",
+      "skill_code": "S004_compare_unit_fractions",
+      "stem": "Place 1/3 and 1/6 on the same number line from 0 to 1. Which is farther right?"
+    },
+    {
+      "correct_answer": "2/3",
+      "elo": 1420,
+      "id": "i_3002",
+      "pool": "general",
+      "representation": "number_line",
+      "skill_code": "S006_compare_unlike_fractions",
+      "stem": "On a number line from 0 to 1, place 3/5 and 2/3. Which is farther right?"
+    },
+    {
+      "correct_answer": "7/4 (between 1 and 2, one quarter past 1 and a half)",
+      "elo": 1440,
+      "id": "i_3003",
+      "pool": "general",
+      "representation": "number_line",
+      "skill_code": "S007_improper_fractions",
+      "stem": "Place 7/4 on a number line from 0 to 2."
+    },
+    {
+      "correct_answer": "5/7",
+      "elo": 1460,
+      "id": "i_3004",
+      "pool": "general",
+      "representation": "number_line",
+      "skill_code": "S005_add_fractions",
+      "stem": "Start at 2/7 and hop forward 3/7 on a number line. Where do you land?"
+    },
+    {
+      "correct_answer": "Yes",
+      "elo": 1400,
+      "id": "i_3005",
+      "pool": "general",
+      "representation": "symbolic",
+      "skill_code": "S003_equivalent_fractions",
+      "stem": "Without a picture, is 4/10 equal to 2/5?"
+    },
+    {
+      "correct_answer": "30",
+      "elo": 1420,
+      "id": "i_3006",
+      "pool": "general",
+      "representation": "symbolic",
+      "skill_code": "S008_fraction_of_a_set",
+      "stem": "Without counting objects, what is 3/4 of 40?"
+    },
+    {
+      "correct_answer": "5 equal parts out of 8 total parts",
+      "elo": 1380,
+      "id": "i_3007",
+      "pool": "general",
+      "representation": "symbolic",
+      "skill_code": "S001_identify_fraction",
+      "stem": "Without a picture, what does 5/8 mean?"
+    },
+    {
+      "correct_answer": "True",
+      "elo": 1390,
+      "id": "i_3008",
+      "pool": "general",
+      "representation": "symbolic",
+      "skill_code": "S002_equal_parts",
+      "stem": "True or false, using words only: a fraction requires equal-size parts."
+    }
+  ]
+}

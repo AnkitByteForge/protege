@@ -1,0 +1,162 @@
+{
+  "diagnostic_item": {
+    "content_version": "v1",
+    "correct_answer": "1/4",
+    "distractors": [
+      {
+        "likelihood": 0.82,
+        "maps_to": "M003",
+        "value": "1/8"
+      },
+      {
+        "likelihood": 0.06,
+        "maps_to": "M003",
+        "value": "equal"
+      }
+    ],
+    "elo": 1180,
+    "id": "i_0132",
+    "representation": "area_model",
+    "role": "diagnostic",
+    "skill_code": "S004_compare_unit_fractions",
+    "stem": "Which is more pizza: 1/4 or 1/8?"
+  },
+  "intervention": {
+    "historical_success_rate": 0.78,
+    "id": "INT_M003_A",
+    "misconception_code": "M003",
+    "script": "Let's cut the SAME pizza two ways and lay them on top of each other.",
+    "strategy": "same_whole_partition_contrast",
+    "type": "VISUALIZATION"
+  },
+  "learner_evidence": {
+    "asr_confidence": 0.88,
+    "diagnosis": {
+      "asr_reliable": true,
+      "labels": [
+        {
+          "confidence": 0.91,
+          "evidence_span": "more pieces are littler",
+          "misconception_id": "M003",
+          "state": "resolved"
+        }
+      ],
+      "understanding_signals": [
+        "inverse_denominator_relationship",
+        "partitioning_language"
+      ]
+    },
+    "explanation": "no because the bottom is how many pieces you cut it so more pieces are littler",
+    "manipulative_trace": [
+      {
+        "action": "drag",
+        "t": 2.1,
+        "target": "bar_1_4"
+      },
+      {
+        "action": "align",
+        "t": 4.8,
+        "targets": [
+          "bar_1_4",
+          "bar_1_8"
+        ]
+      }
+    ]
+  },
+  "mastery_outcome": {
+    "caveats": [
+      "transfer confirmed on number line only"
+    ],
+    "claim": "Ava can compare unit fractions",
+    "evidence_ids": [
+      "e_m003_1",
+      "e_m003_2",
+      "e_m003_3",
+      "e_m003_4",
+      "e_m003_5"
+    ],
+    "misconception_posteriors": {
+      "M003": 0.04
+    },
+    "next_review": "2026-09-19",
+    "p_known_after": 0.91,
+    "p_known_before": 0.31,
+    "transfer_verified": true
+  },
+  "misconception": {
+    "citation": "Whole-number bias literature; Siegler et al. on fraction magnitude.",
+    "code": "M003",
+    "cognitive_origin": "Whole-number bias — the child transfers whole-number ordering to the denominator, since 8 > 4.",
+    "content_version": "v1",
+    "distractor_likelihood": {
+      "other": 0.12,
+      "picks_1_8": 0.82,
+      "says_equal": 0.06
+    },
+    "distractor_likelihood_if_not_misconception": {
+      "other": 0.82,
+      "picks_1_8": 0.08,
+      "says_equal": 0.1
+    },
+    "prevalence_prior": 0.42,
+    "skill_code": "S004_compare_unit_fractions",
+    "sprout_forbidden": [
+      "stating 1/4 > 1/8 before resolution",
+      "numerator",
+      "denominator"
+    ],
+    "title": "Larger denominator means larger fraction"
+  },
+  "skill": {
+    "code": "S004_compare_unit_fractions",
+    "grade_band": "3-4",
+    "prerequisites": [
+      "S001_identify_fraction",
+      "S002_equal_parts"
+    ],
+    "standard": "CCSS.3.NF.A.3d",
+    "title": "Compare unit fractions"
+  },
+  "sprout_forbidden": [
+    "stating 1/4 > 1/8 before resolution",
+    "numerator",
+    "denominator"
+  ],
+  "sprout_scripts": [
+    {
+      "emotion": "confident",
+      "id": "SS_M003_01",
+      "misconception_code": "M003",
+      "utterance": "I think 1/8 is bigger! Eight is way more than four."
+    },
+    {
+      "emotion": "curious",
+      "id": "SS_M003_02",
+      "misconception_code": "M003",
+      "utterance": "Wait, so 1/8 wins because 8 is the bigger number, right?"
+    },
+    {
+      "emotion": "confused",
+      "id": "SS_M003_03",
+      "misconception_code": "M003",
+      "utterance": "Hmm, but 8 is more than 4. Doesn't more mean bigger?"
+    }
+  ],
+  "verification": {
+    "results": [
+      true,
+      true,
+      true
+    ],
+    "transfer_item": {
+      "id": "i_0201",
+      "representation": "number_line",
+      "result": true
+    },
+    "unaided_items": [
+      "i_0148",
+      "i_0155",
+      "i_0161"
+    ]
+  }
+}

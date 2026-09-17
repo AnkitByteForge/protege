@@ -1,0 +1,159 @@
+{
+  "diagnostic_item": {
+    "content_version": "v1",
+    "correct_answer": "2/4 (or 1/2)",
+    "distractors": [
+      {
+        "likelihood": 0.75,
+        "maps_to": "M008",
+        "value": "2/8"
+      },
+      {
+        "likelihood": 0.1,
+        "maps_to": "M008",
+        "value": "1/8"
+      }
+    ],
+    "elo": 1150,
+    "id": "i_1801",
+    "representation": "symbolic",
+    "role": "diagnostic",
+    "skill_code": "S005_add_fractions",
+    "stem": "What is 1/4 + 1/4?"
+  },
+  "intervention": {
+    "historical_success_rate": 0.82,
+    "id": "INT_M008_C",
+    "misconception_code": "M008",
+    "script": "Watch: 1/4 + 1/4 — the pieces are already the same size (fourths), so we just add how many pieces: 1 + 1 = 2, giving 2/4.",
+    "strategy": "same_denominator_addition",
+    "type": "WORKED_EXAMPLE"
+  },
+  "learner_evidence": {
+    "asr_confidence": 0.9,
+    "diagnosis": {
+      "asr_reliable": true,
+      "labels": [
+        {
+          "confidence": 0.92,
+          "evidence_span": "the bottom stays 4",
+          "misconception_id": "M008",
+          "state": "resolved"
+        }
+      ],
+      "understanding_signals": [
+        "partitioning_language"
+      ]
+    },
+    "explanation": "the pieces are already fourths so the bottom stays 4, you just add 1 plus 1 on top to get 2/4",
+    "manipulative_trace": [
+      {
+        "action": "drag",
+        "t": 1.5,
+        "target": "bar_1_4_a"
+      },
+      {
+        "action": "align",
+        "t": 3.0,
+        "targets": [
+          "bar_1_4_a",
+          "bar_1_4_b"
+        ]
+      }
+    ]
+  },
+  "mastery_outcome": {
+    "caveats": [
+      "transfer confirmed on a number line only; set-model transfer not yet attempted"
+    ],
+    "claim": "Ava can add fractions with like denominators",
+    "evidence_ids": [
+      "e_m008_1",
+      "e_m008_2",
+      "e_m008_3",
+      "e_m008_4",
+      "e_m008_5"
+    ],
+    "misconception_posteriors": {
+      "M008": 0.03
+    },
+    "next_review": "2026-09-23",
+    "p_known_after": 0.93,
+    "p_known_before": 0.22,
+    "transfer_verified": true
+  },
+  "misconception": {
+    "citation": "The 'add straight across' bug is among the most widely documented fraction-arithmetic errors in mathematics-education research.",
+    "code": "M008",
+    "cognitive_origin": "The 'add straight across' bug: children apply whole-number addition procedures directly to both parts of the fraction (1/4 + 1/4 -> 2/8) because they have not yet encoded that the denominator names the unit size, which stays fixed when the pieces being combined are already the same size.",
+    "content_version": "v1",
+    "distractor_likelihood": {
+      "adds_across": 0.75,
+      "keeps_one_numerator_adds_denominators": 0.1,
+      "other": 0.15
+    },
+    "distractor_likelihood_if_not_misconception": {
+      "adds_across": 0.2,
+      "keeps_one_numerator_adds_denominators": 0.08,
+      "other": 0.72
+    },
+    "prevalence_prior": 0.45,
+    "skill_code": "S005_add_fractions",
+    "sprout_forbidden": [
+      "common denominator",
+      "stating 1/2 + 1/3 = 2/5 as correct after resolution"
+    ],
+    "title": "Adding fractions means adding numerators and denominators separately"
+  },
+  "skill": {
+    "code": "S005_add_fractions",
+    "grade_band": "4-5",
+    "prerequisites": [
+      "S003_equivalent_fractions",
+      "S004_compare_unit_fractions"
+    ],
+    "standard": "CCSS.4.NF.B.3a",
+    "title": "Add fractions with like denominators"
+  },
+  "sprout_forbidden": [
+    "common denominator",
+    "stating 1/2 + 1/3 = 2/5 as correct after resolution"
+  ],
+  "sprout_scripts": [
+    {
+      "emotion": "confident",
+      "id": "SS_M008_01",
+      "misconception_code": "M008",
+      "utterance": "1/4 plus 1/4 is 2/8 — just add the tops and add the bottoms!"
+    },
+    {
+      "emotion": "curious",
+      "id": "SS_M008_02",
+      "misconception_code": "M008",
+      "utterance": "Wait, do I add the bottom numbers together too, or just the top ones?"
+    },
+    {
+      "emotion": "confused",
+      "id": "SS_M008_03",
+      "misconception_code": "M008",
+      "utterance": "Adding fractions feels just like adding regular numbers, top and bottom both."
+    }
+  ],
+  "verification": {
+    "results": [
+      true,
+      true,
+      true
+    ],
+    "transfer_item": {
+      "id": "i_1891",
+      "representation": "number_line",
+      "result": true
+    },
+    "unaided_items": [
+      "i_2033",
+      "i_2034",
+      "i_2036"
+    ]
+  }
+}

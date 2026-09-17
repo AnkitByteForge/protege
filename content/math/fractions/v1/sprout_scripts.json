@@ -1,0 +1,292 @@
+{
+  "sprout_scripts": [
+    {
+      "emotion": "confident",
+      "id": "SS_M001_01",
+      "misconception_code": "M001",
+      "utterance": "Three-fourths? That's easy, it's a three and a four! Two numbers."
+    },
+    {
+      "emotion": "curious",
+      "id": "SS_M001_02",
+      "misconception_code": "M001",
+      "utterance": "Wait, is this fraction one thing, or is it really two things, like a 3 and a 4?"
+    },
+    {
+      "emotion": "confused",
+      "id": "SS_M001_03",
+      "misconception_code": "M001",
+      "utterance": "I don't get how two numbers stuck together make just one amount."
+    },
+    {
+      "emotion": "uncertain",
+      "id": "SS_M001_04",
+      "misconception_code": "M001",
+      "utterance": "Maybe this fraction means 3 things AND 4 things? I'm not totally sure."
+    },
+    {
+      "emotion": "confident",
+      "id": "SS_M001_05",
+      "misconception_code": "M001",
+      "utterance": "I'll just say the top number and the bottom number separately, right?"
+    },
+    {
+      "emotion": "curious",
+      "id": "SS_M001_06",
+      "misconception_code": "M001",
+      "utterance": "So which one matters more, the top three or the bottom four?"
+    },
+    {
+      "emotion": "confident",
+      "id": "SS_M002_01",
+      "misconception_code": "M002",
+      "utterance": "I cut it into 4 pieces, so each piece is 1/4 — the sizes don't matter!"
+    },
+    {
+      "emotion": "curious",
+      "id": "SS_M002_02",
+      "misconception_code": "M002",
+      "utterance": "Does it matter if the pieces are different sizes, as long as there are 4?"
+    },
+    {
+      "emotion": "confused",
+      "id": "SS_M002_03",
+      "misconception_code": "M002",
+      "utterance": "These pieces look really different, but I still called it 1/4. Is that wrong?"
+    },
+    {
+      "emotion": "uncertain",
+      "id": "SS_M002_04",
+      "misconception_code": "M002",
+      "utterance": "Maybe the pieces need to match somehow? I'm not sure."
+    },
+    {
+      "emotion": "confident",
+      "id": "SS_M002_05",
+      "misconception_code": "M002",
+      "utterance": "Four pieces means fourths, no matter how I cut it, right?"
+    },
+    {
+      "emotion": "curious",
+      "id": "SS_M002_06",
+      "misconception_code": "M002",
+      "utterance": "So counting pieces isn't enough — what else do I check?"
+    },
+    {
+      "emotion": "confident",
+      "id": "SS_M003_01",
+      "misconception_code": "M003",
+      "utterance": "I think 1/8 is bigger! Eight is way more than four."
+    },
+    {
+      "emotion": "curious",
+      "id": "SS_M003_02",
+      "misconception_code": "M003",
+      "utterance": "Wait, so 1/8 wins because 8 is the bigger number, right?"
+    },
+    {
+      "emotion": "confused",
+      "id": "SS_M003_03",
+      "misconception_code": "M003",
+      "utterance": "Hmm, but 8 is more than 4. Doesn't more mean bigger?"
+    },
+    {
+      "emotion": "uncertain",
+      "id": "SS_M003_04",
+      "misconception_code": "M003",
+      "utterance": "Um, maybe 1/8 is bigger? Eight feels like a bigger number to me."
+    },
+    {
+      "emotion": "confident",
+      "id": "SS_M003_05",
+      "misconception_code": "M003",
+      "utterance": "Eight pieces has to beat four pieces, so 1/8 wins, right?"
+    },
+    {
+      "emotion": "curious",
+      "id": "SS_M003_06",
+      "misconception_code": "M003",
+      "utterance": "If I had 8 friends instead of 4, wouldn't my share be the bigger one?"
+    },
+    {
+      "emotion": "confident",
+      "id": "SS_M004_01",
+      "misconception_code": "M004",
+      "utterance": "1/2 and 2/4 can't be the same — 2/4 has bigger numbers, so it must be more!"
+    },
+    {
+      "emotion": "curious",
+      "id": "SS_M004_02",
+      "misconception_code": "M004",
+      "utterance": "Wait, how can two different-looking fractions be the exact same amount?"
+    },
+    {
+      "emotion": "confused",
+      "id": "SS_M004_03",
+      "misconception_code": "M004",
+      "utterance": "If the numbers are different, doesn't that mean the fractions are different too?"
+    },
+    {
+      "emotion": "uncertain",
+      "id": "SS_M004_04",
+      "misconception_code": "M004",
+      "utterance": "Maybe they're close but not really equal? I'm not sure."
+    },
+    {
+      "emotion": "confident",
+      "id": "SS_M004_05",
+      "misconception_code": "M004",
+      "utterance": "Bigger top and bottom numbers always means a bigger fraction, right?"
+    },
+    {
+      "emotion": "curious",
+      "id": "SS_M004_06",
+      "misconception_code": "M004",
+      "utterance": "So if I make the numbers bigger, does the fraction always grow?"
+    },
+    {
+      "emotion": "confident",
+      "id": "SS_M005_01",
+      "misconception_code": "M005",
+      "utterance": "1/4 has to be the biggest — four is such a small bottom number, so the pieces must be huge!"
+    },
+    {
+      "emotion": "curious",
+      "id": "SS_M005_02",
+      "misconception_code": "M005",
+      "utterance": "Isn't a smaller bottom number always the winner, no matter what's on top?"
+    },
+    {
+      "emotion": "confused",
+      "id": "SS_M005_03",
+      "misconception_code": "M005",
+      "utterance": "I only looked at the bottom numbers. Was I supposed to look at the top too?"
+    },
+    {
+      "emotion": "uncertain",
+      "id": "SS_M005_04",
+      "misconception_code": "M005",
+      "utterance": "Maybe the top number matters sometimes? I'm not sure when."
+    },
+    {
+      "emotion": "confident",
+      "id": "SS_M005_05",
+      "misconception_code": "M005",
+      "utterance": "Smaller bottom number, bigger fraction — that's the rule, right?"
+    },
+    {
+      "emotion": "curious",
+      "id": "SS_M005_06",
+      "misconception_code": "M005",
+      "utterance": "So the top number never changes who wins?"
+    },
+    {
+      "emotion": "confident",
+      "id": "SS_M006_01",
+      "misconception_code": "M006",
+      "utterance": "That fraction can't be right — the top number can't be bigger than the bottom!"
+    },
+    {
+      "emotion": "curious",
+      "id": "SS_M006_02",
+      "misconception_code": "M006",
+      "utterance": "Wait, can a fraction ever be bigger than one whole thing?"
+    },
+    {
+      "emotion": "confused",
+      "id": "SS_M006_03",
+      "misconception_code": "M006",
+      "utterance": "I thought fractions were always pieces smaller than one whole."
+    },
+    {
+      "emotion": "uncertain",
+      "id": "SS_M006_04",
+      "misconception_code": "M006",
+      "utterance": "Maybe that's just a mistake and should really be a whole number instead?"
+    },
+    {
+      "emotion": "confident",
+      "id": "SS_M006_05",
+      "misconception_code": "M006",
+      "utterance": "Fractions have to stay under 1, so this one must be wrong, right?"
+    },
+    {
+      "emotion": "curious",
+      "id": "SS_M006_06",
+      "misconception_code": "M006",
+      "utterance": "So what does a fraction like that even mean if it's more than a whole pizza?"
+    },
+    {
+      "emotion": "confident",
+      "id": "SS_M007_01",
+      "misconception_code": "M007",
+      "utterance": "2/3 of 12? Easy, just divide by the top number: 12 divided by 2 is 6!"
+    },
+    {
+      "emotion": "curious",
+      "id": "SS_M007_02",
+      "misconception_code": "M007",
+      "utterance": "Wait, which number tells me how many groups to split into, the top or the bottom?"
+    },
+    {
+      "emotion": "confused",
+      "id": "SS_M007_03",
+      "misconception_code": "M007",
+      "utterance": "I keep mixing up which number I'm supposed to divide by."
+    },
+    {
+      "emotion": "uncertain",
+      "id": "SS_M007_04",
+      "misconception_code": "M007",
+      "utterance": "Maybe I use the bottom number sometimes? I'm not sure when."
+    },
+    {
+      "emotion": "confident",
+      "id": "SS_M007_05",
+      "misconception_code": "M007",
+      "utterance": "The top number is what I divide by, right? That's what I always do."
+    },
+    {
+      "emotion": "curious",
+      "id": "SS_M007_06",
+      "misconception_code": "M007",
+      "utterance": "So the bottom number is just... extra?"
+    },
+    {
+      "emotion": "confident",
+      "id": "SS_M008_01",
+      "misconception_code": "M008",
+      "utterance": "1/4 plus 1/4 is 2/8 — just add the tops and add the bottoms!"
+    },
+    {
+      "emotion": "curious",
+      "id": "SS_M008_02",
+      "misconception_code": "M008",
+      "utterance": "Wait, do I add the bottom numbers together too, or just the top ones?"
+    },
+    {
+      "emotion": "confused",
+      "id": "SS_M008_03",
+      "misconception_code": "M008",
+      "utterance": "Adding fractions feels just like adding regular numbers, top and bottom both."
+    },
+    {
+      "emotion": "uncertain",
+      "id": "SS_M008_04",
+      "misconception_code": "M008",
+      "utterance": "Maybe the bottom number should stay the same? I'm not totally sure."
+    },
+    {
+      "emotion": "confident",
+      "id": "SS_M008_05",
+      "misconception_code": "M008",
+      "utterance": "Adding is adding — tops together, bottoms together, that's the rule!"
+    },
+    {
+      "emotion": "curious",
+      "id": "SS_M008_06",
+      "misconception_code": "M008",
+      "utterance": "So why wouldn't the bottom numbers add up too?"
+    }
+  ]
+}
