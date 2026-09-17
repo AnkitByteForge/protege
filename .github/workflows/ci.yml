@@ -146,8 +146,11 @@ jobs:
       - name: TypeScript
         run: npm run typecheck
 
+      - name: Vitest (unit/component tests)
+        run: npm run test
+
       - name: Install Playwright browser
         run: npx playwright install --with-deps chromium
 
-      - name: Playwright smoke test (builds + starts the app)
+      - name: Playwright (e2e, accessibility, keyboard, reduced-motion)
         run: npx playwright test

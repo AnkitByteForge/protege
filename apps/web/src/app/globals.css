@@ -1,47 +1,131 @@
-:root {
-  color-scheme: light;
+@import "tailwindcss";
+
+/*
+ * Tailwind v4 is CSS-first: this @theme block IS the Tailwind config.
+ * Values here must stay in sync with src/design/tokens.ts (the TS source
+ * used by runtime code such as motion springs). If you change a color,
+ * radius, or font here, change it there too.
+ */
+@theme {
+  --color-ink: #3b2f24;
+  --color-ink-soft: #6b5c4c;
+  --color-paper: #fbf6ec;
+  --color-surface: #f3ebda;
+  --color-surface-raised: #fffdf8;
+
+  --color-moss-200: #cfe6d3;
+  --color-moss-500: #6fae7e;
+  --color-moss-600: #3f7a4e;
+  --color-moss-700: #2f6b45;
+
+  --color-sky-200: #cde7f0;
+  --color-sky-500: #6fb8cf;
+  --color-sky-600: #3b87a8;
+  --color-sky-700: #2a6e8c;
+
+  --color-apricot-200: #f6d9bd;
+  --color-apricot-500: #e8965a;
+  --color-apricot-600: #d97a3f;
+  --color-apricot-700: #b85c2e;
+
+  --color-sand-200: #f3ebda;
+  --color-sand-300: #efe0c4;
+  --color-sand-500: #c9af83;
+
+  --color-clay-200: #e9d3b8;
+  --color-clay-600: #a66b34;
+  --color-clay-700: #8a5a2b;
+
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1.25rem;
+  --radius-xl: 1.75rem;
+  --radius-2xl: 2.5rem;
+
+  --font-sans: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-display), var(--font-body), ui-sans-serif, sans-serif;
+
+  --spacing-touch: 3rem;
+  --spacing-touch-lg: 3.75rem;
+
+  --shadow-soft: 0 1px 2px rgba(59, 47, 36, 0.06), 0 8px 24px -8px rgba(59, 47, 36, 0.18);
+  --shadow-soft-lg: 0 4px 8px rgba(59, 47, 36, 0.08), 0 24px 48px -16px rgba(59, 47, 36, 0.24);
+
+  --animate-ambient-float: ambient-float 7s ease-in-out infinite;
+  --animate-ambient-drift: ambient-drift 22s ease-in-out infinite;
 }
 
-* {
-  box-sizing: border-box;
+@keyframes ambient-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
 }
 
-body {
-  margin: 0;
-  font-family:
-    ui-sans-serif,
-    system-ui,
-    -apple-system,
-    "Segoe UI",
-    sans-serif;
-  background: #f7f4ee;
-  color: #2c2a26;
+@keyframes ambient-drift {
+  0%,
+  100% {
+    transform: translateX(0) translateY(0);
+  }
+  50% {
+    transform: translateX(14px) translateY(-8px);
+  }
 }
 
-.page {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 2rem;
-  text-align: center;
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    color-scheme: light;
+  }
+
+  body {
+    margin: 0;
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--color-sky-700);
+    outline-offset: 3px;
+    border-radius: var(--radius-sm);
+  }
+
+  /* Respect the OS-level reduced-motion preference for anything not
+     already gated through Framer Motion's `useReducedMotion`. */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
 }
 
-h1 {
-  margin: 0;
-  font-size: 2.5rem;
-  letter-spacing: 0.04em;
-}
+@layer utilities {
+  .skip-link {
+    position: absolute;
+    left: -9999px;
+    top: 0;
+    z-index: 100;
+    background: var(--color-surface-raised);
+    color: var(--color-ink);
+    padding: 0.75rem 1.25rem;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-soft-lg);
+  }
 
-.lede {
-  margin: 0;
-  font-size: 1.125rem;
-}
-
-.muted {
-  margin: 0;
-  color: #7a756b;
-  max-width: 32rem;
+  .skip-link:focus {
+    left: 1rem;
+    top: 1rem;
+  }
 }
