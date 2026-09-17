@@ -1,0 +1,121 @@
+{
+  "content_version": "v1",
+  "counts": {
+    "diagnostic_items": 32,
+    "interventions": 24,
+    "misconceptions": 8,
+    "practice_items": 40,
+    "sprout_scripts": 48,
+    "transfer_items": 24,
+    "worked_examples": 8
+  },
+  "domain": "math",
+  "generated_at": "2026-09-17T11:51:41.428800+00:00",
+  "human_ratification_note": "Machine validation only. See content/math/fractions/v1/RATIFICATION.md for the required human sign-off before this content is used with a real learner (roadmap P3 'Human ratification').",
+  "human_ratified": false,
+  "misconceptions_detail": [
+    {
+      "citation": "Early rational-number concept development literature on the part-whole construct (Behr, Post & Lesh).",
+      "code": "M001",
+      "diagnostic_item_count": 4,
+      "has_worked_example": true,
+      "intervention_count": 3,
+      "prevalence_prior": 0.35,
+      "skill_code": "S001_identify_fraction",
+      "sprout_script_count": 6,
+      "title": "A fraction is two separate whole numbers, not one quantity"
+    },
+    {
+      "citation": "Research on children's partitioning strategies and the equal-parts requirement in early fraction instruction.",
+      "code": "M002",
+      "diagnostic_item_count": 4,
+      "has_worked_example": true,
+      "intervention_count": 3,
+      "prevalence_prior": 0.38,
+      "skill_code": "S002_equal_parts",
+      "sprout_script_count": 6,
+      "title": "Unequal partitions still count as a valid fraction"
+    },
+    {
+      "citation": "Whole-number bias literature; Siegler et al. on fraction magnitude.",
+      "code": "M003",
+      "diagnostic_item_count": 4,
+      "has_worked_example": true,
+      "intervention_count": 3,
+      "prevalence_prior": 0.42,
+      "skill_code": "S004_compare_unit_fractions",
+      "sprout_script_count": 6,
+      "title": "Larger denominator means larger fraction"
+    },
+    {
+      "citation": "Literature on componential vs. proportional reasoning in fraction equivalence.",
+      "code": "M004",
+      "diagnostic_item_count": 4,
+      "has_worked_example": true,
+      "intervention_count": 3,
+      "prevalence_prior": 0.33,
+      "skill_code": "S003_equivalent_fractions",
+      "sprout_script_count": 6,
+      "title": "Scaling numerator and denominator together changes a fraction's value"
+    },
+    {
+      "citation": "Fraction-comparison strategy literature on componential (part-by-part) reasoning.",
+      "code": "M005",
+      "diagnostic_item_count": 4,
+      "has_worked_example": true,
+      "intervention_count": 3,
+      "prevalence_prior": 0.3,
+      "skill_code": "S006_compare_unlike_fractions",
+      "sprout_script_count": 6,
+      "title": "Bigger denominator always means a smaller fraction, even across different numerators"
+    },
+    {
+      "citation": "Literature on the part-whole-only conception of fractions and the transition to fractions greater than one.",
+      "code": "M006",
+      "diagnostic_item_count": 4,
+      "has_worked_example": true,
+      "intervention_count": 3,
+      "prevalence_prior": 0.36,
+      "skill_code": "S007_improper_fractions",
+      "sprout_script_count": 6,
+      "title": "A fraction can never be greater than one whole"
+    },
+    {
+      "citation": "Research on children's difficulty transferring fraction understanding from area models to set/group models.",
+      "code": "M007",
+      "diagnostic_item_count": 4,
+      "has_worked_example": true,
+      "intervention_count": 3,
+      "prevalence_prior": 0.31,
+      "skill_code": "S008_fraction_of_a_set",
+      "sprout_script_count": 6,
+      "title": "Fraction of a set means dividing by the numerator, not the denominator"
+    },
+    {
+      "citation": "The 'add straight across' bug is among the most widely documented fraction-arithmetic errors in mathematics-education research.",
+      "code": "M008",
+      "diagnostic_item_count": 4,
+      "has_worked_example": true,
+      "intervention_count": 3,
+      "prevalence_prior": 0.45,
+      "skill_code": "S005_add_fractions",
+      "sprout_script_count": 6,
+      "title": "Adding fractions means adding numerators and denominators separately"
+    }
+  ],
+  "representations": {
+    "area_model": 26,
+    "number_line": 13,
+    "set_model": 16,
+    "symbolic": 41
+  },
+  "schema_version": "1.0",
+  "unit": "fractions",
+  "validation": {
+    "error_count": 0,
+    "errors_by_rule": {},
+    "ok": true,
+    "reading_level_owner": "P2 educational_validator (packages/learning-engine); see tools/authoring/src/protege/authoring/p2_adapter.py",
+    "reading_level_status": "not_evaluated (pending P2 merge)"
+  }
+}

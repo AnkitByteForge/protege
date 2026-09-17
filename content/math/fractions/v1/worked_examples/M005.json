@@ -1,0 +1,161 @@
+{
+  "diagnostic_item": {
+    "content_version": "v1",
+    "correct_answer": "5/6",
+    "distractors": [
+      {
+        "likelihood": 0.68,
+        "maps_to": "M005",
+        "value": "1/2"
+      },
+      {
+        "likelihood": 0.17,
+        "maps_to": "M005",
+        "value": "equal"
+      }
+    ],
+    "elo": 1200,
+    "id": "i_1501",
+    "representation": "symbolic",
+    "role": "diagnostic",
+    "skill_code": "S006_compare_unlike_fractions",
+    "stem": "Which is bigger: 5/6 or 1/2?"
+  },
+  "intervention": {
+    "historical_success_rate": 0.79,
+    "id": "INT_M005_C",
+    "misconception_code": "M005",
+    "script": "Watch: turn 1/4 into 2/8 so both fractions talk about eighths — now compare 3/8 with 2/8 directly.",
+    "strategy": "convert_to_common_denominator",
+    "type": "WORKED_EXAMPLE"
+  },
+  "learner_evidence": {
+    "asr_confidence": 0.81,
+    "diagnosis": {
+      "asr_reliable": true,
+      "labels": [
+        {
+          "confidence": 0.86,
+          "evidence_span": "turned 1/2 into 3/6",
+          "misconception_id": "M005",
+          "state": "resolved"
+        }
+      ],
+      "understanding_signals": [
+        "partitioning_language"
+      ]
+    },
+    "explanation": "5/6 is bigger because I turned 1/2 into 3/6 and 5 is more than 3",
+    "manipulative_trace": [
+      {
+        "action": "drag",
+        "t": 2.4,
+        "target": "bar_5_6"
+      },
+      {
+        "action": "align",
+        "t": 5.0,
+        "targets": [
+          "bar_5_6",
+          "bar_1_2"
+        ]
+      }
+    ]
+  },
+  "mastery_outcome": {
+    "caveats": [
+      "transfer to a set/group model not yet confirmed — she solved this with symbols and a number line but missed the marbles version; we'll check again next session"
+    ],
+    "claim": "Ava can compare fractions with unlike numerators and denominators",
+    "evidence_ids": [
+      "e_m005_1",
+      "e_m005_2",
+      "e_m005_3",
+      "e_m005_4",
+      "e_m005_5"
+    ],
+    "misconception_posteriors": {
+      "M005": 0.09
+    },
+    "next_review": "2026-09-18",
+    "p_known_after": 0.87,
+    "p_known_before": 0.29,
+    "transfer_verified": false
+  },
+  "misconception": {
+    "citation": "Fraction-comparison strategy literature on componential (part-by-part) reasoning.",
+    "code": "M005",
+    "cognitive_origin": "An overgeneralization of the (correct, unit-fraction-only) rule 'more pieces means a smaller piece' to fractions whose numerators also differ: the child compares only denominators and ignores the numerator entirely (e.g., judging 3/8 < 1/4 because 8 > 4).",
+    "content_version": "v1",
+    "distractor_likelihood": {
+      "compares_denominators_only": 0.68,
+      "compares_numerators_only": 0.17,
+      "other": 0.15
+    },
+    "distractor_likelihood_if_not_misconception": {
+      "compares_denominators_only": 0.15,
+      "compares_numerators_only": 0.1,
+      "other": 0.75
+    },
+    "prevalence_prior": 0.3,
+    "skill_code": "S006_compare_unlike_fractions",
+    "sprout_forbidden": [
+      "numerator",
+      "denominator",
+      "comparing only the bottom numbers"
+    ],
+    "title": "Bigger denominator always means a smaller fraction, even across different numerators"
+  },
+  "skill": {
+    "code": "S006_compare_unlike_fractions",
+    "grade_band": "4-5",
+    "prerequisites": [
+      "S004_compare_unit_fractions",
+      "S003_equivalent_fractions"
+    ],
+    "standard": "CCSS.4.NF.A.2",
+    "title": "Compare fractions with unlike numerators and denominators"
+  },
+  "sprout_forbidden": [
+    "numerator",
+    "denominator",
+    "comparing only the bottom numbers"
+  ],
+  "sprout_scripts": [
+    {
+      "emotion": "confident",
+      "id": "SS_M005_01",
+      "misconception_code": "M005",
+      "utterance": "1/4 has to be the biggest — four is such a small bottom number, so the pieces must be huge!"
+    },
+    {
+      "emotion": "curious",
+      "id": "SS_M005_02",
+      "misconception_code": "M005",
+      "utterance": "Isn't a smaller bottom number always the winner, no matter what's on top?"
+    },
+    {
+      "emotion": "confused",
+      "id": "SS_M005_03",
+      "misconception_code": "M005",
+      "utterance": "I only looked at the bottom numbers. Was I supposed to look at the top too?"
+    }
+  ],
+  "verification": {
+    "results": [
+      true,
+      true,
+      true
+    ],
+    "transfer_item": {
+      "id": "i_1592",
+      "representation": "set_model",
+      "result": false
+    },
+    "unaided_items": [
+      "i_2018",
+      "i_2019",
+      "i_2021"
+    ]
+  }
+}

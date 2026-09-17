@@ -1,0 +1,48 @@
+{
+  "prerequisites": [
+    {
+      "prereq_code": "S001_identify_fraction",
+      "skill_code": "S002_equal_parts"
+    },
+    {
+      "prereq_code": "S002_equal_parts",
+      "skill_code": "S003_equivalent_fractions"
+    },
+    {
+      "prereq_code": "S001_identify_fraction",
+      "skill_code": "S004_compare_unit_fractions"
+    },
+    {
+      "prereq_code": "S002_equal_parts",
+      "skill_code": "S004_compare_unit_fractions"
+    },
+    {
+      "prereq_code": "S003_equivalent_fractions",
+      "skill_code": "S005_add_fractions"
+    },
+    {
+      "prereq_code": "S004_compare_unit_fractions",
+      "skill_code": "S005_add_fractions"
+    },
+    {
+      "prereq_code": "S004_compare_unit_fractions",
+      "skill_code": "S006_compare_unlike_fractions"
+    },
+    {
+      "prereq_code": "S003_equivalent_fractions",
+      "skill_code": "S006_compare_unlike_fractions"
+    },
+    {
+      "prereq_code": "S001_identify_fraction",
+      "skill_code": "S007_improper_fractions"
+    },
+    {
+      "prereq_code": "S001_identify_fraction",
+      "skill_code": "S008_fraction_of_a_set"
+    },
+    {
+      "prereq_code": "S002_equal_parts",
+      "skill_code": "S008_fraction_of_a_set"
+    }
+  ]
+}

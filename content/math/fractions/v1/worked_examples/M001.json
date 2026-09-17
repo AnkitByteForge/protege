@@ -1,0 +1,158 @@
+{
+  "diagnostic_item": {
+    "content_version": "v1",
+    "correct_answer": "3/4",
+    "distractors": [
+      {
+        "likelihood": 0.68,
+        "maps_to": "M001",
+        "value": "3 and 4, two separate numbers"
+      },
+      {
+        "likelihood": 0.17,
+        "maps_to": "M001",
+        "value": "4 and 3, two separate numbers"
+      }
+    ],
+    "elo": 1100,
+    "id": "i_1101",
+    "representation": "area_model",
+    "role": "diagnostic",
+    "skill_code": "S001_identify_fraction",
+    "stem": "This rectangle is cut into 4 equal parts and 3 are shaded. What fraction of the rectangle is shaded?"
+  },
+  "intervention": {
+    "historical_success_rate": 0.74,
+    "id": "INT_M001_A",
+    "misconception_code": "M001",
+    "script": "Let's shade ONE shape and count: how many parts did we shade out of how many total? That's our one fraction.",
+    "strategy": "single_shaded_shape",
+    "type": "VISUALIZATION"
+  },
+  "learner_evidence": {
+    "asr_confidence": 0.86,
+    "diagnosis": {
+      "asr_reliable": true,
+      "labels": [
+        {
+          "confidence": 0.87,
+          "evidence_span": "one amount not two numbers",
+          "misconception_id": "M001",
+          "state": "resolved"
+        }
+      ],
+      "understanding_signals": [
+        "partitioning_language"
+      ]
+    },
+    "explanation": "it's 3/4 because I shaded 3 parts and there are 4 parts total, it's one amount not two numbers",
+    "manipulative_trace": [
+      {
+        "action": "drag",
+        "t": 1.6,
+        "target": "rect_shaded_3"
+      },
+      {
+        "action": "align",
+        "t": 3.4,
+        "targets": [
+          "rect_shaded_3",
+          "rect_whole_4"
+        ]
+      }
+    ]
+  },
+  "mastery_outcome": {
+    "caveats": [
+      "transfer confirmed on a number line only; set-model transfer not yet attempted"
+    ],
+    "claim": "Ava can identify a fraction as one quantity, not two separate numbers",
+    "evidence_ids": [
+      "e_m001_1",
+      "e_m001_2",
+      "e_m001_3",
+      "e_m001_4",
+      "e_m001_5"
+    ],
+    "misconception_posteriors": {
+      "M001": 0.06
+    },
+    "next_review": "2026-09-19",
+    "p_known_after": 0.88,
+    "p_known_before": 0.26,
+    "transfer_verified": true
+  },
+  "misconception": {
+    "citation": "Early rational-number concept development literature on the part-whole construct (Behr, Post & Lesh).",
+    "code": "M001",
+    "cognitive_origin": "Whole-number-count bias: before a part-whole scheme develops, children read '3/4' as two independent counts read top-to-bottom ('a three and a four') rather than a single quantity describing parts out of a whole.",
+    "content_version": "v1",
+    "distractor_likelihood": {
+      "other": 0.15,
+      "picks_larger_of_the_two_numbers": 0.17,
+      "reads_as_two_numbers": 0.68
+    },
+    "distractor_likelihood_if_not_misconception": {
+      "other": 0.89,
+      "picks_larger_of_the_two_numbers": 0.04,
+      "reads_as_two_numbers": 0.07
+    },
+    "prevalence_prior": 0.35,
+    "skill_code": "S001_identify_fraction",
+    "sprout_forbidden": [
+      "numerator",
+      "denominator",
+      "stating the fraction names one quantity before resolution"
+    ],
+    "title": "A fraction is two separate whole numbers, not one quantity"
+  },
+  "skill": {
+    "code": "S001_identify_fraction",
+    "grade_band": "1-2",
+    "prerequisites": [],
+    "standard": "CCSS.1.G.A.3",
+    "title": "Identify a fraction as a part of a whole"
+  },
+  "sprout_forbidden": [
+    "numerator",
+    "denominator",
+    "stating the fraction names one quantity before resolution"
+  ],
+  "sprout_scripts": [
+    {
+      "emotion": "confident",
+      "id": "SS_M001_01",
+      "misconception_code": "M001",
+      "utterance": "Three-fourths? That's easy, it's a three and a four! Two numbers."
+    },
+    {
+      "emotion": "curious",
+      "id": "SS_M001_02",
+      "misconception_code": "M001",
+      "utterance": "Wait, is this fraction one thing, or is it really two things, like a 3 and a 4?"
+    },
+    {
+      "emotion": "confused",
+      "id": "SS_M001_03",
+      "misconception_code": "M001",
+      "utterance": "I don't get how two numbers stuck together make just one amount."
+    }
+  ],
+  "verification": {
+    "results": [
+      true,
+      true,
+      true
+    ],
+    "transfer_item": {
+      "id": "i_1191",
+      "representation": "number_line",
+      "result": true
+    },
+    "unaided_items": [
+      "i_2001",
+      "i_2002",
+      "i_2004"
+    ]
+  }
+}

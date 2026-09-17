@@ -1,0 +1,160 @@
+{
+  "diagnostic_item": {
+    "content_version": "v1",
+    "correct_answer": "No — the parts must be equal size for 1/4 to be correct",
+    "distractors": [
+      {
+        "likelihood": 0.7,
+        "maps_to": "M002",
+        "value": "Yes, 1/4, because 1 out of 4 parts is shaded"
+      },
+      {
+        "likelihood": 0.15,
+        "maps_to": "M002",
+        "value": "No, uneven pieces can never show a fraction at all"
+      }
+    ],
+    "elo": 1080,
+    "id": "i_1201",
+    "representation": "area_model",
+    "role": "diagnostic",
+    "skill_code": "S002_equal_parts",
+    "stem": "A square is cut into 4 parts of clearly different sizes and 1 part is shaded. Is the shaded part 1/4 of the square?"
+  },
+  "intervention": {
+    "historical_success_rate": 0.75,
+    "id": "INT_M002_C",
+    "misconception_code": "M002",
+    "script": "Watch me fold the paper in half twice to make four TRULY equal parts — now every piece matches.",
+    "strategy": "fold_to_check_equal",
+    "type": "WORKED_EXAMPLE"
+  },
+  "learner_evidence": {
+    "asr_confidence": 0.84,
+    "diagnosis": {
+      "asr_reliable": true,
+      "labels": [
+        {
+          "confidence": 0.85,
+          "evidence_span": "the parts have to be the same size",
+          "misconception_id": "M002",
+          "state": "resolved"
+        }
+      ],
+      "understanding_signals": [
+        "partitioning_language"
+      ]
+    },
+    "explanation": "no, because the parts have to be the same size to call it 1/4, these pieces are all different sizes",
+    "manipulative_trace": [
+      {
+        "action": "drag",
+        "t": 2.1,
+        "target": "piece_1"
+      },
+      {
+        "action": "align",
+        "t": 4.5,
+        "targets": [
+          "piece_1",
+          "piece_2",
+          "piece_3",
+          "piece_4"
+        ]
+      }
+    ]
+  },
+  "mastery_outcome": {
+    "caveats": [
+      "transfer confirmed on a number line only; set-model transfer not yet attempted"
+    ],
+    "claim": "Ava can judge whether a partition shows equal parts before naming a fraction",
+    "evidence_ids": [
+      "e_m002_1",
+      "e_m002_2",
+      "e_m002_3",
+      "e_m002_4",
+      "e_m002_5"
+    ],
+    "misconception_posteriors": {
+      "M002": 0.05
+    },
+    "next_review": "2026-09-19",
+    "p_known_after": 0.89,
+    "p_known_before": 0.3,
+    "transfer_verified": true
+  },
+  "misconception": {
+    "citation": "Research on children's partitioning strategies and the equal-parts requirement in early fraction instruction.",
+    "code": "M002",
+    "cognitive_origin": "Children over-attend to the COUNT of pieces and under-attend to their SIZE, so any shape divided into N regions is labeled '1/N' regardless of whether the regions are equal — a failure to encode equal partitioning as a defining feature of a fraction.",
+    "content_version": "v1",
+    "distractor_likelihood": {
+      "labels_by_piece_count_only": 0.7,
+      "other": 0.15,
+      "says_uneven_pieces_show_no_fraction": 0.15
+    },
+    "distractor_likelihood_if_not_misconception": {
+      "labels_by_piece_count_only": 0.12,
+      "other": 0.83,
+      "says_uneven_pieces_show_no_fraction": 0.05
+    },
+    "prevalence_prior": 0.38,
+    "skill_code": "S002_equal_parts",
+    "sprout_forbidden": [
+      "equal parts",
+      "unequal pieces don't count"
+    ],
+    "title": "Unequal partitions still count as a valid fraction"
+  },
+  "skill": {
+    "code": "S002_equal_parts",
+    "grade_band": "1-2",
+    "prerequisites": [
+      "S001_identify_fraction"
+    ],
+    "standard": "CCSS.2.G.A.3",
+    "title": "Partition shapes into equal parts"
+  },
+  "sprout_forbidden": [
+    "equal parts",
+    "unequal pieces don't count"
+  ],
+  "sprout_scripts": [
+    {
+      "emotion": "confident",
+      "id": "SS_M002_01",
+      "misconception_code": "M002",
+      "utterance": "I cut it into 4 pieces, so each piece is 1/4 — the sizes don't matter!"
+    },
+    {
+      "emotion": "curious",
+      "id": "SS_M002_02",
+      "misconception_code": "M002",
+      "utterance": "Does it matter if the pieces are different sizes, as long as there are 4?"
+    },
+    {
+      "emotion": "confused",
+      "id": "SS_M002_03",
+      "misconception_code": "M002",
+      "utterance": "These pieces look really different, but I still called it 1/4. Is that wrong?"
+    }
+  ],
+  "verification": {
+    "results": [
+      true,
+      true,
+      true
+    ],
+    "transfer_item": {
+      "id": "i_1291",
+      "representation": "number_line",
+      "result": true
+    },
+    "unaided_items": [
+      "i_2007",
+      "i_2009",
+      "i_2010"
+    ]
+  }
+}

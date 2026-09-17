@@ -1,0 +1,158 @@
+{
+  "diagnostic_item": {
+    "content_version": "v1",
+    "correct_answer": "Yes — they are equivalent, the same amount",
+    "distractors": [
+      {
+        "likelihood": 0.66,
+        "maps_to": "M004",
+        "value": "No, 2/4 is bigger because the numbers are bigger"
+      },
+      {
+        "likelihood": 0.19,
+        "maps_to": "M004",
+        "value": "No, they look different so they can't be equal"
+      }
+    ],
+    "elo": 1120,
+    "id": "i_1401",
+    "representation": "area_model",
+    "role": "diagnostic",
+    "skill_code": "S003_equivalent_fractions",
+    "stem": "Two identical circles are shaded the same amount, but one is cut into 2 parts (1 shaded) and the other into 4 parts (2 shaded). Are 1/2 and 2/4 the same amount?"
+  },
+  "intervention": {
+    "historical_success_rate": 0.76,
+    "id": "INT_M004_A",
+    "misconception_code": "M004",
+    "script": "Let's stack a bar split in halves on top of one split in fourths — see how the shaded amount lines up exactly.",
+    "strategy": "stacked_equal_bars",
+    "type": "VISUALIZATION"
+  },
+  "learner_evidence": {
+    "asr_confidence": 0.85,
+    "diagnosis": {
+      "asr_reliable": true,
+      "labels": [
+        {
+          "confidence": 0.88,
+          "evidence_span": "still the same amount shaded",
+          "misconception_id": "M004",
+          "state": "resolved"
+        }
+      ],
+      "understanding_signals": [
+        "partitioning_language"
+      ]
+    },
+    "explanation": "yes they're the same because you just cut the second one into smaller pieces but it's still the same amount shaded",
+    "manipulative_trace": [
+      {
+        "action": "drag",
+        "t": 1.8,
+        "target": "bar_1_2"
+      },
+      {
+        "action": "align",
+        "t": 3.6,
+        "targets": [
+          "bar_1_2",
+          "bar_2_4"
+        ]
+      }
+    ]
+  },
+  "mastery_outcome": {
+    "caveats": [
+      "transfer confirmed on a number line only; set-model transfer not yet attempted"
+    ],
+    "claim": "Ava can recognize equivalent fractions",
+    "evidence_ids": [
+      "e_m004_1",
+      "e_m004_2",
+      "e_m004_3",
+      "e_m004_4",
+      "e_m004_5"
+    ],
+    "misconception_posteriors": {
+      "M004": 0.05
+    },
+    "next_review": "2026-09-20",
+    "p_known_after": 0.89,
+    "p_known_before": 0.28,
+    "transfer_verified": true
+  },
+  "misconception": {
+    "citation": "Literature on componential vs. proportional reasoning in fraction equivalence.",
+    "code": "M004",
+    "cognitive_origin": "Children treat numerator and denominator as independent whole-number counts, so scaling both by the same factor looks like making a different, bigger fraction rather than preserving the same part-whole ratio — a failure to see multiplicative equivalence.",
+    "content_version": "v1",
+    "distractor_likelihood": {
+      "other": 0.15,
+      "says_bigger_numbers_means_different_value": 0.66,
+      "says_different_pictures_mean_different_fractions": 0.19
+    },
+    "distractor_likelihood_if_not_misconception": {
+      "other": 0.8,
+      "says_bigger_numbers_means_different_value": 0.06,
+      "says_different_pictures_mean_different_fractions": 0.14
+    },
+    "prevalence_prior": 0.33,
+    "skill_code": "S003_equivalent_fractions",
+    "sprout_forbidden": [
+      "equivalent",
+      "stating 1/2 equals 2/4 before resolution"
+    ],
+    "title": "Scaling numerator and denominator together changes a fraction's value"
+  },
+  "skill": {
+    "code": "S003_equivalent_fractions",
+    "grade_band": "3-4",
+    "prerequisites": [
+      "S002_equal_parts"
+    ],
+    "standard": "CCSS.3.NF.A.3",
+    "title": "Recognize equivalent fractions"
+  },
+  "sprout_forbidden": [
+    "equivalent",
+    "stating 1/2 equals 2/4 before resolution"
+  ],
+  "sprout_scripts": [
+    {
+      "emotion": "confident",
+      "id": "SS_M004_01",
+      "misconception_code": "M004",
+      "utterance": "1/2 and 2/4 can't be the same — 2/4 has bigger numbers, so it must be more!"
+    },
+    {
+      "emotion": "curious",
+      "id": "SS_M004_02",
+      "misconception_code": "M004",
+      "utterance": "Wait, how can two different-looking fractions be the exact same amount?"
+    },
+    {
+      "emotion": "confused",
+      "id": "SS_M004_03",
+      "misconception_code": "M004",
+      "utterance": "If the numbers are different, doesn't that mean the fractions are different too?"
+    }
+  ],
+  "verification": {
+    "results": [
+      true,
+      true,
+      true
+    ],
+    "transfer_item": {
+      "id": "i_1491",
+      "representation": "number_line",
+      "result": true
+    },
+    "unaided_items": [
+      "i_2013",
+      "i_2014",
+      "i_2016"
+    ]
+  }
+}

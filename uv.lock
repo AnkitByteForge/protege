@@ -710,8 +710,18 @@ dev = [
 
 [[package]]
 name = "protege-authoring"
-version = "0.1.0"
+version = "0.2.0"
 source = { editable = "tools/authoring" }
+dependencies = [
+    { name = "protege-contracts" },
+    { name = "pydantic" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "protege-contracts", editable = "packages/contracts" },
+    { name = "pydantic", specifier = ">=2.10" },
+]
 
 [[package]]
 name = "protege-contracts"

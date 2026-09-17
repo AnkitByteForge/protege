@@ -1,0 +1,191 @@
+{
+  "misconceptions": [
+    {
+      "citation": "Early rational-number concept development literature on the part-whole construct (Behr, Post & Lesh).",
+      "code": "M001",
+      "cognitive_origin": "Whole-number-count bias: before a part-whole scheme develops, children read '3/4' as two independent counts read top-to-bottom ('a three and a four') rather than a single quantity describing parts out of a whole.",
+      "content_version": "v1",
+      "distractor_likelihood": {
+        "other": 0.15,
+        "picks_larger_of_the_two_numbers": 0.17,
+        "reads_as_two_numbers": 0.68
+      },
+      "distractor_likelihood_if_not_misconception": {
+        "other": 0.89,
+        "picks_larger_of_the_two_numbers": 0.04,
+        "reads_as_two_numbers": 0.07
+      },
+      "prevalence_prior": 0.35,
+      "skill_code": "S001_identify_fraction",
+      "sprout_forbidden": [
+        "numerator",
+        "denominator",
+        "stating the fraction names one quantity before resolution"
+      ],
+      "title": "A fraction is two separate whole numbers, not one quantity"
+    },
+    {
+      "citation": "Research on children's partitioning strategies and the equal-parts requirement in early fraction instruction.",
+      "code": "M002",
+      "cognitive_origin": "Children over-attend to the COUNT of pieces and under-attend to their SIZE, so any shape divided into N regions is labeled '1/N' regardless of whether the regions are equal — a failure to encode equal partitioning as a defining feature of a fraction.",
+      "content_version": "v1",
+      "distractor_likelihood": {
+        "labels_by_piece_count_only": 0.7,
+        "other": 0.15,
+        "says_uneven_pieces_show_no_fraction": 0.15
+      },
+      "distractor_likelihood_if_not_misconception": {
+        "labels_by_piece_count_only": 0.12,
+        "other": 0.83,
+        "says_uneven_pieces_show_no_fraction": 0.05
+      },
+      "prevalence_prior": 0.38,
+      "skill_code": "S002_equal_parts",
+      "sprout_forbidden": [
+        "equal parts",
+        "unequal pieces don't count"
+      ],
+      "title": "Unequal partitions still count as a valid fraction"
+    },
+    {
+      "citation": "Whole-number bias literature; Siegler et al. on fraction magnitude.",
+      "code": "M003",
+      "cognitive_origin": "Whole-number bias — the child transfers whole-number ordering to the denominator, since 8 > 4.",
+      "content_version": "v1",
+      "distractor_likelihood": {
+        "other": 0.12,
+        "picks_1_8": 0.82,
+        "says_equal": 0.06
+      },
+      "distractor_likelihood_if_not_misconception": {
+        "other": 0.82,
+        "picks_1_8": 0.08,
+        "says_equal": 0.1
+      },
+      "prevalence_prior": 0.42,
+      "skill_code": "S004_compare_unit_fractions",
+      "sprout_forbidden": [
+        "stating 1/4 > 1/8 before resolution",
+        "numerator",
+        "denominator"
+      ],
+      "title": "Larger denominator means larger fraction"
+    },
+    {
+      "citation": "Literature on componential vs. proportional reasoning in fraction equivalence.",
+      "code": "M004",
+      "cognitive_origin": "Children treat numerator and denominator as independent whole-number counts, so scaling both by the same factor looks like making a different, bigger fraction rather than preserving the same part-whole ratio — a failure to see multiplicative equivalence.",
+      "content_version": "v1",
+      "distractor_likelihood": {
+        "other": 0.15,
+        "says_bigger_numbers_means_different_value": 0.66,
+        "says_different_pictures_mean_different_fractions": 0.19
+      },
+      "distractor_likelihood_if_not_misconception": {
+        "other": 0.8,
+        "says_bigger_numbers_means_different_value": 0.06,
+        "says_different_pictures_mean_different_fractions": 0.14
+      },
+      "prevalence_prior": 0.33,
+      "skill_code": "S003_equivalent_fractions",
+      "sprout_forbidden": [
+        "equivalent",
+        "stating 1/2 equals 2/4 before resolution"
+      ],
+      "title": "Scaling numerator and denominator together changes a fraction's value"
+    },
+    {
+      "citation": "Fraction-comparison strategy literature on componential (part-by-part) reasoning.",
+      "code": "M005",
+      "cognitive_origin": "An overgeneralization of the (correct, unit-fraction-only) rule 'more pieces means a smaller piece' to fractions whose numerators also differ: the child compares only denominators and ignores the numerator entirely (e.g., judging 3/8 < 1/4 because 8 > 4).",
+      "content_version": "v1",
+      "distractor_likelihood": {
+        "compares_denominators_only": 0.68,
+        "compares_numerators_only": 0.17,
+        "other": 0.15
+      },
+      "distractor_likelihood_if_not_misconception": {
+        "compares_denominators_only": 0.15,
+        "compares_numerators_only": 0.1,
+        "other": 0.75
+      },
+      "prevalence_prior": 0.3,
+      "skill_code": "S006_compare_unlike_fractions",
+      "sprout_forbidden": [
+        "numerator",
+        "denominator",
+        "comparing only the bottom numbers"
+      ],
+      "title": "Bigger denominator always means a smaller fraction, even across different numerators"
+    },
+    {
+      "citation": "Literature on the part-whole-only conception of fractions and the transition to fractions greater than one.",
+      "code": "M006",
+      "cognitive_origin": "Early fraction experience is almost entirely parts of a single whole (pizza slices, pie charts), so 'fraction' gets encoded as inherently less than one; a numerator larger than the denominator is treated as an error rather than a quantity greater than one whole.",
+      "content_version": "v1",
+      "distractor_likelihood": {
+        "other": 0.15,
+        "rewrites_as_whole_number_only": 0.21,
+        "says_impossible_or_invalid": 0.64
+      },
+      "distractor_likelihood_if_not_misconception": {
+        "other": 0.78,
+        "rewrites_as_whole_number_only": 0.13,
+        "says_impossible_or_invalid": 0.09
+      },
+      "prevalence_prior": 0.36,
+      "skill_code": "S007_improper_fractions",
+      "sprout_forbidden": [
+        "improper",
+        "stating a fraction can be greater than one whole before resolution"
+      ],
+      "title": "A fraction can never be greater than one whole"
+    },
+    {
+      "citation": "Research on children's difficulty transferring fraction understanding from area models to set/group models.",
+      "code": "M007",
+      "cognitive_origin": "When asked for a fraction of a GROUP of objects rather than a single shape, children map the wrong number in the fraction onto the partitioning step, using the numerator as the divisor instead of the denominator — a failure to transfer the part-whole model from area to a set/group model.",
+      "content_version": "v1",
+      "distractor_likelihood": {
+        "divides_by_numerator": 0.62,
+        "other": 0.15,
+        "uses_numerator_as_the_answer": 0.23
+      },
+      "distractor_likelihood_if_not_misconception": {
+        "divides_by_numerator": 0.1,
+        "other": 0.84,
+        "uses_numerator_as_the_answer": 0.06
+      },
+      "prevalence_prior": 0.31,
+      "skill_code": "S008_fraction_of_a_set",
+      "sprout_forbidden": [
+        "denominator",
+        "stating you divide by the denominator before resolution"
+      ],
+      "title": "Fraction of a set means dividing by the numerator, not the denominator"
+    },
+    {
+      "citation": "The 'add straight across' bug is among the most widely documented fraction-arithmetic errors in mathematics-education research.",
+      "code": "M008",
+      "cognitive_origin": "The 'add straight across' bug: children apply whole-number addition procedures directly to both parts of the fraction (1/4 + 1/4 -> 2/8) because they have not yet encoded that the denominator names the unit size, which stays fixed when the pieces being combined are already the same size.",
+      "content_version": "v1",
+      "distractor_likelihood": {
+        "adds_across": 0.75,
+        "keeps_one_numerator_adds_denominators": 0.1,
+        "other": 0.15
+      },
+      "distractor_likelihood_if_not_misconception": {
+        "adds_across": 0.2,
+        "keeps_one_numerator_adds_denominators": 0.08,
+        "other": 0.72
+      },
+      "prevalence_prior": 0.45,
+      "skill_code": "S005_add_fractions",
+      "sprout_forbidden": [
+        "common denominator",
+        "stating 1/2 + 1/3 = 2/5 as correct after resolution"
+      ],
+      "title": "Adding fractions means adding numerators and denominators separately"
+    }
+  ]
+}
