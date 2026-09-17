@@ -1,0 +1,24 @@
+[project]
+name = "protege-roles"
+version = "0.1.0"
+description = "PROTÉGÉ bounded LLM roles (roadmap P5: Sprout Generator). Sprout consumes a code-selected misconception_id, compiles behaviour constraints, generates via the P4 ModelRouter, and validates through a four-stage gate with a deterministic authored fallback. Pure package: no FastAPI/SQLAlchemy coupling (docs/DECISIONS.md D6 pattern)."
+requires-python = ">=3.12"
+dependencies = [
+    "protege-contracts",
+    "protege-learning-engine",
+    "protege-llm",
+    "protege-authoring",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/protege"]
+
+[tool.uv.sources]
+protege-contracts = { workspace = true }
+protege-learning-engine = { workspace = true }
+protege-llm = { workspace = true }
+protege-authoring = { workspace = true }
