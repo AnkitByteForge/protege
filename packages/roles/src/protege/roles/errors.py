@@ -26,8 +26,7 @@ class NoCandidatePoolError(RoleError):
     def __init__(self, misconception_id: str) -> None:
         self.misconception_id = misconception_id
         super().__init__(
-            f"no authored SproutScript candidates for misconception "
-            f"{misconception_id!r}"
+            f"no authored SproutScript candidates for misconception {misconception_id!r}"
         )
 
 
