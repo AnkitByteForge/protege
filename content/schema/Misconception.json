@@ -1,5 +1,5 @@
 {
-  "description": "The moat: one authored misconception record (§22, §38, roadmap P3).\n\n``distractor_likelihood`` is the authored ``P(d | M_k)`` table that the\nmisconception Bayes update consumes (§10.2) — authored, never learned.\nKeys are distractor-behavior slugs (§38: ``picks_1_8``, ``says_equal``).",
+  "description": "The moat: one authored misconception record (§22, §38, roadmap P3).\n\n``distractor_likelihood`` is the authored ``P(d | M_k)`` table that the\nmisconception Bayes update consumes (§10.2) — authored, never learned.\nKeys are distractor-behavior slugs (§38: ``picks_1_8``, ``says_equal``).\nIts ``\"other\"`` catch-all key belongs only to this ``M_k``-conditional\ndistribution and must never be reused as, or confused with, the\ncomplement distribution below — the two are authored independently and\nneed not (and generally will not) share a common normalization.\n\n``distractor_likelihood_if_not_misconception`` is the complementary\n``P(d | not M_k)`` table required by D13 (locked on\n``feature/p2-learning``'s ``docs/DECISIONS.md``): §10.2's misconception\nbeliefs are independent Bernoullis, and a correct binary Bayes update —\n``P(M_k | d) = P(d|M_k)P(M_k) / [P(d|M_k)P(M_k) + P(d|¬M_k)(1-P(M_k))]``\n— needs both the numerator likelihood (``distractor_likelihood``) and\nthis complement to normalize. §10.2's shorthand\n``P(M_k | d) ∝ P(d | M_k) · P(M_k)`` elided the complement term; D13\nlocks that it is not optional in an actual update, and explicitly\nrejects candidate-set normalization as an alternative.\n\nThe field is nullable: the §38 ``M003`` fixture predates this\nclarification and must keep validating verbatim (P1's exit criterion),\nso ``None`` is accepted here with no error. ``None`` means \"this record\nhas not been authored against the complement-likelihood requirement\" —\nit is never a stand-in for \"complement likelihood is zero\" or for\n``distractor_likelihood``'s ``\"other\"`` bucket.\n\nNew v1 misconception content must supply it: authoring code should call\n``Misconception.validate_authored`` rather than the bare\n``model_validate``, and runtime code that needs ``P(d | not M_k)`` (P2's\nBayes update) must call ``require_complement_likelihood()`` rather than\nreading the optional field directly, so an absent complement likelihood\nraises ``MissingComplementLikelihoodError`` instead of silently\nproceeding with no update, a zero, or the wrong dict.",
   "properties": {
     "citation": {
       "anyOf": [
@@ -61,6 +61,24 @@
       },
       "title": "Distractor Likelihood",
       "type": "object"
+    },
+    "distractor_likelihood_if_not_misconception": {
+      "anyOf": [
+        {
+          "additionalProperties": {
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "type": "number"
+          },
+          "type": "object"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Authored P(d | not M_k) — the complement of distractor_likelihood, required to normalize the §10.2 Bayes update. None only for content authored before this field existed (§38's M003 fixture); new v1 content must set it (see Misconception.validate_authored).",
+      "title": "Distractor Likelihood If Not Misconception"
     },
     "prevalence_prior": {
       "default": 0.2,

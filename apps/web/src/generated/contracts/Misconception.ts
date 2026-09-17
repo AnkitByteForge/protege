@@ -11,6 +11,12 @@ export type Code = string;
 export type CognitiveOrigin = string;
 export type ContentVersion = string | null;
 export type Description = string | null;
+/**
+ * Authored P(d | not M_k) — the complement of distractor_likelihood, required to normalize the §10.2 Bayes update. None only for content authored before this field existed (§38's M003 fixture); new v1 content must set it (see Misconception.validate_authored).
+ */
+export type DistractorLikelihoodIfNotMisconception = {
+  [k: string]: number;
+} | null;
 export type PrevalencePrior = number;
 export type SkillCode = string | null;
 export type SproutForbidden = string[];
@@ -22,6 +28,36 @@ export type Title = string;
  * ``distractor_likelihood`` is the authored ``P(d | M_k)`` table that the
  * misconception Bayes update consumes (§10.2) — authored, never learned.
  * Keys are distractor-behavior slugs (§38: ``picks_1_8``, ``says_equal``).
+ * Its ``"other"`` catch-all key belongs only to this ``M_k``-conditional
+ * distribution and must never be reused as, or confused with, the
+ * complement distribution below — the two are authored independently and
+ * need not (and generally will not) share a common normalization.
+ *
+ * ``distractor_likelihood_if_not_misconception`` is the complementary
+ * ``P(d | not M_k)`` table required by D13 (locked on
+ * ``feature/p2-learning``'s ``docs/DECISIONS.md``): §10.2's misconception
+ * beliefs are independent Bernoullis, and a correct binary Bayes update —
+ * ``P(M_k | d) = P(d|M_k)P(M_k) / [P(d|M_k)P(M_k) + P(d|¬M_k)(1-P(M_k))]``
+ * — needs both the numerator likelihood (``distractor_likelihood``) and
+ * this complement to normalize. §10.2's shorthand
+ * ``P(M_k | d) ∝ P(d | M_k) · P(M_k)`` elided the complement term; D13
+ * locks that it is not optional in an actual update, and explicitly
+ * rejects candidate-set normalization as an alternative.
+ *
+ * The field is nullable: the §38 ``M003`` fixture predates this
+ * clarification and must keep validating verbatim (P1's exit criterion),
+ * so ``None`` is accepted here with no error. ``None`` means "this record
+ * has not been authored against the complement-likelihood requirement" —
+ * it is never a stand-in for "complement likelihood is zero" or for
+ * ``distractor_likelihood``'s ``"other"`` bucket.
+ *
+ * New v1 misconception content must supply it: authoring code should call
+ * ``Misconception.validate_authored`` rather than the bare
+ * ``model_validate``, and runtime code that needs ``P(d | not M_k)`` (P2's
+ * Bayes update) must call ``require_complement_likelihood()`` rather than
+ * reading the optional field directly, so an absent complement likelihood
+ * raises ``MissingComplementLikelihoodError`` instead of silently
+ * proceeding with no update, a zero, or the wrong dict.
  */
 export interface Misconception {
   citation?: Citation;
@@ -30,6 +66,7 @@ export interface Misconception {
   content_version?: ContentVersion;
   description?: Description;
   distractor_likelihood?: DistractorLikelihood;
+  distractor_likelihood_if_not_misconception?: DistractorLikelihoodIfNotMisconception;
   prevalence_prior?: PrevalencePrior;
   skill_code?: SkillCode;
   sprout_forbidden?: SproutForbidden;

@@ -81,6 +81,30 @@ def build_misconception() -> Misconception:
     )
 
 
+def build_misconception_with_complement() -> Misconception:
+    """A ``Misconception`` authored against the D13 requirement (locked on
+    ``feature/p2-learning``'s ``docs/DECISIONS.md``): carries both
+    ``distractor_likelihood`` (P(d|M_k)) and its complement
+    (P(d|not M_k)). Values are synthetic test data, not §38's authored
+    research numbers."""
+    return Misconception(
+        code="M003",
+        title="Larger denominator means larger fraction",
+        cognitive_origin="Whole-number bias transferred to the denominator.",
+        skill_code="S004",
+        distractor_likelihood={"picks_1_8": 0.82, "says_equal": 0.06, "other": 0.12},
+        distractor_likelihood_if_not_misconception={
+            "picks_1_8": 0.10,
+            "says_equal": 0.15,
+            "other": 0.75,
+        },
+        prevalence_prior=0.42,
+        citation="Whole-number bias literature; Siegler et al.",
+        sprout_forbidden=["stating 1/4 > 1/8 before resolution"],
+        content_version="v1",
+    )
+
+
 def build_distractor() -> Distractor:
     return Distractor(value="1/8", maps_to="M003", likelihood=0.82)
 
