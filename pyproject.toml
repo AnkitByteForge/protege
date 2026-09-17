@@ -13,6 +13,7 @@ dependencies = [
     "protege-llm",
     "protege-roles",
     "protege-session-fsm",
+    "protege-thin-thread",
 ]
 
 [tool.uv]
@@ -27,6 +28,7 @@ members = [
     "packages/llm",
     "packages/roles",
     "packages/session-fsm",
+    "packages/thin-thread",
 ]
 
 [tool.uv.sources]
@@ -37,6 +39,7 @@ protege-learning-engine = { workspace = true }
 protege-llm = { workspace = true }
 protege-roles = { workspace = true }
 protege-session-fsm = { workspace = true }
+protege-thin-thread = { workspace = true }
 
 [dependency-groups]
 dev = [
@@ -55,6 +58,7 @@ testpaths = [
     "packages/roles/tests",
     "tools/authoring/tests",
     "packages/session-fsm/tests",
+    "packages/thin-thread/tests",
 ]
 addopts = "-q"
 
@@ -90,6 +94,7 @@ files = [
     "packages/llm/src",
     "packages/roles/src",
     "packages/session-fsm/src",
+    "packages/thin-thread/src",
 ]
 explicit_package_bases = true
 exclude = ["migrations"]
@@ -134,6 +139,17 @@ ignore_missing_imports = true
 # P7's session-fsm imports it directly, so keep this package-level override.
 [[tool.mypy.overrides]]
 module = "protege.learning_engine"
+ignore_missing_imports = true
+
+# P8's thin thread (packages/thin-thread) is the first package to
+# cross-import protege.session's submodules directly
+# (protege.session.machine, protege.session.orchestrator) and
+# protege.roles's submodules directly (protege.roles.sprout,
+# protege.roles.diagnostician, protege.roles.beliefs) -- neither
+# packages/session-fsm nor packages/roles has a py.typed marker, and
+# adding one belongs to those packages' own phases (P7, P5/P6), not P8.
+[[tool.mypy.overrides]]
+module = ["protege.session", "protege.session.*", "protege.roles", "protege.roles.*"]
 ignore_missing_imports = true
 
 [tool.pydantic.mypy]
