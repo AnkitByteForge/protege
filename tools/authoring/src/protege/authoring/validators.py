@@ -15,7 +15,7 @@ from collections import Counter
 from dataclasses import dataclass, field
 from typing import Any
 
-from protege.contracts import Intervention, RepresentationType, SproutScript
+from protege.contracts import Intervention, RepresentationType, SproutScript, TransferItem
 
 from .errors import ContentValidationError
 from .loader import ContentPack
@@ -432,12 +432,14 @@ def _transfer_pool(record: dict[str, Any]) -> str:
 def _check_transfer_items(pack: ContentPack) -> list[ContentValidationError]:
     errors: list[ContentValidationError] = []
     by_skill_diag_representation: dict[str, set[RepresentationType]] = {}
-    for item in pack.diagnostic_items:
-        if item.skill_code:
-            by_skill_diag_representation.setdefault(item.skill_code, set()).add(item.representation)
+    for diagnostic_item in pack.diagnostic_items:
+        if diagnostic_item.skill_code:
+            by_skill_diag_representation.setdefault(diagnostic_item.skill_code, set()).add(
+                diagnostic_item.representation
+            )
 
-    per_misconception: dict[str, list[Any]] = {m.code: [] for m in pack.misconceptions}
-    general: list[Any] = []
+    per_misconception: dict[str, list[TransferItem]] = {m.code: [] for m in pack.misconceptions}
+    general: list[TransferItem] = []
     by_skill_code = {m.skill_code: m.code for m in pack.misconceptions if m.skill_code is not None}
 
     for raw, item in zip(pack.transfer_items_raw, pack.transfer_items, strict=True):
@@ -589,10 +591,10 @@ def _check_required_counts(pack: ContentPack) -> list[ContentValidationError]:
 
 def _representation_counts(pack: ContentPack) -> Counter[RepresentationType]:
     counts: Counter[RepresentationType] = Counter()
-    for item in [*pack.diagnostic_items, *pack.practice_items]:
-        counts[item.representation] += 1
-    for item in pack.transfer_items:
-        counts[item.representation] += 1
+    for learning_item in [*pack.diagnostic_items, *pack.practice_items]:
+        counts[learning_item.representation] += 1
+    for transfer_item in pack.transfer_items:
+        counts[transfer_item.representation] += 1
     return counts
 
 
