@@ -12,6 +12,7 @@ dependencies = [
     "protege-learning-engine",
     "protege-llm",
     "protege-roles",
+    "protege-session-fsm",
 ]
 
 [tool.uv]
@@ -25,6 +26,7 @@ members = [
     "packages/learning-engine",
     "packages/llm",
     "packages/roles",
+    "packages/session-fsm",
 ]
 
 [tool.uv.sources]
@@ -34,6 +36,7 @@ protege-authoring = { workspace = true }
 protege-learning-engine = { workspace = true }
 protege-llm = { workspace = true }
 protege-roles = { workspace = true }
+protege-session-fsm = { workspace = true }
 
 [dependency-groups]
 dev = [
@@ -51,6 +54,7 @@ testpaths = [
     "packages/llm/tests",
     "packages/roles/tests",
     "tools/authoring/tests",
+    "packages/session-fsm/tests",
 ]
 addopts = "-q"
 
@@ -85,6 +89,7 @@ files = [
     "packages/learning-engine/src",
     "packages/llm/src",
     "packages/roles/src",
+    "packages/session-fsm/src",
 ]
 explicit_package_bases = true
 exclude = ["migrations"]
@@ -123,6 +128,12 @@ ignore_missing_imports = true
 # packages/llm) or that predate P5 (tools/authoring).
 [[tool.mypy.overrides]]
 module = ["protege.authoring.*", "protege.learning_engine.*", "protege.llm.*"]
+ignore_missing_imports = true
+
+# Same situation as above: packages/learning-engine has no py.typed marker.
+# P7's session-fsm imports it directly, so keep this package-level override.
+[[tool.mypy.overrides]]
+module = "protege.learning_engine"
 ignore_missing_imports = true
 
 [tool.pydantic.mypy]
