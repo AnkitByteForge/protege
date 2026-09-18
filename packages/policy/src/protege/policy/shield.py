@@ -109,14 +109,30 @@ def _check_session_hard_cap(
     context: PolicyContext, proposed: PolicyAction
 ) -> tuple[PolicyAction, str, str] | None:
     """Rule 6: "Never allow the session to exceed the 25-minute hard cap."
-    The policy has no dedicated "end session" action in the 13-action set
-    (that remains the FSM's own, already-existing hard-cap/termination
-    machinery, §28.1, carried forward untouched); the shield's job here is
-    narrower -- guarantee the *policy itself* never proposes continued
-    ordinary pacing once the cap is reached, by forcing the same safe
-    hand-off action the other escalation rules use. Compared in seconds
-    (``session_minutes * 60``) against P7's own ``SESSION_HARD_CAP_SECONDS``
-    to avoid a second, independently-rounded 25.0-minutes literal."""
+
+    This is a **policy-layer enforcement decision only**: once
+    ``session_minutes`` reaches the threshold, the shield forces every
+    subsequent proposal to HUMAN_TUTOR, unconditionally, for as long as
+    this function keeps being asked. The policy has no dedicated "end
+    session" action in the 13-action set, and this module has no
+    execution authority of its own -- it returns a value, it does not
+    stop anything.
+
+    §28.1's termination logic (the FSM actually ending the session,
+    recording ``SessionEndReason.TIME``, and refusing further events) is
+    documented in ARCHITECTURE.md but is **not currently wired up** in
+    ``protege.session`` (P7): ``SESSION_HARD_CAP_SECONDS`` is declared
+    there but nothing in ``machine.py``/``orchestrator.py`` reads it, and
+    ``SessionEndReason`` is never constructed outside ``packages/
+    contracts``. Driving an actual FSM event/session termination from this
+    rule's output remains an **orchestration integration concern** for
+    whichever phase wires P11 into a live session loop (P10 or later) --
+    until that wiring exists, this rule does not by itself guarantee the
+    wall-clock session cannot continue beyond 25 minutes; it only
+    guarantees the *policy* never again recommends continuing it.
+    Compared in seconds (``session_minutes * 60``) against P7's own
+    ``SESSION_HARD_CAP_SECONDS`` to avoid a second, independently-rounded
+    25.0-minutes literal for the threshold itself."""
     if context.session_minutes * 60.0 >= SESSION_HARD_CAP_SECONDS:
         return (
             PolicyAction.HUMAN_TUTOR,
