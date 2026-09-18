@@ -40,3 +40,17 @@ test("gallery route renders every documented section", async ({ page }) => {
     await expect(page.getByRole("heading", { name: heading, exact: true })).toBeVisible();
   }
 });
+
+test("manipulatives gallery route renders every documented section", async ({ page }) => {
+  await page.goto("/gallery/manipulatives");
+  await expect(page.getByRole("heading", { name: "Things a child can think with" })).toBeVisible();
+  for (const heading of [
+    "FractionBar",
+    "NumberLine",
+    "AreaModel",
+    "ExplanationCards",
+    "Trace log",
+  ]) {
+    await expect(page.getByRole("heading", { name: heading, exact: true })).toBeVisible();
+  }
+});
