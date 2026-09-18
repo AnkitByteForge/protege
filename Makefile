@@ -8,9 +8,9 @@ WEB_PORT ?= 3101
 # mypy needs the src dirs as explicit package bases to resolve the shared
 # `protege.*` namespace packages (separator is platform-specific).
 ifeq ($(OS),Windows_NT)
-MYPYPATH := services/session/src;packages/contracts/src;tools/authoring/src;packages/learning-engine/src;packages/llm/src;packages/roles/src
+MYPYPATH := services/session/src;packages/contracts/src;tools/authoring/src;packages/learning-engine/src;packages/llm/src;packages/roles/src;packages/session-fsm/src;packages/thin-thread/src;packages/policy/src
 else
-MYPYPATH := services/session/src:packages/contracts/src:tools/authoring/src:packages/learning-engine/src:packages/llm/src:packages/roles/src
+MYPYPATH := services/session/src:packages/contracts/src:tools/authoring/src:packages/learning-engine/src:packages/llm/src:packages/roles/src:packages/session-fsm/src:packages/thin-thread/src:packages/policy/src
 endif
 
 help: ## List available targets

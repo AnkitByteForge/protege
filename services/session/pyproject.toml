@@ -19,6 +19,7 @@ dependencies = [
     "protege-session-fsm",
     "protege-llm",
     "protege-thin-thread",
+    "protege-policy",
 ]
 
 [tool.uv.sources]
@@ -26,6 +27,7 @@ protege-contracts = { workspace = true }
 protege-session-fsm = { workspace = true }
 protege-llm = { workspace = true }
 protege-thin-thread = { workspace = true }
+protege-policy = { workspace = true }
 
 [build-system]
 requires = ["hatchling"]
