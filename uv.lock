@@ -16,6 +16,7 @@ members = [
     "protege-roles",
     "protege-session",
     "protege-session-fsm",
+    "protege-thin-thread",
 ]
 
 [[package]]
@@ -836,6 +837,7 @@ dependencies = [
     { name = "protege-roles" },
     { name = "protege-session" },
     { name = "protege-session-fsm" },
+    { name = "protege-thin-thread" },
 ]
 
 [package.dev-dependencies]
@@ -855,6 +857,7 @@ requires-dist = [
     { name = "protege-roles", editable = "packages/roles" },
     { name = "protege-session", editable = "services/session" },
     { name = "protege-session-fsm", editable = "packages/session-fsm" },
+    { name = "protege-thin-thread", editable = "packages/thin-thread" },
 ]
 
 [package.metadata.requires-dev]
@@ -970,6 +973,29 @@ dependencies = [
 requires-dist = [
     { name = "protege-contracts", editable = "packages/contracts" },
     { name = "protege-learning-engine", editable = "packages/learning-engine" },
+]
+
+[[package]]
+name = "protege-thin-thread"
+version = "0.1.0"
+source = { editable = "packages/thin-thread" }
+dependencies = [
+    { name = "protege-authoring" },
+    { name = "protege-contracts" },
+    { name = "protege-learning-engine" },
+    { name = "protege-llm" },
+    { name = "protege-roles" },
+    { name = "protege-session-fsm" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "protege-authoring", editable = "tools/authoring" },
+    { name = "protege-contracts", editable = "packages/contracts" },
+    { name = "protege-learning-engine", editable = "packages/learning-engine" },
+    { name = "protege-llm", editable = "packages/llm" },
+    { name = "protege-roles", editable = "packages/roles" },
+    { name = "protege-session-fsm", editable = "packages/session-fsm" },
 ]
 
 [[package]]

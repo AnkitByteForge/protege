@@ -153,6 +153,15 @@
 - **References.** `PROTEGE_IMPLEMENTATION_ROADMAP.md` P5 ("Backend" field: "`protege/roles/sprout.py`"); this document's D6 (identical reasoning for P2/P4).
 - **Consequence.** `packages/roles` exists from this point forward with P5's real logic (not an empty skeleton, unlike D6's P2/P4 placeholders — P5 is being implemented in the same change that adds this entry).
 
+## D15 — P8 package home: `packages/thin-thread` as a new uv workspace member
+
+- **Gap.** Roadmap P8's Backend field gives only the entry-point module path ("A single `python -m protege.thin_thread` entry point wiring FSM -> Sprout -> Diagnostician -> mastery -> verification"), the same way P4 and P5 originally gave only a module path before D6/D14 resolved their parent directories.
+- **Decision.** `packages/thin-thread` — package `protege-thin-thread`, module `protege.thin_thread`. Owns P8's scenario definitions (`scenario.py`), the FakeProvider script builder (`fake_script.py`), the `ModelRouter` construction helper (`router_setup.py`), the deterministic id allocator (`ids.py`), the end-to-end runner (`engine.py`), and the `python -m protege.thin_thread` CLI (`cli.py`/`__main__.py`). Registered as a `uv` workspace member alongside the other `packages/*` members, following the exact D6/D14 convention (hatchling wheel build, `src/protege/<module>` layout, namespace package under `protege.*`).
+- **Why this follows from the architecture.** D6/D14's reasoning applies unchanged: P8 is explicitly "no auth, no DB, no UI, no deploy" (roadmap P8 Components field) and must stay importable by a future P24 evaluation harness without pulling in FastAPI/SQLAlchemy/uvicorn. `packages/thin-thread` depends only on `protege-contracts`, `protege-learning-engine`, `protege-llm`, `protege-roles`, `protege-session-fsm`, and `protege-authoring` (for `load_content_pack`) — no framework weight, matching every other `packages/*` member. It is a sibling of `packages/session-fsm`, not a submodule of it, because P8 is the *content-driven wiring* the orchestrator's own module docstring explicitly defers to P8 ("Wiring the content-driven, end-to-end session ... is explicitly roadmap P8's job"), not a P7 concern.
+- **Prevents.** Nesting the thin-thread wiring inside `packages/session-fsm` (which would make P7's own package depend on P5/P6/content-authoring purely to serve P8's demo) or inside `services/session` (which does not exist as a runnable dependency yet, and roadmap P8 explicitly forbids introducing persistence/API/UI).
+- **References.** `PROTEGE_IMPLEMENTATION_ROADMAP.md` P8 ("Backend" field: "A single `python -m protege.thin_thread` entry point"); `PROTEGE_ARCHITECTURE.md` §42 ("First Vertical Slice"); this document's D6/D14 (identical reasoning for P2/P4/P5).
+- **Consequence.** `packages/thin-thread` exists from this point forward with P8's real logic (not an empty skeleton — P8 is being implemented in the same change that adds this entry).
+
 ---
 
 ## Meaning-preserving typo fixes applied
