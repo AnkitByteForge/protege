@@ -72,6 +72,7 @@ from protege.contracts import (
     Explanation,
     ExplanationGivenEvent,
     HintRequestedEvent,
+    JSONValue,
     ManipulativeMovedEvent,
     MasteryEstimate,
     MisconceptionBelief,
@@ -147,7 +148,15 @@ class EventOutcome:
     mastery_verified: bool | None
 
 
-def _json_value(value: object) -> object:
+def _json_value(value: object) -> JSONValue:
+    # Same narrowing helper as `protege.thin_thread.engine`'s own
+    # `_json_value`/`_json_payload` (packages/thin-thread/src/protege/
+    # thin_thread/engine.py) -- reused here in shape and in its
+    # `protege.contracts.JSONValue` return type, not reinvented, so
+    # `DomainEvent.payload`/`Evidence.payload` (both typed
+    # `dict[str, JSONValue]`) receive a genuinely compatible value rather
+    # than the looser `dict[str, object]` a plain recursive narrower would
+    # otherwise produce.
     if value is None or isinstance(value, str | int | float | bool):
         return value
     if isinstance(value, dict):
@@ -157,7 +166,7 @@ def _json_value(value: object) -> object:
     raise TypeError(f"payload value {value!r} ({type(value).__name__}) is not JSON-compatible")
 
 
-def _json_payload(payload: Mapping[str, object]) -> dict[str, object]:
+def _json_payload(payload: Mapping[str, object]) -> dict[str, JSONValue]:
     return {key: _json_value(value) for key, value in payload.items()}
 
 
@@ -392,13 +401,13 @@ async def apply_event(
         context.p_known = bkt_update(before_p_known, correct=correct, params=SESSION_BKT_PARAMS)
 
         if context.current == S.TRANSFER:
-            observation = TransferObservationInput(
+            transfer_observation = TransferObservationInput(
                 item_id=item.item_id,
                 source_event_id=f"pending_{uuid.uuid4().hex}",
                 representation=str(item.representation),
                 result=correct,
             )
-            built = build_transfer_evidence(observation)
+            built = build_transfer_evidence(transfer_observation)
             evidence = Evidence(
                 id=f"e_{uuid.uuid4().hex}",
                 kind=EvidenceKind.TRANSFER,

@@ -66,12 +66,24 @@ def _build_default_router(settings: Settings) -> ModelRouter:
     if settings.nvidia_api_key and not os.environ.get("NVIDIA_API_KEY"):
         os.environ["NVIDIA_API_KEY"] = settings.nvidia_api_key
     if settings.nvidia_api_key or os.environ.get("NVIDIA_API_KEY"):
-        return build_router("nvidia")
+        return _as_model_router(build_router("nvidia"))
     logger.warning(
         "NVIDIA_API_KEY is not configured -- Sprout/Diagnostician will use the "
         "deterministic FakeProvider until it is set"
     )
-    return build_router("fake")
+    return _as_model_router(build_router("fake"))
+
+
+def _as_model_router(router: object) -> ModelRouter:
+    # `protege.thin_thread` has no `py.typed` marker (pyproject.toml's own
+    # mypy override note: adding one belongs to that package's P8 phase,
+    # not P10) -- `build_router`'s real, documented return type is always
+    # `ModelRouter`, but the type checker sees `Any` across that untyped
+    # boundary. This `isinstance` check makes the guarantee explicit and
+    # verified rather than casting past it.
+    if not isinstance(router, ModelRouter):
+        raise TypeError(f"build_router() returned {type(router)!r}, expected ModelRouter")
+    return router
 
 
 def setup_tracing() -> None:

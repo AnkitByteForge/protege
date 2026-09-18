@@ -53,9 +53,27 @@ def get_thin_thread_items() -> ThinThreadItems:
 
 @lru_cache(maxsize=1)
 def get_misconception() -> Misconception:
-    return resolve_misconception(get_content_pack())
+    # `packages/thin_thread` has no `py.typed` marker (pyproject.toml's
+    # mypy override for it: "adding one belongs to that package's own
+    # phase (P8), not P9/P10") -- `ignore_missing_imports` lets this cross-
+    # package call resolve without an import error, but its return value
+    # is unavoidably `Any` to the type checker. `resolve_misconception`'s
+    # own real implementation always returns a genuine `Misconception` or
+    # raises `KeyError` -- this `isinstance` check makes that guarantee
+    # explicit and verified at the one place P10 crosses that untyped
+    # boundary, rather than casting past it.
+    misconception = resolve_misconception(get_content_pack())
+    if not isinstance(misconception, Misconception):
+        raise TypeError(
+            f"resolve_misconception() returned {type(misconception)!r}, expected Misconception"
+        )
+    return misconception
 
 
 @lru_cache(maxsize=1)
 def get_skill() -> Skill:
-    return resolve_skill(get_content_pack())
+    # Same untyped-package-boundary narrowing as `get_misconception` above.
+    skill = resolve_skill(get_content_pack())
+    if not isinstance(skill, Skill):
+        raise TypeError(f"resolve_skill() returned {type(skill)!r}, expected Skill")
+    return skill
