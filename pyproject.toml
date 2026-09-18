@@ -47,6 +47,7 @@ dev = [
     "httpx>=0.28",
     "ruff>=0.9",
     "mypy>=1.14",
+    "pyjwt[crypto]>=2.9",
 ]
 
 [tool.pytest.ini_options]
@@ -82,6 +83,15 @@ select = ["E", "F", "I", "UP", "B", "C4", "SIM", "RUF"]
 
 [tool.ruff.lint.isort]
 known-first-party = ["protege"]
+
+[tool.ruff.lint.flake8-bugbear]
+# FastAPI's own dependency-injection idiom (`param: T = Depends(...)`,
+# `= Header(...)`) is exactly what B008 exists to flag for a *mutable
+# default* footgun -- these three are immutable-safe by construction (each
+# call returns a small, inert marker FastAPI's own resolver evaluates per
+# request, never reused as a shared mutable default), so are the standard,
+# ruff-documented way to keep B008 meaningful everywhere else.
+extend-immutable-calls = ["fastapi.Depends", "fastapi.Header", "fastapi.Query"]
 
 [tool.mypy]
 python_version = "3.12"

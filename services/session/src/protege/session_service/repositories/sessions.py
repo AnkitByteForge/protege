@@ -116,6 +116,18 @@ class SessionRepository:
     async def get(self, session_id: uuid.UUID) -> SessionRow | None:
         return await self._session.get(SessionRow, session_id)
 
+    async def save_context_snapshot(
+        self, *, session_id: uuid.UUID, snapshot: dict[str, object]
+    ) -> None:
+        """Checkpoint the live orchestrator's ``SessionContext`` (roadmap
+        P10 -- see ``SessionRow.context_snapshot``'s docstring). Called in
+        the same transaction as the transitions/evidence that snapshot
+        reflects, never on its own."""
+        session_row = await self._session.get(SessionRow, session_id)
+        if session_row is not None:
+            session_row.context_snapshot = snapshot
+        await self._session.flush()
+
     async def list_transitions(self, session_id: uuid.UUID) -> list[SessionStateRow]:
         result = await self._session.execute(
             select(SessionStateRow)

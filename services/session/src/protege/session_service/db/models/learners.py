@@ -28,6 +28,13 @@ class Parent(Base):
 
     id: Mapped[uuid.UUID] = uuid_pk()
     email: Mapped[str] = mapped_column(String(320), nullable=False, unique=True)
+    clerk_user_id: Mapped[str | None] = mapped_column(String(128), nullable=True)
+    """Verified Clerk JWT ``sub`` claim for this account (roadmap P10: the
+    minimum persistent identity mapping an API needs to resolve a verified
+    caller to *their own* row for ownership checks). Nullable -- a row may
+    pre-date Clerk linkage (``LearnerRepository.get_or_create``'s test/demo
+    convenience path); uniquely indexed where non-null by the P10 migration
+    so two parents can never share one Clerk identity."""
     consent_version: Mapped[str] = mapped_column(String(32), nullable=False)
     consent_at: Mapped[datetime | None] = mapped_column(nullable=True)
     # server_default (not just the ORM-level `default=`) matches the §22

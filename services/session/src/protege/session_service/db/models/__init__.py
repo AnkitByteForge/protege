@@ -8,6 +8,7 @@ from .artifacts import ProofArtifact, TutorBriefingRow
 from .content import ItemVersion, LearningItem, Misconception, Skill, SkillPrereq
 from .events import EventRow
 from .evidence import EvidenceRow
+from .idempotency import IdempotencyKeyRow
 from .interactions import DiagnosisRow, ExplanationRow, ResponseRow
 from .jobs import JOB_STATUSES, JobRow
 from .learners import Learner, Parent
@@ -30,6 +31,7 @@ __all__ = [
     "EventRow",
     "EvidenceRow",
     "ExplanationRow",
+    "IdempotencyKeyRow",
     "ItemVersion",
     "JobRow",
     "Learner",

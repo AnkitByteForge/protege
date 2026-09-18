@@ -64,6 +64,49 @@ class Settings(BaseSettings):
     log_level: str = "INFO"
     otel_console_export: bool = True
 
+    # --- Auth (roadmap P10: Clerk-issued session JWTs, verified server
+    # side; see docs/P10_SESSION_API.md for how the frontend obtains these
+    # values and what each one is for). ``clerk_secret_key`` is the only
+    # true secret here -- it authenticates this service to Clerk's own API
+    # (``clerk_backend_api.Clerk(bearer_auth=...)``); the JWKS/public key
+    # itself is not secret (it is what a JWT's *signature* is checked
+    # against), but is still env-configured, never hardcoded, so a
+    # non-production Clerk instance can be swapped in without a code change.
+    clerk_secret_key: str = ""
+    clerk_publishable_key: str = ""
+    clerk_jwt_key: str = ""
+    """PEM-formatted JWT verification public key (Clerk dashboard -> API
+    Keys -> "Show JWT public key"). When set, verification is networkless
+    (no per-request or startup call to Clerk -- roadmap P10: "JWKS/public-
+    key verification should be cached appropriately rather than requiring a
+    Clerk network request for every request"). When empty, the Clerk SDK
+    falls back to fetching + internally caching the JWKS from Clerk's own
+    Backend API using ``clerk_secret_key``."""
+    clerk_authorized_parties: str = ""
+    """Comma-separated origins allowed to present a session token to this
+    API (Clerk's ``authorized_parties`` -- guards the subdomain-cookie-
+    leaking attack the official docs describe). E.g.
+    ``https://app.example.com,http://localhost:3000``. Empty disables the
+    check (development only; the JWT signature/expiry are still verified)."""
+
+    # --- Idempotency (roadmap P10: "Idempotency-Key ... 24 h dedupe --
+    # Postgres at this scale") ---
+    idempotency_ttl_hours: float = 24.0
+
+    # --- Rate limits (roadmap P10, verbatim numbers) ---
+    rate_limit_events_per_minute: int = 60
+    rate_limit_sessions_per_day: int = 10
+
+    # --- SSE (roadmap P10: "reconnect-safe behaviour appropriate to the
+    # current architecture"; no separate message bus -- the stream is a
+    # poll over the same `session_states`/`turns` rows every other route
+    # reads, so it can never become a second source of truth). A closed
+    # idle connection is a normal, expected part of this design: the
+    # client's `EventSource` reconnects automatically with `Last-Event-ID`
+    # and resumes exactly where it left off.
+    sse_poll_interval_s: float = 0.5
+    sse_idle_timeout_s: float = 20.0
+
 
 @lru_cache
 def get_settings() -> Settings:

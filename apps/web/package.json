@@ -16,7 +16,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
-    "generate:types": "node scripts/generate-contract-types.mjs && prettier --write src/generated/contracts"
+    "generate:types": "node scripts/generate-contract-types.mjs && prettier --write src/generated/contracts",
+    "generate:api-types": "openapi-typescript ../../services/session/openapi.json -o src/generated/api/schema.ts && prettier --write src/generated/api"
   },
   "dependencies": {
     "clsx": "^2.1.1",
@@ -40,6 +41,7 @@
     "eslint-config-next": "^15.1.0",
     "jsdom": "^29.1.1",
     "json-schema-to-typescript": "^16.0.0",
+    "openapi-typescript": "^7.5.0",
     "postcss": "^8.5.28",
     "prettier": "^3.4.0",
     "tailwindcss": "^4.3.3",

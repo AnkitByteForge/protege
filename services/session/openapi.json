@@ -1,0 +1,1470 @@
+{
+  "components": {
+    "schemas": {
+      "AnswerSubmittedEvent": {
+        "description": "The child answered the currently-presented item. ``response_text``\nis validated server-side (``protege.learning_engine.validate_answer``)\nagainst that item's authored correct answer -- never trusted, and the\ncorrect answer itself is never present in this or any request payload.",
+        "properties": {
+          "item_id": {
+            "maxLength": 64,
+            "minLength": 1,
+            "title": "Item Id",
+            "type": "string"
+          },
+          "response_text": {
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Response Text",
+            "type": "string"
+          },
+          "type": {
+            "const": "answer_submitted",
+            "default": "answer_submitted",
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "item_id",
+          "response_text"
+        ],
+        "title": "AnswerSubmittedEvent",
+        "type": "object"
+      },
+      "CardExplanation": {
+        "description": "Explanation chosen from the 3 authored cards (§19.2).",
+        "properties": {
+          "card_ids": {
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1,
+            "title": "Card Ids",
+            "type": "array"
+          },
+          "id": {
+            "anyOf": [
+              {
+                "maxLength": 128,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Id"
+          },
+          "modality": {
+            "const": "explanation_card",
+            "default": "explanation_card",
+            "title": "Modality",
+            "type": "string"
+          },
+          "skill_code": {
+            "anyOf": [
+              {
+                "examples": [
+                  "S004",
+                  "S001_identify_fraction"
+                ],
+                "pattern": "^S\\d{3}(_[a-z][a-z0-9_]*)?$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Skill Code"
+          },
+          "text": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Text"
+          }
+        },
+        "required": [
+          "card_ids"
+        ],
+        "title": "CardExplanation",
+        "type": "object"
+      },
+      "DeletionRequestOut": {
+        "properties": {
+          "parent_id": {
+            "format": "uuid",
+            "title": "Parent Id",
+            "type": "string"
+          },
+          "request_id": {
+            "format": "uuid",
+            "title": "Request Id",
+            "type": "string"
+          },
+          "status": {
+            "const": "recorded",
+            "default": "recorded",
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "request_id",
+          "parent_id"
+        ],
+        "title": "DeletionRequestOut",
+        "type": "object"
+      },
+      "DiagnosisLabel": {
+        "description": "One closed-set label from the Diagnostician (§7.3, §38).\n\nThe wire key is ``misconception_id`` (§7.3); the value is the library\ncode (``M003``).",
+        "properties": {
+          "confidence": {
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Confidence",
+            "type": "number"
+          },
+          "evidence_span": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Evidence Span"
+          },
+          "misconception_id": {
+            "examples": [
+              "M003"
+            ],
+            "pattern": "^M\\d{3}$",
+            "title": "Misconception Id",
+            "type": "string"
+          },
+          "state": {
+            "$ref": "#/components/schemas/MisconceptionState",
+            "default": "unresolved"
+          }
+        },
+        "required": [
+          "misconception_id",
+          "confidence"
+        ],
+        "title": "DiagnosisLabel",
+        "type": "object"
+      },
+      "DiagnosisResult": {
+        "description": "Diagnostician output — closed set only, abstention over guessing (§7.3).",
+        "properties": {
+          "abstained": {
+            "default": false,
+            "title": "Abstained",
+            "type": "boolean"
+          },
+          "asr_reliable": {
+            "default": true,
+            "title": "Asr Reliable",
+            "type": "boolean"
+          },
+          "labels": {
+            "items": {
+              "$ref": "#/components/schemas/DiagnosisLabel"
+            },
+            "maxItems": 8,
+            "title": "Labels",
+            "type": "array"
+          },
+          "model_run_id": {
+            "anyOf": [
+              {
+                "maxLength": 128,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model Run Id"
+          },
+          "understanding_signals": {
+            "items": {
+              "$ref": "#/components/schemas/UnderstandingSignal"
+            },
+            "title": "Understanding Signals",
+            "type": "array"
+          }
+        },
+        "title": "DiagnosisResult",
+        "type": "object"
+      },
+      "ExplanationGivenEvent": {
+        "description": "A teach-back / readiness / reflection explanation, in any of the\nfour authored modalities (see :data:`~.session.Explanation`).",
+        "properties": {
+          "explanation": {
+            "discriminator": {
+              "mapping": {
+                "explanation_card": "#/components/schemas/CardExplanation",
+                "manipulative": "#/components/schemas/ManipulativeExplanation",
+                "text": "#/components/schemas/TextExplanation",
+                "voice": "#/components/schemas/VoiceExplanation"
+              },
+              "propertyName": "modality"
+            },
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/VoiceExplanation"
+              },
+              {
+                "$ref": "#/components/schemas/TextExplanation"
+              },
+              {
+                "$ref": "#/components/schemas/ManipulativeExplanation"
+              },
+              {
+                "$ref": "#/components/schemas/CardExplanation"
+              }
+            ],
+            "title": "Explanation"
+          },
+          "type": {
+            "const": "explanation_given",
+            "default": "explanation_given",
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "explanation"
+        ],
+        "title": "ExplanationGivenEvent",
+        "type": "object"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "title": "Detail",
+            "type": "array"
+          }
+        },
+        "title": "HTTPValidationError",
+        "type": "object"
+      },
+      "HintRequestedEvent": {
+        "description": "The child asked for the available hint (valid only while the server\nconsiders one available -- i.e. session state ``COACH_ASSIST``).",
+        "properties": {
+          "type": {
+            "const": "hint_requested",
+            "default": "hint_requested",
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "title": "HintRequestedEvent",
+        "type": "object"
+      },
+      "ItemPromptOut": {
+        "properties": {
+          "item_id": {
+            "title": "Item Id",
+            "type": "string"
+          },
+          "stem": {
+            "title": "Stem",
+            "type": "string"
+          }
+        },
+        "required": [
+          "item_id",
+          "stem"
+        ],
+        "title": "ItemPromptOut",
+        "type": "object"
+      },
+      "LearnerStateOut": {
+        "properties": {
+          "learner_id": {
+            "format": "uuid",
+            "title": "Learner Id",
+            "type": "string"
+          },
+          "misconceptions": {
+            "items": {
+              "$ref": "#/components/schemas/MisconceptionBeliefOut"
+            },
+            "title": "Misconceptions",
+            "type": "array"
+          },
+          "skills": {
+            "items": {
+              "$ref": "#/components/schemas/SkillMasteryOut"
+            },
+            "title": "Skills",
+            "type": "array"
+          }
+        },
+        "required": [
+          "learner_id",
+          "skills",
+          "misconceptions"
+        ],
+        "title": "LearnerStateOut",
+        "type": "object"
+      },
+      "ManipulativeAction": {
+        "description": "One manipulative interaction in a trace (§38: ``{t, action, target}``).\n\nThe trace is a first-class diagnostic input, equal in standing to speech\n(roadmap P13): a child who aligns two bars has demonstrated understanding\nwithout a word.",
+        "properties": {
+          "action": {
+            "examples": [
+              "drag",
+              "align",
+              "snap"
+            ],
+            "title": "Action",
+            "type": "string"
+          },
+          "t": {
+            "description": "Seconds since the item was presented.",
+            "minimum": 0.0,
+            "title": "T",
+            "type": "number"
+          },
+          "target": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Target"
+          },
+          "targets": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Targets"
+          }
+        },
+        "required": [
+          "t",
+          "action"
+        ],
+        "title": "ManipulativeAction",
+        "type": "object"
+      },
+      "ManipulativeExplanation": {
+        "description": "Non-verbal teach-back: the child shows it with the manipulative.",
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "maxLength": 128,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Id"
+          },
+          "manipulative_trace": {
+            "items": {
+              "$ref": "#/components/schemas/ManipulativeAction"
+            },
+            "minItems": 1,
+            "title": "Manipulative Trace",
+            "type": "array"
+          },
+          "modality": {
+            "const": "manipulative",
+            "default": "manipulative",
+            "title": "Modality",
+            "type": "string"
+          },
+          "skill_code": {
+            "anyOf": [
+              {
+                "examples": [
+                  "S004",
+                  "S001_identify_fraction"
+                ],
+                "pattern": "^S\\d{3}(_[a-z][a-z0-9_]*)?$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Skill Code"
+          },
+          "text": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Text"
+          }
+        },
+        "required": [
+          "manipulative_trace"
+        ],
+        "title": "ManipulativeExplanation",
+        "type": "object"
+      },
+      "ManipulativeMovedEvent": {
+        "description": "A structured manipulative interaction trace (roadmap P13: \"equal in\nstanding to speech\" as diagnostic evidence).",
+        "properties": {
+          "trace": {
+            "items": {
+              "$ref": "#/components/schemas/ManipulativeAction"
+            },
+            "minItems": 1,
+            "title": "Trace",
+            "type": "array"
+          },
+          "type": {
+            "const": "manipulative_moved",
+            "default": "manipulative_moved",
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "trace"
+        ],
+        "title": "ManipulativeMovedEvent",
+        "type": "object"
+      },
+      "MisconceptionBeliefOut": {
+        "properties": {
+          "misconception_code": {
+            "title": "Misconception Code",
+            "type": "string"
+          },
+          "p_holds": {
+            "title": "P Holds",
+            "type": "number"
+          },
+          "resolved_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Resolved At"
+          },
+          "state": {
+            "title": "State",
+            "type": "string"
+          }
+        },
+        "required": [
+          "misconception_code",
+          "p_holds",
+          "state",
+          "resolved_at"
+        ],
+        "title": "MisconceptionBeliefOut",
+        "type": "object"
+      },
+      "MisconceptionState": {
+        "enum": [
+          "unresolved",
+          "resolved"
+        ],
+        "title": "MisconceptionState",
+        "type": "string"
+      },
+      "NotYetAvailableOut": {
+        "description": "Roadmap P10: \"If those artifacts do not yet have writers ... return\nthe canonical not-yet-available representation instead of fabricating\ndata.\" Used for ``/proof`` and ``/tutor-brief`` until P20/P21 exist.",
+        "properties": {
+          "learner_id": {
+            "format": "uuid",
+            "title": "Learner Id",
+            "type": "string"
+          },
+          "message": {
+            "default": "This isn't ready yet -- proof artifacts are generated by a later phase.",
+            "title": "Message",
+            "type": "string"
+          },
+          "status": {
+            "const": "not_yet_available",
+            "default": "not_yet_available",
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "learner_id"
+        ],
+        "title": "NotYetAvailableOut",
+        "type": "object"
+      },
+      "SessionCreateIn": {
+        "properties": {
+          "learner_id": {
+            "format": "uuid",
+            "title": "Learner Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "learner_id"
+        ],
+        "title": "SessionCreateIn",
+        "type": "object"
+      },
+      "SessionEventOut": {
+        "properties": {
+          "diagnosis": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/DiagnosisResult"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "end_reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "End Reason"
+          },
+          "ended_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ended At"
+          },
+          "hint_text": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hint Text"
+          },
+          "learner_id": {
+            "format": "uuid",
+            "title": "Learner Id",
+            "type": "string"
+          },
+          "mastery_verified": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Mastery Verified"
+          },
+          "misconception_resolved": {
+            "default": false,
+            "title": "Misconception Resolved",
+            "type": "boolean"
+          },
+          "next_item": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ItemPromptOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "session_id": {
+            "format": "uuid",
+            "title": "Session Id",
+            "type": "string"
+          },
+          "sprout_turn": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SproutTurn"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "started_at": {
+            "format": "date-time",
+            "title": "Started At",
+            "type": "string"
+          },
+          "state": {
+            "title": "State",
+            "type": "string"
+          },
+          "step": {
+            "title": "Step",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "session_id",
+          "learner_id",
+          "state",
+          "started_at",
+          "ended_at",
+          "end_reason",
+          "step"
+        ],
+        "title": "SessionEventOut",
+        "type": "object"
+      },
+      "SessionOut": {
+        "properties": {
+          "end_reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "End Reason"
+          },
+          "ended_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ended At"
+          },
+          "learner_id": {
+            "format": "uuid",
+            "title": "Learner Id",
+            "type": "string"
+          },
+          "next_item": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ItemPromptOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "session_id": {
+            "format": "uuid",
+            "title": "Session Id",
+            "type": "string"
+          },
+          "started_at": {
+            "format": "date-time",
+            "title": "Started At",
+            "type": "string"
+          },
+          "state": {
+            "title": "State",
+            "type": "string"
+          },
+          "step": {
+            "title": "Step",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "session_id",
+          "learner_id",
+          "state",
+          "started_at",
+          "ended_at",
+          "end_reason",
+          "step"
+        ],
+        "title": "SessionOut",
+        "type": "object"
+      },
+      "SkillMasteryOut": {
+        "properties": {
+          "computed_at": {
+            "format": "date-time",
+            "title": "Computed At",
+            "type": "string"
+          },
+          "evidence_count": {
+            "title": "Evidence Count",
+            "type": "integer"
+          },
+          "p_known": {
+            "title": "P Known",
+            "type": "number"
+          },
+          "skill_code": {
+            "title": "Skill Code",
+            "type": "string"
+          },
+          "transfer_verified": {
+            "title": "Transfer Verified",
+            "type": "boolean"
+          },
+          "unaided_correct": {
+            "title": "Unaided Correct",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "skill_code",
+          "p_known",
+          "evidence_count",
+          "unaided_correct",
+          "transfer_verified",
+          "computed_at"
+        ],
+        "title": "SkillMasteryOut",
+        "type": "object"
+      },
+      "SproutConfidenceShown": {
+        "description": "Confidence Sprout displays about his (wrong) belief (addendum §7.3).",
+        "enum": [
+          "high",
+          "medium",
+          "low"
+        ],
+        "title": "SproutConfidenceShown",
+        "type": "string"
+      },
+      "SproutPresentationEmotion": {
+        "description": "Rig presentation state, driven by resolution belief (§8.3).\n\nSprout is never `delighted` before the misconception clears — the\nfrontend maps this enum straight onto the SVG rig.",
+        "enum": [
+          "confused",
+          "thinking",
+          "dawning",
+          "delighted"
+        ],
+        "title": "SproutPresentationEmotion",
+        "type": "string"
+      },
+      "SproutTurn": {
+        "description": "One in-character Sprout line (addendum §2.5; §7.3).\n\nThe addendum sample types ``exhibits``/``emotion``/``confidence_shown``\nas bare ``str``; the contracts use the closed enums instead. Sprout may\nnot state the correct answer while the misconception is unresolved —\nthat check is the deterministic answer-leak validator's job, not this\nschema's.",
+        "properties": {
+          "confidence_shown": {
+            "$ref": "#/components/schemas/SproutConfidenceShown"
+          },
+          "emotion": {
+            "$ref": "#/components/schemas/SproutPresentationEmotion"
+          },
+          "exhibits": {
+            "examples": [
+              "M003"
+            ],
+            "pattern": "^M\\d{3}$",
+            "title": "Exhibits",
+            "type": "string"
+          },
+          "utterance": {
+            "description": "At most 30 words (§7.3).",
+            "title": "Utterance",
+            "type": "string"
+          }
+        },
+        "required": [
+          "utterance",
+          "exhibits",
+          "emotion",
+          "confidence_shown"
+        ],
+        "title": "SproutTurn",
+        "type": "object"
+      },
+      "TextExplanation": {
+        "description": "Typed explanation.",
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "maxLength": 128,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Id"
+          },
+          "modality": {
+            "const": "text",
+            "default": "text",
+            "title": "Modality",
+            "type": "string"
+          },
+          "skill_code": {
+            "anyOf": [
+              {
+                "examples": [
+                  "S004",
+                  "S001_identify_fraction"
+                ],
+                "pattern": "^S\\d{3}(_[a-z][a-z0-9_]*)?$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Skill Code"
+          },
+          "text": {
+            "title": "Text",
+            "type": "string"
+          }
+        },
+        "required": [
+          "text"
+        ],
+        "title": "TextExplanation",
+        "type": "object"
+      },
+      "UnderstandingSignal": {
+        "description": "Closed-set positive signals (§38 attested; extended via P3/P6 review).",
+        "enum": [
+          "inverse_denominator_relationship",
+          "partitioning_language"
+        ],
+        "title": "UnderstandingSignal",
+        "type": "string"
+      },
+      "ValidationError": {
+        "properties": {
+          "ctx": {
+            "title": "Context",
+            "type": "object"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "title": "Location",
+            "type": "array"
+          },
+          "msg": {
+            "title": "Message",
+            "type": "string"
+          },
+          "type": {
+            "title": "Error Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError",
+        "type": "object"
+      },
+      "VoiceExplanation": {
+        "description": "Spoken explanation; ASR confidence gates diagnosis (§7.3 abstention).",
+        "properties": {
+          "asr_confidence": {
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Asr Confidence",
+            "type": "number"
+          },
+          "id": {
+            "anyOf": [
+              {
+                "maxLength": 128,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Id"
+          },
+          "modality": {
+            "const": "voice",
+            "default": "voice",
+            "title": "Modality",
+            "type": "string"
+          },
+          "skill_code": {
+            "anyOf": [
+              {
+                "examples": [
+                  "S004",
+                  "S001_identify_fraction"
+                ],
+                "pattern": "^S\\d{3}(_[a-z][a-z0-9_]*)?$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Skill Code"
+          },
+          "text": {
+            "title": "Text",
+            "type": "string"
+          }
+        },
+        "required": [
+          "text",
+          "asr_confidence"
+        ],
+        "title": "VoiceExplanation",
+        "type": "object"
+      }
+    }
+  },
+  "info": {
+    "title": "PROTÉGÉ Session Service",
+    "version": "0.1.0"
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/healthz": {
+      "get": {
+        "operationId": "healthz_healthz_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "title": "Response Healthz Healthz Get",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Healthz"
+      }
+    },
+    "/v1/learners/{learner_id}/proof": {
+      "get": {
+        "description": "Parent Proof cards are generated by P20, which has not shipped --\nroadmap P10: \"return the canonical not-yet-available representation\ninstead of fabricating data.\" ``proof_artifacts`` (P9 schema) has no\nwriter yet, so this route never fabricates a card from partial state.",
+        "operationId": "get_learner_proof_route_v1_learners__learner_id__proof_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "learner_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Learner Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotYetAvailableOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Learner Proof Route",
+        "tags": [
+          "learners"
+        ]
+      }
+    },
+    "/v1/learners/{learner_id}/state": {
+      "get": {
+        "description": "Parent/tutor-scoped mastery view (architecture §23), read straight\noff P9's authoritative ``mastery_estimates``/``misconception_beliefs``\n-- no client-side reconstruction, no re-derivation here.",
+        "operationId": "get_learner_state_route_v1_learners__learner_id__state_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "learner_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Learner Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LearnerStateOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Learner State Route",
+        "tags": [
+          "learners"
+        ]
+      }
+    },
+    "/v1/learners/{learner_id}/tutor-brief": {
+      "get": {
+        "description": "Tutor Briefs are generated by P21, which has not shipped. Gated to\ntutor/admin roles (architecture §23: \"Requires time-boxed tutor\ngrant\") -- P10 does not implement the grant ledger itself; see\n``authz.require_tutor_or_admin``'s docstring.",
+        "operationId": "get_learner_tutor_brief_route_v1_learners__learner_id__tutor_brief_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "learner_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Learner Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotYetAvailableOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Learner Tutor Brief Route",
+        "tags": [
+          "learners"
+        ]
+      }
+    },
+    "/v1/parents/{parent_id}/deletion-request": {
+      "post": {
+        "operationId": "deletion_request_route_v1_parents__parent_id__deletion_request_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "parent_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Parent Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "title": "Idempotency-Key",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeletionRequestOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Deletion Request Route",
+        "tags": [
+          "parents"
+        ]
+      }
+    },
+    "/v1/sessions": {
+      "post": {
+        "operationId": "create_session_route_v1_sessions_post",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "title": "Idempotency-Key",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SessionCreateIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Session Route",
+        "tags": [
+          "sessions"
+        ]
+      }
+    },
+    "/v1/sessions/{session_id}": {
+      "get": {
+        "operationId": "get_session_route_v1_sessions__session_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "session_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Session Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Session Route",
+        "tags": [
+          "sessions"
+        ]
+      }
+    },
+    "/v1/sessions/{session_id}/complete": {
+      "post": {
+        "operationId": "complete_session_route_v1_sessions__session_id__complete_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "session_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Session Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "title": "Idempotency-Key",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Complete Session Route",
+        "tags": [
+          "sessions"
+        ]
+      }
+    },
+    "/v1/sessions/{session_id}/events": {
+      "post": {
+        "operationId": "submit_event_route_v1_sessions__session_id__events_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "session_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Session Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "title": "Idempotency-Key",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "discriminator": {
+                  "mapping": {
+                    "answer_submitted": "#/components/schemas/AnswerSubmittedEvent",
+                    "explanation_given": "#/components/schemas/ExplanationGivenEvent",
+                    "hint_requested": "#/components/schemas/HintRequestedEvent",
+                    "manipulative_moved": "#/components/schemas/ManipulativeMovedEvent"
+                  },
+                  "propertyName": "type"
+                },
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/AnswerSubmittedEvent"
+                  },
+                  {
+                    "$ref": "#/components/schemas/ExplanationGivenEvent"
+                  },
+                  {
+                    "$ref": "#/components/schemas/ManipulativeMovedEvent"
+                  },
+                  {
+                    "$ref": "#/components/schemas/HintRequestedEvent"
+                  }
+                ],
+                "title": "Payload"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionEventOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Submit Event Route",
+        "tags": [
+          "sessions"
+        ]
+      }
+    },
+    "/v1/sessions/{session_id}/stream": {
+      "get": {
+        "operationId": "stream_session_route_v1_sessions__session_id__stream_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "session_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Session Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Stream Session Route",
+        "tags": [
+          "sessions"
+        ]
+      }
+    }
+  }
+}

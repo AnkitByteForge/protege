@@ -92,6 +92,13 @@ from .session import (
     TextExplanation,
     VoiceExplanation,
 )
+from .session_events import (
+    AnswerSubmittedEvent,
+    ExplanationGivenEvent,
+    HintRequestedEvent,
+    ManipulativeMovedEvent,
+    SessionEventRequest,
+)
 from .worked_example import (
     LearnerEvidence,
     TransferObservation,
@@ -140,6 +147,12 @@ __all__ = [  # noqa: RUF022
     "PolicyDecisionAction",
     "PolicyDecisionReward",
     "DomainEvent",
+    # Session event requests (wire shape for POST /v1/sessions/{id}/events)
+    "SessionEventRequest",
+    "AnswerSubmittedEvent",
+    "ExplanationGivenEvent",
+    "ManipulativeMovedEvent",
+    "HintRequestedEvent",
     # Role outputs
     "SproutTurn",
     "CoachHint",
