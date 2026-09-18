@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { Sprout } from "@/components/sprout/Sprout";
 import { SceneFrame } from "@/components/primitives/SceneFrame";
 import { SoftPanel } from "@/components/primitives/SoftPanel";
 import { Button, PrimaryAction, SecondaryAction } from "@/components/primitives/Button";
@@ -25,6 +26,7 @@ const sections = [
   ["panels", "Panels"],
   ["speech", "Speech bubble"],
   ["progress", "Leaf progress"],
+  ["sprout", "Sprout"],
   ["scene", "SceneFrame"],
   ["states", "Loading & recovery"],
   ["motion", "Motion"],
@@ -36,6 +38,9 @@ export default function GalleryPage() {
   const [sceneKey, setSceneKey] = useState("a");
   const [loading, setLoading] = useState(false);
   const [recovering, setRecovering] = useState(false);
+  const [sproutEmotion, setSproutEmotion] = useState<
+    "confused" | "thinking" | "dawning" | "delighted"
+  >("confused");
 
   return (
     <main id="main" className="mx-auto max-w-4xl px-4 py-10 sm:px-8">
@@ -204,6 +209,42 @@ export default function GalleryPage() {
                 + leaf
               </Button>
             </Inline>
+          </Stack>
+        </GallerySection>
+
+        <GallerySection
+          id="sprout"
+          title="Sprout"
+          description="The combinatorial character rig — 480 expressions from 19 reusable parts, driven entirely by learning-state props. Sprout can never appear delighted before a misconception resolves; see the full 480-point explorer and the safety-rule demo on its own page."
+        >
+          <Stack gap="md" align="start">
+            <Inline gap="xs">
+              {(["confused", "thinking", "dawning", "delighted"] as const).map((e) => (
+                <Button
+                  key={e}
+                  size="md"
+                  variant={sproutEmotion === e ? "primary" : "secondary"}
+                  onClick={() => setSproutEmotion(e)}
+                >
+                  {e}
+                </Button>
+              ))}
+            </Inline>
+            <SoftPanel elevation="floating" className="flex w-56 flex-col items-center gap-3 py-6">
+              <Sprout
+                emotion={sproutEmotion}
+                misconceptionState="unresolved"
+                leafCount={3}
+                size="md"
+              />
+            </SoftPanel>
+            <Text muted className="text-sm">
+              Note: <code>misconceptionState=&quot;unresolved&quot;</code> here on purpose — picking
+              &quot;delighted&quot; shows the safety clamp holding Sprout at &quot;dawning&quot;.{" "}
+              <Link href="/gallery/sprout" className="font-bold text-sky-700 underline">
+                Open the full rig explorer →
+              </Link>
+            </Text>
           </Stack>
         </GallerySection>
 
