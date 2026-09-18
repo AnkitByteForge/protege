@@ -36,9 +36,29 @@ class Settings(BaseSettings):
     # that SSL negotiation. Production URLs override via env.
     database_url: str = "postgresql+asyncpg://protege:protege@localhost:5433/protege?ssl=disable"
 
-    # --- Object storage slots (StorageAdapter arrives later) ---
+    # --- Object storage (StorageAdapter; roadmap P9) ---
     aws_region: str = "us-east-1"
     s3_bucket: str = ""
+    storage_backend: str = "local"
+    storage_local_root: str = "./local_storage"
+
+    # --- Embeddings (docs/DECISIONS.md D2: local bge-small, 384-d,
+    # configuration-driven -- never hardcoded in application code or the
+    # migration that creates the pgvector column). ---
+    embedding_model: str = "BAAI/bge-small-en-v1.5"
+    embedding_dimension: int = 384
+
+    # --- Jobs worker (roadmap P9) ---
+    job_worker_id: str = "worker-local"
+    job_poll_interval_s: float = 1.0
+    job_max_attempts: int = 5
+    # A claimed ("running") job whose claim is older than this is treated as
+    # abandoned (the worker that claimed it crashed or was killed) and
+    # becomes reclaimable again -- addendum §6: "if the worker dies mid-job,
+    # it must be retried." Generous relative to any single model call
+    # (addendum §2.3's 2.5 s LLM timeout) so a merely slow, still-alive
+    # worker is never falsely reclaimed out from under itself.
+    job_stale_claim_timeout_s: float = 300.0
 
     # --- Service ---
     log_level: str = "INFO"

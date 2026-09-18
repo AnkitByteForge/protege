@@ -12,7 +12,18 @@ dependencies = [
     "asyncpg>=0.30",
     "alembic>=1.14",
     "opentelemetry-sdk>=1.29",
+    "pgvector>=0.3",
+    "protege-contracts",
+    "protege-session-fsm",
+    "protege-llm",
+    "protege-thin-thread",
 ]
+
+[tool.uv.sources]
+protege-contracts = { workspace = true }
+protege-session-fsm = { workspace = true }
+protege-llm = { workspace = true }
+protege-thin-thread = { workspace = true }
 
 [build-system]
 requires = ["hatchling"]
