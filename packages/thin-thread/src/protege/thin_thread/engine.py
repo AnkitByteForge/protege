@@ -12,7 +12,7 @@ existing packages named above -- nothing here recomputes their math.
 
 from __future__ import annotations
 
-from collections.abc import Callable, Sequence
+from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass, field
 
 from protege.authoring.loader import ContentPack, load_content_pack
@@ -21,6 +21,7 @@ from protege.contracts import (
     Evidence,
     EvidenceKind,
     Explanation,
+    JSONValue,
     LearningItem,
     MasteryOutcome,
     Misconception,
@@ -203,6 +204,38 @@ def _result_line(correct: bool, before: float, after: float) -> str:
     return f"{status}  P(knows) {before:.2f} -> {after:.2f}"
 
 
+def _json_value(value: object) -> JSONValue:
+    """Narrow one payload value to :data:`~protege.contracts.JSONValue`,
+    recursively. Raises ``TypeError`` on a genuinely non-JSON value rather
+    than silently asserting it safe -- see :func:`_json_payload`."""
+    if value is None or isinstance(value, str | int | float | bool):
+        return value
+    if isinstance(value, dict):
+        return {str(key): _json_value(item) for key, item in value.items()}
+    if isinstance(value, list):
+        return [_json_value(item) for item in value]
+    raise TypeError(
+        f"evidence payload value {value!r} ({type(value).__name__}) is not JSON-compatible"
+    )
+
+
+def _json_payload(payload: Mapping[str, object]) -> dict[str, JSONValue]:
+    """Narrow a P2 :class:`~protege.learning_engine.BuiltEvidence.payload`
+    -- typed ``dict[str, object]`` because ``packages/learning-engine`` has
+    no dependency on ``packages/contracts`` (docs/DECISIONS.md D6, D8) --
+    into the ``dict[str, JSONValue]``
+    :class:`~protege.contracts.Evidence.payload` requires.
+
+    Every value ``evidence_builder`` actually constructs is a JSON
+    primitive (see ``build_response_evidence``,
+    ``build_transfer_evidence``, ``build_teaching_episode_evidence``), so
+    this is a real per-value type check, not a cast -- it performs no data
+    conversion and changes no evidence content; it only proves, value by
+    value, what was already true.
+    """
+    return {key: _json_value(value) for key, value in payload.items()}
+
+
 def _score_learning_item(
     item: LearningItem, *, correct: bool, ids: IdAllocator, unaided: bool
 ) -> tuple[bool, Evidence, str]:
@@ -223,7 +256,7 @@ def _score_learning_item(
         kind=EvidenceKind.RESPONSE,
         source_event_id=built.source_event_id,
         weight=built.weight,
-        payload=built.payload,
+        payload=_json_payload(built.payload),
     )
     return result.is_correct, evidence, child_text
 
@@ -246,7 +279,7 @@ def _score_transfer_item(
         kind=EvidenceKind.TRANSFER,
         source_event_id=built.source_event_id,
         weight=built.weight,
-        payload=built.payload,
+        payload=_json_payload(built.payload),
     )
     return result.is_correct, evidence, child_text
 
@@ -454,7 +487,7 @@ def run_thin_thread(
         kind=EvidenceKind.TEACHING_EPISODE,
         source_event_id=teaching_episode_built.source_event_id,
         weight=teaching_episode_built.weight,
-        payload=teaching_episode_built.payload,
+        payload=_json_payload(teaching_episode_built.payload),
     )
     evidence.append(teaching_evidence)
     trace(
