@@ -52,7 +52,19 @@ def _build_default_router(settings: Settings) -> ModelRouter:
     without one -- a route that actually reaches Sprout/the Diagnostician
     then gets stable canned output rather than a startup crash. Real
     deployments must set ``NVIDIA_API_KEY``.
+
+    ``protege.thin_thread.router_setup.build_router("nvidia")`` always
+    constructs a bare ``NvidiaProvider()`` (P4/P8 code, out of P10's scope
+    to change), which reads its key directly from ``os.environ`` -- never
+    from this service's own ``Settings``. Every other secret in this app is
+    configured via ``.env``/``Settings`` only, so a key present in
+    ``settings.nvidia_api_key`` (loaded from ``.env``) but never actually
+    exported to the process environment must be exported here first, or
+    ``NvidiaProvider()`` silently can't see it and the app fails to boot
+    the moment a real key is configured the same way every other key is.
     """
+    if settings.nvidia_api_key and not os.environ.get("NVIDIA_API_KEY"):
+        os.environ["NVIDIA_API_KEY"] = settings.nvidia_api_key
     if settings.nvidia_api_key or os.environ.get("NVIDIA_API_KEY"):
         return build_router("nvidia")
     logger.warning(
