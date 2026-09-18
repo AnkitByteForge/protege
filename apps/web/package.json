@@ -16,15 +16,19 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
+    "test:e2e:session": "playwright test --config=playwright.session.config.ts",
     "generate:types": "node scripts/generate-contract-types.mjs && prettier --write src/generated/contracts",
     "generate:api-types": "openapi-typescript ../../services/session/openapi.json -o src/generated/api/schema.ts && prettier --write src/generated/api"
   },
   "dependencies": {
+    "@clerk/nextjs": "^7.9.4",
+    "@xstate/react": "^6.1.0",
     "clsx": "^2.1.1",
     "framer-motion": "^13.4.0",
     "next": "^15.1.0",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "xstate": "^5.33.2"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.13.0",

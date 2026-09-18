@@ -524,7 +524,25 @@ async def apply_event(
             belief_row = await learning_state_repo.get_misconception_belief(
                 learner_id, misconception_row.id
             )
-            prior = belief_row.p_holds if belief_row is not None else misconception.prevalence_prior
+            # `belief_row.p_holds` is a Postgres NUMERIC column -- SQLAlchemy
+            # deserializes it as `decimal.Decimal`, not `float`. Every
+            # downstream consumer (`apply_diagnosis_to_beliefs` ->
+            # `packages/learning-engine`'s `misconception_belief_update`) is
+            # typed and implemented in plain `float` arithmetic
+            # (`numerator = p_d_given_mk * prior`), which raises `TypeError:
+            # unsupported operand type(s) for *: 'float' and
+            # 'decimal.Decimal'` the moment a *second* teach-back turn reads
+            # a real, previously-persisted belief back from the DB (the
+            # first turn never hits this path -- it falls through to
+            # `misconception.prevalence_prior`, already a `float`). Coercing
+            # at this one boundary -- where a DB-typed value first crosses
+            # into the pure-math learning-engine layer -- fixes the mismatch
+            # without changing either side's own, correctly-typed contract.
+            prior = (
+                float(belief_row.p_holds)
+                if belief_row is not None
+                else misconception.prevalence_prior
+            )
 
             sprout_turn, diagnosis, new_state = orchestrator.run_teach_back_turn(
                 misconception_code=misconception.code,

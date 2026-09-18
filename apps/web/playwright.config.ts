@@ -2,6 +2,11 @@ import { defineConfig, devices } from "@playwright/test";
 
 export default defineConfig({
   testDir: "./tests",
+  // `tests/session/**` needs a live P10 backend + seeded identity
+  // (`playwright.session.config.ts`, `make test-e2e-session`) -- excluded
+  // here so this static-page suite's own `webServer` (no backend) never
+  // tries to run them.
+  testIgnore: "**/session/**",
   timeout: 30_000,
   fullyParallel: true,
   forbidOnly: !!process.env.CI,

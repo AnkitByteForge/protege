@@ -1,4 +1,4 @@
-.PHONY: help dev api web db-up db-down db-migrate observability test test-web test-e2e lint typecheck format types api-types eval clean
+.PHONY: help dev api web db-up db-down db-migrate observability test test-web test-e2e test-e2e-session lint typecheck format types api-types eval clean
 
 .DEFAULT_GOAL := help
 UV := uv run
@@ -48,6 +48,11 @@ test-web: ## Run frontend unit/component tests (Vitest)
 
 test-e2e: ## Run the Playwright smoke test (builds and starts the web app)
 	cd apps/web && npx playwright test
+
+test-e2e-session: ## Run the P15 session E2E suite against a real P10 backend (no real Clerk account needed -- see services/session/scripts/e2e_server.py)
+	$(MAKE) db-up
+	$(MAKE) db-migrate
+	cd apps/web && npx playwright test --config=playwright.session.config.ts
 
 lint: ## Ruff (lint + format check) + ESLint + Prettier check
 	$(UV) ruff check .

@@ -1,20 +1,13 @@
 import { expect, test } from "@playwright/test";
+import { forbidden } from "./forbidden-vocabulary";
 
 /**
  * The child-facing world never surfaces internal/technical language. This
  * mirrors the forbidden-vocabulary check the roadmap specifies in full for
- * P15 (once real scenes exist); here it just guards the one child route
- * P12 ships so the rule is respected from the start, not bolted on later.
+ * P15 (see `session/happy-path.spec.ts` for the live-session version); here
+ * it just guards the one child route P12 ships so the rule is respected
+ * from the start, not bolted on later.
  */
-const forbidden = [
-  /\bAI\b/i,
-  /\bmodel\b/i,
-  /\bmastery\b/i,
-  /%/,
-  /\bpercent(age)?\b/i,
-  /\bscore\b/i,
-];
-
 test("the (child) world preview never shows internal/technical language", async ({ page }) => {
   await page.goto("/world");
   const text = await page.locator("body").innerText();
