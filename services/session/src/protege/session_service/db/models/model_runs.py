@@ -3,8 +3,9 @@ mirrors ``packages/llm/src/protege/llm/telemetry.py``'s ``ModelRunRecord``
 field-for-field (that module's own docstring: "P9 owns the actual table and
 migration; P4 produces records in this shape so the future persistence layer
 has nothing to invent") -- see
-``services/session/src/protege/session_service/persistence/model_run_sink.py``
-for the bulk-write from a router's telemetry buffer into this table.
+``services/session/src/protege/session_service/repositories/model_runs.py``'s
+``ModelRunRepository.record_many`` for the bulk-write from a router's
+telemetry buffer into this table.
 """
 
 from __future__ import annotations

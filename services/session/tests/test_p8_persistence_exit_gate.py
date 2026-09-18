@@ -18,18 +18,21 @@ orphaned rows or vectors remain.
 
 from __future__ import annotations
 
+from datetime import UTC, datetime
+
 import pytest
 from _db_helpers import ensure_p9_schema, run_async, truncate_all_p9_tables
 from sqlalchemy import func, select, text
 
 from protege.authoring.loader import load_content_pack
-from protege.contracts import SessionState
+from protege.contracts import DomainEvent, EventType, Evidence, EvidenceKind, SessionState
 from protege.llm.providers.fake import FakeProvider
 from protege.llm.router import ModelRouter
 from protege.session_service.db.engine import session_scope
 from protege.session_service.db.models import EmbeddingRecord
 from protege.session_service.persistence.thin_thread_bridge import persist_thin_thread_result
 from protege.session_service.repositories.content import ContentRepository
+from protege.session_service.repositories.events import EventRepository
 from protege.session_service.repositories.evidence import EvidenceRepository
 from protege.session_service.repositories.learners import LearnerRepository
 from protege.session_service.repositories.learning_state import LearningStateRepository
@@ -134,7 +137,7 @@ def test_completed_p8_session_persists_rehydrates_and_resolves_its_claim() -> No
                 assert row.source_event_id is not None
 
             tree = await EvidenceRepository(session).resolve_claim(
-                result.mastery_outcome.evidence_ids
+                result.mastery_outcome.evidence_ids, learner_row_id=learner_id
             )
             assert len(tree) == len(result.mastery_outcome.evidence_ids)
             for node in tree:
@@ -229,5 +232,90 @@ def test_learner_deletion_leaves_events_and_safety_events_unlinked_not_orphaned(
             ).scalar_one()
             # ...but no longer linked to the deleted learner.
             assert still_linked == 0
+
+    run_async(scenario())
+
+
+def test_resolve_claim_does_not_cross_contaminate_learners_with_colliding_opaque_ids() -> None:
+    """Audit 7: "no claim can silently resolve to unrelated learner/session
+    data." A pre-persistence id minter like P8's ``IdAllocator`` restarts
+    its counter at 1 every run, so two different learners' evidence can
+    legitimately carry the identical opaque ``external_ref`` (e.g. both
+    mint ``"e_001"``). ``EvidenceRepository.resolve_claim`` must still
+    resolve each learner's claim to *that learner's own* evidence row, never
+    the other learner's -- proven here by constructing exactly that
+    collision directly (not relying on the thin-thread bridge, so the test
+    does not depend on IdAllocator's own restart behaviour to reproduce it).
+    """
+
+    async def scenario() -> None:
+        async with session_scope() as session:
+            learner_a = await LearnerRepository(session).get_or_create(
+                parent_email="collision-a@example.com", display_name="A", grade_band="3-4"
+            )
+            learner_b = await LearnerRepository(session).get_or_create(
+                parent_email="collision-b@example.com", display_name="B", grade_band="3-4"
+            )
+
+            event_repo = EventRepository(session)
+            evidence_repo = EvidenceRepository(session)
+
+            event_a = await event_repo.append(
+                DomainEvent(
+                    id="evt_a",
+                    event_type=EventType.ANSWER_SUBMITTED,
+                    occurred_at=datetime.now(UTC),
+                    learner_id=str(learner_a.id),
+                ),
+                learner_row_id=learner_a.id,
+                session_row_id=None,
+            )
+            event_b = await event_repo.append(
+                DomainEvent(
+                    id="evt_b",
+                    event_type=EventType.ANSWER_SUBMITTED,
+                    occurred_at=datetime.now(UTC),
+                    learner_id=str(learner_b.id),
+                ),
+                learner_row_id=learner_b.id,
+                session_row_id=None,
+            )
+
+            # The identical opaque id, minted independently for two
+            # different learners -- the exact collision a restarting
+            # IdAllocator produces across two separate runs.
+            evidence_a = await evidence_repo.append(
+                Evidence(
+                    id="e_001",
+                    kind=EvidenceKind.RESPONSE,
+                    source_event_id="ignored-by-append",
+                    weight=1.0,
+                    payload={"owner": "a"},
+                ),
+                learner_row_id=learner_a.id,
+                source_event_row_id=event_a.id,
+            )
+            evidence_b = await evidence_repo.append(
+                Evidence(
+                    id="e_001",
+                    kind=EvidenceKind.RESPONSE,
+                    source_event_id="ignored-by-append",
+                    weight=1.0,
+                    payload={"owner": "b"},
+                ),
+                learner_row_id=learner_b.id,
+                source_event_row_id=event_b.id,
+            )
+            assert evidence_a.id != evidence_b.id  # two distinct rows, same external_ref
+
+            tree_a = await evidence_repo.resolve_claim(["e_001"], learner_row_id=learner_a.id)
+            tree_b = await evidence_repo.resolve_claim(["e_001"], learner_row_id=learner_b.id)
+
+            assert len(tree_a) == 1
+            assert len(tree_b) == 1
+            assert tree_a[0].evidence.id == evidence_a.id
+            assert tree_a[0].evidence.payload["owner"] == "a"
+            assert tree_b[0].evidence.id == evidence_b.id
+            assert tree_b[0].evidence.payload["owner"] == "b"
 
     run_async(scenario())

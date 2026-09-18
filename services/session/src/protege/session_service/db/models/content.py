@@ -11,7 +11,7 @@ from __future__ import annotations
 import uuid
 from datetime import datetime
 
-from sqlalchemy import ForeignKey, Integer, Numeric, String
+from sqlalchemy import ForeignKey, Index, Integer, Numeric, String
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.dialects.postgresql import UUID as PGUUID
 from sqlalchemy.orm import Mapped, mapped_column
@@ -76,7 +76,7 @@ class LearningItem(Base):
     id: Mapped[uuid.UUID] = uuid_pk()
     item_code: Mapped[str] = mapped_column(String(64), nullable=False, unique=True)
     skill_id: Mapped[uuid.UUID | None] = mapped_column(
-        PGUUID(as_uuid=True), ForeignKey("skills.id"), nullable=True, index=True
+        PGUUID(as_uuid=True), ForeignKey("skills.id"), nullable=True
     )
     stem: Mapped[str] = mapped_column(String, nullable=False)
     representation: Mapped[str] = mapped_column(String(32), nullable=False)
@@ -87,7 +87,12 @@ class LearningItem(Base):
     content_version: Mapped[str | None] = mapped_column(String(32), nullable=True)
     created_at: Mapped[datetime] = created_at_column()
 
-    __table_args__ = ({"comment": "index (skill_id, elo) added in the P9 migration DDL"},)
+    # §22 table register: "indexes (skill_id, elo)" -- a real composite
+    # index, not the single-column `skill_id` index a bare `index=True`
+    # would produce (an audit-fixed defect: a prior revision of this model
+    # claimed this index existed via a `__table_args__` comment with no
+    # actual DDL backing it).
+    __table_args__ = (Index("ix_learning_items_skill_id_elo", "skill_id", "elo"),)
 
 
 class ItemVersion(Base):

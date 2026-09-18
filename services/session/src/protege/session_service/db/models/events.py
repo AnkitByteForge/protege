@@ -17,7 +17,7 @@ from __future__ import annotations
 import uuid
 from datetime import datetime
 
-from sqlalchemy import ForeignKey, String
+from sqlalchemy import ForeignKey, String, UniqueConstraint
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.dialects.postgresql import UUID as PGUUID
 from sqlalchemy.orm import Mapped, mapped_column
@@ -31,7 +31,11 @@ class EventRow(Base):
     __tablename__ = "events"
 
     id: Mapped[uuid.UUID] = uuid_pk()
-    external_ref: Mapped[str | None] = mapped_column(String(128), nullable=True, index=True)
+    external_ref: Mapped[str | None] = mapped_column(String(128), nullable=True)
+    """Mirrors ``EvidenceRow.external_ref``: scoped unique per learner, not
+    globally, for the same reason (a pre-persistence id minter like P8's
+    ``IdAllocator`` restarts its counter every run) -- see that column's
+    docstring."""
     event_type: Mapped[str] = mapped_column(String(64), nullable=False)
     schema_version: Mapped[str] = mapped_column(String(16), nullable=False, default="1.0")
     occurred_at: Mapped[datetime] = mapped_column(nullable=False)
@@ -57,3 +61,7 @@ class EventRow(Base):
     )
     trace_id: Mapped[str | None] = mapped_column(String(128), nullable=True)
     payload: Mapped[dict[str, object]] = mapped_column(JSONB, nullable=False, default=dict)
+
+    __table_args__ = (
+        UniqueConstraint("learner_id", "external_ref", name="uq_events_learner_external_ref"),
+    )

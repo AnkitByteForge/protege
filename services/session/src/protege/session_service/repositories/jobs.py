@@ -8,6 +8,17 @@ skips the locked row and finds the next (or nothing). The caller commits
 promptly after claiming (see ``jobs/worker.py``) so the row-level lock is
 held only for the claim itself, not for the job's full execution; once
 claimed, ``status='running'`` is what prevents a second claim, not the lock.
+
+**Stale-claim reclaim.** A worker that dies (crash, OOM-kill, deploy) after
+claiming a job but before calling ``complete``/``fail`` leaves that job
+stuck at ``status='running'`` forever -- no other worker's claim query
+selects ``running`` rows, so nothing would ever retry it, contradicting the
+roadmap's own queue semantics ("if the worker dies mid-job, it must be
+retried"). ``claim`` therefore also selects ``running`` rows whose
+``claimed_at`` is older than ``stale_after_s`` and treats them exactly like
+a fresh claim (including the ``attempt_count`` increment and the
+``max_attempts`` check) -- a stale job that has already exhausted its
+attempts is marked terminally ``failed`` here rather than reclaimed again.
 """
 
 from __future__ import annotations
@@ -15,10 +26,16 @@ from __future__ import annotations
 import uuid
 from datetime import UTC, datetime, timedelta
 
-from sqlalchemy import func, select
+from sqlalchemy import and_, func, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from ..db.models import JobRow
+
+DEFAULT_STALE_CLAIM_TIMEOUT_S = 300.0
+"""Mirrors ``Settings.job_stale_claim_timeout_s``'s default, for callers
+that construct a ``JobRepository`` directly without going through
+``Settings`` (e.g. tests). ``jobs/worker.py`` passes the real configured
+value through explicitly."""
 
 
 class JobRepository:
@@ -43,13 +60,29 @@ class JobRepository:
         await self._session.flush()
         return row
 
-    async def claim(self, *, worker_id: str) -> JobRow | None:
-        """Atomically claim the oldest eligible queued job, or ``None`` if
-        none is available. Must be called inside a transaction the caller
-        commits soon after (see module docstring)."""
+    async def claim(
+        self, *, worker_id: str, stale_after_s: float = DEFAULT_STALE_CLAIM_TIMEOUT_S
+    ) -> JobRow | None:
+        """Atomically claim the oldest eligible job -- either genuinely
+        ``queued``, or ``running`` with a claim stale enough to mean its
+        worker died (see module docstring) -- or ``None`` if nothing is
+        eligible. Must be called inside a transaction the caller commits
+        soon after (see module docstring).
+
+        A stale job already at ``max_attempts`` is marked terminally
+        ``failed`` here (not reclaimed) and this call returns ``None`` for
+        it; the caller's next ``claim`` picks up whatever is next.
+        """
+        now = datetime.now(UTC)
+        stale_cutoff = now - timedelta(seconds=stale_after_s)
         stmt = (
             select(JobRow)
-            .where(JobRow.status == "queued", JobRow.available_at <= func.now())
+            .where(
+                or_(
+                    and_(JobRow.status == "queued", JobRow.available_at <= func.now()),
+                    and_(JobRow.status == "running", JobRow.claimed_at <= stale_cutoff),
+                )
+            )
             .order_by(JobRow.available_at)
             .limit(1)
             .with_for_update(skip_locked=True)
@@ -58,7 +91,15 @@ class JobRepository:
         row = result.scalar_one_or_none()
         if row is None:
             return None
-        now = datetime.now(UTC)
+        if row.attempt_count >= row.max_attempts:
+            row.status = "failed"
+            row.error = (
+                row.error or ""
+            ) + " | abandoned: claim exceeded the stale-claim timeout and max_attempts was reached"
+            row.finished_at = now
+            row.updated_at = now
+            await self._session.flush()
+            return None
         row.status = "running"
         row.claimed_by = worker_id
         row.claimed_at = now

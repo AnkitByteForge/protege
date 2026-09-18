@@ -7,6 +7,7 @@ layer entirely, to prove the enforcement lives in the database itself.
 
 from __future__ import annotations
 
+import uuid
 from datetime import UTC, datetime
 
 import asyncpg
@@ -14,7 +15,8 @@ import pytest
 from _db_helpers import ensure_p9_schema, run_async, truncate_all_p9_tables
 from sqlalchemy import text
 
-from protege.session_service.db.engine import get_engine
+from protege.session_service.db.engine import get_engine, session_scope
+from protege.session_service.repositories.learners import LearnerRepository
 
 
 def setup_function() -> None:
@@ -35,15 +37,18 @@ async def _insert_event() -> str:
         return str(result.scalar_one())
 
 
-async def _insert_learner_and_evidence() -> tuple[str, str]:
+async def _insert_learner_and_evidence(
+    *, parent_email: str = "append-only-test@example.com"
+) -> tuple[str, str]:
     engine = get_engine()
     async with engine.begin() as conn:
         parent_id = (
             await conn.execute(
                 text(
                     "INSERT INTO parents (email, consent_version) "
-                    "VALUES ('append-only-test@example.com', 'v1') RETURNING id"
-                )
+                    "VALUES (:email, 'v1') RETURNING id"
+                ),
+                {"email": parent_email},
             )
         ).scalar_one()
         learner_id = (
@@ -170,3 +175,99 @@ def test_safety_events_are_append_only() -> None:
             await conn.close()
 
     run_async(scenario())
+
+
+def test_append_only_escape_hatch_does_not_leak_across_transactions() -> None:
+    """``LearnerRepository.delete`` sets ``protege.allow_cascade_write`` via
+    ``SET LOCAL`` for exactly one transaction (see ``db/append_only.py``'s
+    module docstring). This proves the guarantee, not just asserts it: run a
+    real learner deletion (which legitimately bypasses the trigger for its
+    own CASCADE/SET NULL writes), let that transaction commit, then -- on a
+    brand new connection/transaction -- confirm ``evidence`` is still fully
+    append-only-protected. If the escape hatch ever leaked past its own
+    transaction, this second phase would silently succeed instead of raising.
+    """
+    learner_id, evidence_id = run_async(
+        _insert_learner_and_evidence(parent_email="escape-hatch-leak-a@example.com")
+    )
+
+    async def delete_learner() -> None:
+        async with session_scope() as session:
+            await LearnerRepository(session).delete(uuid.UUID(learner_id))
+
+    run_async(delete_learner())
+
+    async def evidence_row_survived_as_orphaned_by_cascade() -> bool:
+        engine = get_engine()
+        async with engine.begin() as conn:
+            result = await conn.execute(
+                text("SELECT count(*) FROM evidence WHERE id = :id"), {"id": evidence_id}
+            )
+            return bool(result.scalar_one())
+
+    # The deletion's CASCADE really did remove the evidence row (proves the
+    # escape hatch worked for its one sanctioned purpose)...
+    assert run_async(evidence_row_survived_as_orphaned_by_cascade()) is False
+
+    # ...and now, on a fresh transaction with no learner deletion in
+    # progress, append-only enforcement is still fully intact.
+    remaining_learner_id, remaining_evidence_id = run_async(
+        _insert_learner_and_evidence(parent_email="escape-hatch-leak-b@example.com")
+    )
+    del remaining_learner_id
+
+    async def scenario() -> None:
+        conn = await _raw_connect()
+        try:
+            with pytest.raises(asyncpg.PostgresError, match="append-only"):
+                await conn.execute(
+                    "UPDATE evidence SET weight = 2.0 WHERE id = $1", remaining_evidence_id
+                )
+        finally:
+            await conn.close()
+
+    run_async(scenario())
+
+
+def test_append_only_escape_hatch_does_not_survive_a_rollback() -> None:
+    """Same guarantee as above, for the rollback path specifically (audit
+    requirement: "confirm rollback restores normal append-only behavior").
+    Forces the learner-deletion transaction to roll back after
+    ``LearnerRepository.delete`` has already set the escape-hatch GUC and
+    issued the cascading writes, then confirms both that the rollback
+    genuinely undid the deletion and that append-only enforcement still
+    holds afterward."""
+
+    class _ForcedRollback(Exception):
+        pass
+
+    learner_id, evidence_id = run_async(_insert_learner_and_evidence())
+
+    async def delete_then_force_rollback() -> None:
+        with pytest.raises(_ForcedRollback):
+            async with session_scope() as session:
+                await LearnerRepository(session).delete(uuid.UUID(learner_id))
+                raise _ForcedRollback
+
+    run_async(delete_then_force_rollback())
+
+    async def evidence_row_exists() -> bool:
+        engine = get_engine()
+        async with engine.begin() as conn:
+            result = await conn.execute(
+                text("SELECT count(*) FROM evidence WHERE id = :id"), {"id": evidence_id}
+            )
+            return bool(result.scalar_one())
+
+    # Rolled back: the evidence row must still be there.
+    assert run_async(evidence_row_exists()) is True
+
+    async def scenario_after_rollback() -> None:
+        conn = await _raw_connect()
+        try:
+            with pytest.raises(asyncpg.PostgresError, match="append-only"):
+                await conn.execute("UPDATE evidence SET weight = 2.0 WHERE id = $1", evidence_id)
+        finally:
+            await conn.close()
+
+    run_async(scenario_after_rollback())

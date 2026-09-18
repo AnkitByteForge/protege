@@ -64,9 +64,20 @@ class EvidenceRepository:
         await self._session.flush()
         return row
 
-    async def get_by_external_ref(self, external_ref: str) -> EvidenceRow | None:
+    async def get_by_external_ref(
+        self, external_ref: str, *, learner_row_id: uuid.UUID
+    ) -> EvidenceRow | None:
+        """Scoped by ``learner_row_id``, not global: ``external_ref`` is only
+        unique per learner (``uq_evidence_learner_external_ref`` -- see
+        ``EvidenceRow.external_ref``'s docstring). An unscoped lookup could
+        return a different learner's evidence entirely when two
+        pre-persistence runs mint the same opaque id, which is exactly the
+        roadmap's "no claim can silently resolve to unrelated learner/session
+        data" failure mode."""
         result = await self._session.execute(
-            select(EvidenceRow).where(EvidenceRow.external_ref == external_ref)
+            select(EvidenceRow).where(
+                EvidenceRow.external_ref == external_ref, EvidenceRow.learner_id == learner_row_id
+            )
         )
         return result.scalar_one_or_none()
 
@@ -78,10 +89,22 @@ class EvidenceRepository:
         )
         return list(result.scalars().all())
 
-    async def resolve_claim(self, evidence_ids: Sequence[str]) -> list[EvidenceTreeNode]:
+    async def resolve_claim(
+        self, evidence_ids: Sequence[str], *, learner_row_id: uuid.UUID
+    ) -> list[EvidenceTreeNode]:
         """Resolve a claim's opaque ``evidence_ids`` (as carried by
         ``MasteryOutcome.evidence_ids``/``ProofClaim.evidence_ids``) to the
         full tree: evidence row -> source event -> originating session/turn.
+
+        A claim always belongs to one specific learner (a
+        ``MasteryOutcome``/``ProofClaim`` is never cross-learner), so
+        ``learner_row_id`` is required and every lookup is scoped to it --
+        this is what makes resolution safe even though the opaque ids
+        themselves are only unique per learner, not globally (see
+        ``EvidenceRow.external_ref``'s docstring): two different learners'
+        sessions can legitimately mint the identical opaque id, and an
+        unscoped lookup could return, or be made to return, the wrong
+        learner's evidence for someone else's claim.
 
         Missing ids are silently skipped rather than raising -- a caller
         auditing a claim wants to see what actually resolves, and a claim
@@ -90,7 +113,9 @@ class EvidenceRepository:
         """
         nodes: list[EvidenceTreeNode] = []
         for evidence_id in evidence_ids:
-            evidence_row = await self.get_by_external_ref(evidence_id)
+            evidence_row = await self.get_by_external_ref(
+                evidence_id, learner_row_id=learner_row_id
+            )
             if evidence_row is None:
                 continue
             event_row = await self._session.get(EventRow, evidence_row.source_event_id)

@@ -19,7 +19,7 @@ from collections.abc import Awaitable, Callable, Mapping
 from ..db.engine import session_scope
 from ..db.models import JobRow
 from ..repositories.jobs import JobRepository
-from ..settings import Settings
+from ..settings import Settings, get_settings
 
 JobHandler = Callable[[JobRow], Awaitable[None]]
 """One job type's execution logic. Raises on failure; ``claim_and_run_once``
@@ -34,8 +34,11 @@ async def claim_and_run_once(
     """Claim and run at most one job. Returns ``True`` iff a job was claimed
     (regardless of whether it then succeeded or failed) -- the caller uses
     this to decide whether to poll again immediately or back off."""
+    resolved_settings = settings if settings is not None else get_settings()
     async with session_scope(settings) as session:
-        job = await JobRepository(session).claim(worker_id=worker_id)
+        job = await JobRepository(session).claim(
+            worker_id=worker_id, stale_after_s=resolved_settings.job_stale_claim_timeout_s
+        )
         if job is None:
             return False
         job_id: uuid.UUID = job.id

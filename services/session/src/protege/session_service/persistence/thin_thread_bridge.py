@@ -39,7 +39,7 @@ from datetime import UTC, datetime, timedelta
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from protege.contracts import DomainEvent, EventType, EvidenceKind, MasteryEstimate
+from protege.contracts import DomainEvent, EventType, Evidence, EvidenceKind, MasteryEstimate
 from protege.llm.telemetry import ModelRunRecord
 from protege.thin_thread.engine import ThinThreadResult
 
@@ -49,11 +49,29 @@ from ..repositories.learning_state import LearningStateRepository
 from ..repositories.model_runs import ModelRunRepository
 from ..repositories.sessions import SessionRepository
 
-_EVENT_TYPE_BY_EVIDENCE_KIND: dict[EvidenceKind, EventType] = {
-    EvidenceKind.RESPONSE: EventType.ANSWER_SUBMITTED,
-    EvidenceKind.TRANSFER: EventType.TRANSFER_PASSED,
-    EvidenceKind.TEACHING_EPISODE: EventType.TEACH_BACK_COMPLETED,
-}
+
+def _event_type_for_evidence(item: Evidence) -> EventType:
+    """Infer the synthesized event's type from one evidence item.
+
+    ``TRANSFER`` is payload-dependent, not a blanket "passed": P8's own
+    ``build_transfer_evidence`` (``packages/learning-engine``) always
+    attaches evidence for a transfer attempt regardless of outcome, with the
+    actual result in ``payload["result"]``. A prior revision of this bridge
+    mapped every ``TRANSFER``-kind item straight to ``TRANSFER_PASSED``,
+    which fabricated a passing event for a transfer the child actually
+    failed -- exactly the kind of falsely-precise event semantics P8 itself
+    never produced. ``RESPONSE`` maps to ``ANSWER_SUBMITTED`` regardless of
+    correctness, which is accurate: the catalog's ``ANSWER_SUBMITTED`` event
+    means only "an answer was submitted," not that it was correct.
+    """
+    if item.kind == EvidenceKind.RESPONSE:
+        return EventType.ANSWER_SUBMITTED
+    if item.kind == EvidenceKind.TEACHING_EPISODE:
+        return EventType.TEACH_BACK_COMPLETED
+    if item.kind == EvidenceKind.TRANSFER:
+        passed = bool(item.payload.get("result", False))
+        return EventType.TRANSFER_PASSED if passed else EventType.TRANSFER_FAILED
+    raise ValueError(f"no event-type mapping for evidence kind {item.kind!r}")
 
 
 @dataclass(frozen=True)
@@ -163,7 +181,7 @@ async def persist_thin_thread_result(
 
     evidence_row_ids: dict[str, uuid.UUID] = {}
     for index, item in enumerate(result.evidence, start=1):
-        event_type = _EVENT_TYPE_BY_EVIDENCE_KIND[item.kind]
+        event_type = _event_type_for_evidence(item)
         event_row = await event_repo.append(
             DomainEvent(
                 id=f"evt_for_{item.evidence_id}",

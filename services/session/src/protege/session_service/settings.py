@@ -52,6 +52,13 @@ class Settings(BaseSettings):
     job_worker_id: str = "worker-local"
     job_poll_interval_s: float = 1.0
     job_max_attempts: int = 5
+    # A claimed ("running") job whose claim is older than this is treated as
+    # abandoned (the worker that claimed it crashed or was killed) and
+    # becomes reclaimable again -- addendum §6: "if the worker dies mid-job,
+    # it must be retried." Generous relative to any single model call
+    # (addendum §2.3's 2.5 s LLM timeout) so a merely slow, still-alive
+    # worker is never falsely reclaimed out from under itself.
+    job_stale_claim_timeout_s: float = 300.0
 
     # --- Service ---
     log_level: str = "INFO"
