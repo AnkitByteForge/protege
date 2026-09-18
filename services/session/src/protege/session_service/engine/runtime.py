@@ -58,6 +58,7 @@ from collections.abc import Mapping
 from dataclasses import dataclass
 from datetime import UTC, datetime
 
+from opentelemetry import trace
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -96,7 +97,6 @@ from protege.roles.beliefs import apply_diagnosis_to_beliefs
 from protege.roles.sprout import SproutGenerator
 from protege.session.machine import Event, SessionContext
 from protege.session.orchestrator import SessionOrchestrator
-from protege.thin_thread.ids import IdAllocator
 from protege.thin_thread.scenario import INITIAL_P_KNOWN, numeric_answer_text
 
 from ..db.models import EvidenceRow, SessionRow, TurnRow
@@ -191,8 +191,21 @@ def next_item_prompt(context: SessionContext) -> ItemPrompt | None:
     return ItemPrompt(item_id=item.item_id, stem=item.stem)
 
 
+def _current_trace_id() -> str | None:
+    """The active OTel span's trace id, as the 32-hex-char W3C
+    ``traceparent`` representation (roadmap: "one trace per request ...
+    flows into ... model calls"). ``None`` if no span is active (e.g. a
+    unit test calling ``engine.runtime`` functions directly, outside the
+    app's request-span middleware) -- both role adapters accept ``None``
+    and fall back to minting their own id, never crash on it."""
+    context = trace.get_current_span().get_span_context()
+    if context.trace_id == 0:
+        return None
+    return format(context.trace_id, "032x")
+
+
 def _build_router_ports(
-    router: ModelRouter, ids: IdAllocator
+    router: ModelRouter, trace_id: str | None
 ) -> tuple[SproutPortAdapter, DiagnosticianPortAdapter]:
     items = get_thin_thread_items()
     content = get_content_pack()
@@ -201,9 +214,9 @@ def _build_router_ports(
         generator,
         item_stem=items.diagnostic.stem,
         correct_answer=items.diagnostic.correct_answer,
-        ids=ids,
+        trace_id=trace_id,
     )
-    diagnostician = DiagnosticianPortAdapter(router, ids)
+    diagnostician = DiagnosticianPortAdapter(router, trace_id)
     return sprout, diagnostician
 
 
@@ -241,8 +254,8 @@ async def create_session(
     SPROUT_TEASE -> DIAGNOSTIC preamble (roadmap: ARRIVAL is a synchronous
     profile load; SPROUT_TEASE's own 10 s timeout is documented "skip; no
     learning cost" -- neither state waits on the child)."""
-    ids = IdAllocator()
-    sprout, diagnostician = _build_router_ports(router, ids)
+    trace_id = _current_trace_id()
+    sprout, diagnostician = _build_router_ports(router, trace_id)
     context = SessionContext(p_known=INITIAL_P_KNOWN)
     orchestrator = SessionOrchestrator(sprout=sprout, diagnostician=diagnostician, context=context)
 
@@ -262,6 +275,7 @@ async def create_session(
             occurred_at=datetime.now(UTC),
             learner_id=str(learner_id),
             session_id=str(session_row.id),
+            trace_id=trace_id,
         ),
         learner_row_id=learner_id,
         session_row_id=session_row.id,
@@ -298,8 +312,8 @@ async def apply_event(
         raise IllegalSessionTransitionError("session has no recorded state yet")
     context = context_from_dict(session_row.context_snapshot)
 
-    ids = IdAllocator()
-    sprout, diagnostician = _build_router_ports(router, ids)
+    trace_id = _current_trace_id()
+    sprout, diagnostician = _build_router_ports(router, trace_id)
     orchestrator = SessionOrchestrator(sprout=sprout, diagnostician=diagnostician, context=context)
 
     session_repo = SessionRepository(session)
@@ -329,6 +343,7 @@ async def apply_event(
                 occurred_at=datetime.now(UTC),
                 learner_id=str(learner_id),
                 session_id=str(session_row.id),
+                trace_id=trace_id,
                 payload=_json_payload(payload or {}),
             ),
             learner_row_id=learner_id,
@@ -672,6 +687,7 @@ async def complete_session(session: AsyncSession, *, session_row: SessionRow) ->
                 occurred_at=datetime.now(UTC),
                 learner_id=str(session_row.learner_id),
                 session_id=str(session_row.id),
+                trace_id=_current_trace_id(),
             ),
             learner_row_id=session_row.learner_id,
             session_row_id=session_row.id,

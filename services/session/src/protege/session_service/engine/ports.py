@@ -31,7 +31,6 @@ from protege.roles.sprout import (
     SproutGenerator,
     SproutState,
 )
-from protege.thin_thread.ids import IdAllocator
 
 
 class SproutPortAdapter:
@@ -41,7 +40,13 @@ class SproutPortAdapter:
     running Sprout dialogue transcript beyond ``turns`` rows, so a fresh
     adapter's ``prior_turns`` starts empty each call, matching what a
     single teach-back turn's generation actually needs -- Sprout speaks
-    once per call, not a whole conversation at once)."""
+    once per call, not a whole conversation at once).
+
+    ``trace_id`` is the current request's real distributed-trace id (see
+    ``engine/runtime.py``'s ``_current_trace_id``), not a locally-minted
+    counter -- so a Sprout call's ``ModelRunRecord.trace_id`` correlates
+    back to the exact HTTP request that caused it (roadmap: "one trace per
+    request ... flows into ... model calls")."""
 
     def __init__(
         self,
@@ -49,13 +54,13 @@ class SproutPortAdapter:
         *,
         item_stem: str,
         correct_answer: str,
-        ids: IdAllocator,
+        trace_id: str | None,
         prior_turns: Sequence[SproutDialogueTurn] = (),
     ) -> None:
         self._generator = generator
         self._item_stem = item_stem
         self._correct_answer = correct_answer
-        self._ids = ids
+        self._trace_id = trace_id
         self.prior_turns: list[SproutDialogueTurn] = list(prior_turns)
         self.results: list[SproutGenerationResult] = []
 
@@ -72,7 +77,7 @@ class SproutPortAdapter:
             item_stem=self._item_stem,
             correct_answer=self._correct_answer,
             prior_turns=tuple(self.prior_turns),
-            trace_id=self._ids.next("trace_sprout"),
+            trace_id=self._trace_id,
         )
         self.results.append(result)
         self.prior_turns.append(SproutDialogueTurn(speaker="sprout", text=result.turn.utterance))
@@ -83,9 +88,12 @@ class SproutPortAdapter:
 
 
 class DiagnosticianPortAdapter:
-    def __init__(self, router: ModelRouter, ids: IdAllocator) -> None:
+    """``trace_id`` is the current request's real distributed-trace id --
+    see :class:`SproutPortAdapter`'s docstring."""
+
+    def __init__(self, router: ModelRouter, trace_id: str | None) -> None:
         self._router = router
-        self._ids = ids
+        self._trace_id = trace_id
         self.results: list[DiagnosisResult] = []
 
     def __call__(
@@ -94,7 +102,7 @@ class DiagnosticianPortAdapter:
         result = diagnose(
             self._router,
             DiagnosticContext(explanation=explanation, misconception_set=misconception_set),
-            trace_id=self._ids.next("trace_diag"),
+            trace_id=self._trace_id,
         )
         self.results.append(result)
         return result
