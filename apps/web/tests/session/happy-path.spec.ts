@@ -17,6 +17,19 @@ test.describe("P15 happy path", () => {
   test("a full session plays start to finish, with real Sprout state, real manipulative evidence, and no forbidden vocabulary", async ({
     page,
   }) => {
+    // This is the one test that walks the *entire* 21-state journey end to
+    // end -- diagnostic, practice, explanation, all 6 teach-back turns (2
+    // of them via coach_assist hints), reflection, all 3 independent-verify
+    // items, and transfer through to completion. That is a genuinely long
+    // real user session (12+ sequential server round trips, several with
+    // their own deliberate-beat dwell), not a stuck app: the global 45s
+    // default (right-sized for every other, single-scene test in this
+    // suite) doesn't leave enough margin for the cumulative total under
+    // real network/system load. Extending it here is a timing-infrastructure
+    // fix for this one long-running test, not a weakened assertion --
+    // nothing this test checks is loosened.
+    test.setTimeout(90_000);
+
     const { learnerId } = readE2EAuth();
 
     await startSession(page, learnerId);
