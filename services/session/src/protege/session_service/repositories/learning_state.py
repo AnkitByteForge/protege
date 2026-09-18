@@ -11,6 +11,7 @@ they are stored.
 from __future__ import annotations
 
 import uuid
+from dataclasses import dataclass
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -18,7 +19,25 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from protege.contracts import MasteryEstimate as MasteryEstimateContract
 from protege.contracts import MisconceptionBelief as MisconceptionBeliefContract
 
-from ..db.models import MasteryEstimateRow, MisconceptionBeliefRow, TeachingEpisodeRow
+from ..db.models import (
+    MasteryEstimateRow,
+    Misconception,
+    MisconceptionBeliefRow,
+    Skill,
+    TeachingEpisodeRow,
+)
+
+
+@dataclass(frozen=True)
+class MasteryEstimateWithSkill:
+    row: MasteryEstimateRow
+    skill_code: str
+
+
+@dataclass(frozen=True)
+class MisconceptionBeliefWithCode:
+    row: MisconceptionBeliefRow
+    misconception_code: str
 
 
 class LearningStateRepository:
@@ -57,6 +76,16 @@ class LearningStateRepository:
         )
         return result.scalar_one_or_none()
 
+    async def list_mastery_for_learner(
+        self, learner_id: uuid.UUID
+    ) -> list[MasteryEstimateWithSkill]:
+        result = await self._session.execute(
+            select(MasteryEstimateRow, Skill.code)
+            .join(Skill, Skill.id == MasteryEstimateRow.skill_id)
+            .where(MasteryEstimateRow.learner_id == learner_id)
+        )
+        return [MasteryEstimateWithSkill(row=row, skill_code=code) for row, code in result.all()]
+
     async def upsert_misconception_belief(
         self,
         *,
@@ -94,6 +123,19 @@ class LearningStateRepository:
             )
         )
         return result.scalar_one_or_none()
+
+    async def list_misconception_beliefs_for_learner(
+        self, learner_id: uuid.UUID
+    ) -> list[MisconceptionBeliefWithCode]:
+        result = await self._session.execute(
+            select(MisconceptionBeliefRow, Misconception.code)
+            .join(Misconception, Misconception.id == MisconceptionBeliefRow.misconception_id)
+            .where(MisconceptionBeliefRow.learner_id == learner_id)
+        )
+        return [
+            MisconceptionBeliefWithCode(row=row, misconception_code=code)
+            for row, code in result.all()
+        ]
 
     async def append_teaching_episode(
         self,

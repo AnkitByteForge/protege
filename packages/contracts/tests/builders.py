@@ -4,6 +4,7 @@ constraint, and snapshot tests. One builder per exported model."""
 from datetime import UTC, datetime
 
 from protege.contracts import (
+    AnswerSubmittedEvent,
     CardExplanation,
     CoachHint,
     Concept,
@@ -12,12 +13,15 @@ from protege.contracts import (
     Distractor,
     DomainEvent,
     Evidence,
+    ExplanationGivenEvent,
+    HintRequestedEvent,
     Intervention,
     ItemVersion,
     LearnerEvidence,
     LearningItem,
     ManipulativeAction,
     ManipulativeExplanation,
+    ManipulativeMovedEvent,
     MasteryEstimate,
     MasteryOutcome,
     Misconception,
@@ -253,6 +257,22 @@ def build_card_explanation() -> CardExplanation:
         card_ids=["card_more_pieces_smaller"],
         skill_code="S004",
     )
+
+
+def build_answer_submitted_event() -> AnswerSubmittedEvent:
+    return AnswerSubmittedEvent(item_id="i_0132", response_text="1/4")
+
+
+def build_explanation_given_event() -> ExplanationGivenEvent:
+    return ExplanationGivenEvent(explanation=build_text_explanation())
+
+
+def build_manipulative_moved_event() -> ManipulativeMovedEvent:
+    return ManipulativeMovedEvent(trace=[build_manipulative_action()])
+
+
+def build_hint_requested_event() -> HintRequestedEvent:
+    return HintRequestedEvent()
 
 
 def build_diagnosis_label() -> DiagnosisLabel:

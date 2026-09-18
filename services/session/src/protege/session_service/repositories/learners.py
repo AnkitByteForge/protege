@@ -44,6 +44,20 @@ class LearnerRepository:
         result = await self._session.execute(select(Parent).where(Parent.email == email))
         return result.scalar_one_or_none()
 
+    async def get_parent_by_clerk_user_id(self, clerk_user_id: str) -> Parent | None:
+        result = await self._session.execute(
+            select(Parent).where(Parent.clerk_user_id == clerk_user_id)
+        )
+        return result.scalar_one_or_none()
+
+    async def link_clerk_user_id(self, *, parent_id: uuid.UUID, clerk_user_id: str) -> Parent:
+        parent = await self._session.get(Parent, parent_id)
+        if parent is None:
+            raise LookupError(f"no parent {parent_id}")
+        parent.clerk_user_id = clerk_user_id
+        await self._session.flush()
+        return parent
+
     async def create_learner(
         self,
         *,

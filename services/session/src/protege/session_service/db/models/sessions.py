@@ -12,6 +12,7 @@ import uuid
 from datetime import datetime
 
 from sqlalchemy import ForeignKey, Integer, String, UniqueConstraint
+from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.dialects.postgresql import UUID as PGUUID
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -34,6 +35,14 @@ class SessionRow(Base):
     started_at: Mapped[datetime] = created_at_column()
     ended_at: Mapped[datetime | None] = mapped_column(nullable=True)
     end_reason: Mapped[str | None] = mapped_column(String(32), nullable=True)
+    context_snapshot: Mapped[dict[str, object] | None] = mapped_column(JSONB, nullable=True)
+    """A checkpoint of ``protege.session.machine.SessionContext`` (roadmap
+    P10). ``session_states`` remains the durable, append-only transition
+    journal/audit trail -- this column is not a second source of truth for
+    *what happened*, only a resumable snapshot of the live orchestrator's
+    working context, so a stateless API process can rebuild the exact
+    ``SessionContext`` its last request left behind. See
+    ``engine/context_codec.py``."""
 
 
 class SessionStateRow(Base):
