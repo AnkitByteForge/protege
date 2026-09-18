@@ -152,6 +152,15 @@ ignore_missing_imports = true
 module = ["protege.session", "protege.session.*", "protege.roles", "protege.roles.*"]
 ignore_missing_imports = true
 
+# P9's session service (services/session) is the first package to
+# cross-import protege.thin_thread directly, for its minimal P8
+# integration point (persistence/thin_thread_bridge.py). packages/thin-thread
+# has no py.typed marker (D15 predates this), and adding one belongs to
+# that package's own phase (P8), not P9.
+[[tool.mypy.overrides]]
+module = ["protege.thin_thread", "protege.thin_thread.*"]
+ignore_missing_imports = true
+
 [tool.pydantic.mypy]
 init_forbid_extra = true
 init_typed = true
