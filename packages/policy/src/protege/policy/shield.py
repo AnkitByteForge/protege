@@ -26,14 +26,28 @@ it always threads the former's return value through the latter before
 constructing the persisted ``PolicyDecisionAction`` -- there is no code
 path in this package that logs or returns a ``.rules`` proposal directly.
 Nothing here can make an FSM transition happen either: this module only
-ever returns a member of the 13-action ``PolicyAction`` vocabulary, never
-touches ``protege.session.machine``, and the session FSM's own guards
-(``TEACH_BACK`` unreachable below 0.35, the 25-minute hard cap, etc.) stay
-independently enforced there regardless of what this module decides
-(roadmap P11 §11: "The policy must NEVER be able to bypass a forbidden FSM
-transition" -- this shield narrows the *policy's* action space to match
-what the FSM would allow anyway; it does not, and could not, grant the
-policy any transition authority the FSM itself does not already have).
+ever returns a member of the 13-action ``PolicyAction`` vocabulary and
+never touches ``protege.session.machine``. That statement means two
+different things for the two rules it might sound like it covers equally,
+and they should not be conflated:
+
+- **TEACH_BACK below 0.35** is genuinely belt-and-braces:
+  ``protege.session.machine``'s own READINESS guards independently make
+  TEACH_BACK unreachable below 0.35 regardless of what this module
+  decides (roadmap P11 §11: "The policy must NEVER be able to bypass a
+  forbidden FSM transition") -- rule 1 here narrows the *policy's* action
+  space to match what the FSM already refuses; it does not, and could
+  not, grant the policy any transition authority the FSM itself does not
+  already have.
+- **The 25-minute hard cap is not the same kind of case.** P7 does not
+  currently enforce that wall-clock threshold anywhere in
+  ``machine.py``/``orchestrator.py`` (see ``_check_session_hard_cap``'s
+  own docstring for the specifics). Rule 6 here is a **policy-layer
+  decision only**: it forces HUMAN_TUTOR once the threshold is reached,
+  but this module has no execution authority to stop anything. Actually
+  terminating the session, or wiring this rule's output into an FSM
+  event, is a **future orchestration-integration concern** -- it is not
+  already guaranteed by this module or by P7 today.
 
 Two of the six boundary constants (the 0.35 TEACH_BACK floor and the
 25-minute hard cap) are imported from P7's already-locked
