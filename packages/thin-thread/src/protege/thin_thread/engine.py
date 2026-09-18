@@ -32,7 +32,6 @@ from protege.contracts import (
     TransferItem,
 )
 from protege.learning_engine import (
-    OTHER_DISTRACTOR_KEY,
     ResponseObservation,
     TeachingEpisodeObservation,
     ThresholdDecision,
@@ -41,7 +40,6 @@ from protege.learning_engine import (
     build_response_evidence,
     build_teaching_episode_evidence,
     build_transfer_evidence,
-    misconception_belief_update,
     validate_answer,
 )
 from protege.llm.router import ModelRouter
@@ -156,33 +154,23 @@ def _update_belief(
     """Deterministic misconception-belief update from one teach-back
     diagnosis (roadmap P8 flow step 10).
 
-    A RESOLVED label is not covered by
-    :func:`~protege.roles.beliefs.apply_diagnosis_to_beliefs` (P6's own
-    helper deliberately only moves a belief for UNRESOLVED evidence -- see
-    its docstring). No canonical document specifies a numeric formula for
-    "a teach-back resolution's effect on p_holds", so this applies the
-    SAME real, already-locked convention (docs/DECISIONS.md D10: the
-    authored ``"other"`` fallback key for free-text evidence not tied to a
-    specific distractor) directly via
-    :func:`~protege.learning_engine.misconception_belief_update` -- a P8-
-    local application of an existing formula, not an invented one. A
-    future P9/P11 owner should ratify (or replace) this convention.
+    A thin wrapper over the real, already-shipped
+    :func:`~protege.roles.beliefs.apply_diagnosis_to_beliefs` (P6) --
+    P8 invents no formula of its own here. That function's own documented
+    behaviour is authoritative and is used exactly as written: it
+    Bayes-updates a belief from UNRESOLVED evidence (via the real P2
+    :func:`~protege.learning_engine.misconception_belief_update`), and
+    deliberately leaves a RESOLVED label's belief **unchanged** ("only
+    genuinely new UNRESOLVED evidence... moves a belief" -- its own
+    docstring). No canonical document specifies a numeric formula for
+    "what a teach-back resolution does to p_holds", so none is invented
+    here; the resolution itself is recorded categorically, via
+    ``MisconceptionBelief.state`` (see ``run_thin_thread``), not by moving
+    this number. ``test_resolution_does_not_move_the_numeric_belief`` in
+    ``packages/thin-thread/tests/test_belief_convention.py`` locks this in
+    so it cannot silently regress into a P8-local alternative formula.
     """
-    resolved = any(
-        label.misconception_code == misconception.code
-        and label.state == MisconceptionState.RESOLVED
-        for label in diagnosis.labels
-    )
-    if resolved:
-        complement = misconception.require_complement_likelihood()
-        updated: dict[str, float] = misconception_belief_update(
-            {misconception.code: belief[misconception.code]},
-            {misconception.code: misconception.distractor_likelihood},
-            {misconception.code: complement},
-            OTHER_DISTRACTOR_KEY,
-        )
-        return updated
-    updated = apply_diagnosis_to_beliefs(
+    updated: dict[str, float] = apply_diagnosis_to_beliefs(
         diagnosis, misconception_set=[misconception], priors=belief
     )
     return updated
@@ -328,7 +316,22 @@ def run_thin_thread(
     from_state = context.current
     new_state = trace.transition(orchestrator, Event.PRIORS_SET, from_state)
 
-    # --- DISCOVERY / GUIDED_LEARNING (no interactive content in P8's scope) -
+    # --- DISCOVERY / GUIDED_LEARNING -----------------------------------------
+    # P8's scope is "no UI" and six hardcoded items -- none of which is
+    # DISCOVERY/GUIDED_LEARNING content (roadmap P8 Components; matches
+    # ARCHITECTURE.md §42's own thin-thread transcript, which likewise
+    # shows no discovery/guided-learning step). The TIMEOUT events fired
+    # below are real, unconditional entries already in
+    # `protege.session.machine.TRANSITIONS` --
+    # `(S.DISCOVERY, Event.TIMEOUT) -> S.GUIDED_LEARNING` and
+    # `(S.GUIDED_LEARNING, Event.TIMEOUT) -> S.PRACTICE` -- exercised by
+    # `packages/session-fsm`'s own golden traces #17/#18, not a P8-invented
+    # shortcut. Neither state performs a P2 learning-engine operation in
+    # this or any other flow (mastery only moves on a *scored* item --
+    # DIAGNOSTIC/PRACTICE/INDEPENDENT_VERIFY/TRANSFER -- never on dwelling
+    # in DISCOVERY/GUIDED_LEARNING itself), so skipping them conceals no
+    # required learning update; see
+    # `test_discovery_guided_learning_skip.py` for the regression lock.
     if new_state == S.DISCOVERY:
         trace.header("DISCOVERY (no discovery content authored for P8's thin slice)")
         new_state = trace.transition(orchestrator, Event.TIMEOUT, S.DISCOVERY)
@@ -562,6 +565,27 @@ def run_thin_thread(
             *verify_evidence_ids,
             transfer_evidence.evidence_id,
         ]
+        caveats = [
+            "transfer confirmed on number line only"
+            if correct
+            else "transfer attempted but not yet verified"
+        ]
+        if context.misconception_resolved:
+            caveats.append(
+                f"{misconception.code} posterior reflects only Bayesian updates from "
+                "unresolved teach-back evidence, if any; resolution itself is recorded "
+                "as a state, not a further belief update (no canonical formula exists "
+                "for one -- see MisconceptionBelief.state)"
+            )
+        else:
+            caveats.append(
+                f"Sprout's {misconception.code} misconception was NOT resolved during "
+                "teach-back this session (diagnosis abstained, or the evidence was "
+                "inconclusive within the turn cap) -- this claim is proven independently, "
+                "via unaided verification and transfer, per ARCHITECTURE.md's separation "
+                "of the mastery claim from misconception resolution; the teach-back "
+                "episode itself is not."
+            )
         mastery_outcome = MasteryOutcome(
             p_known_before=INITIAL_P_KNOWN,
             p_known_after=context.p_known,
@@ -569,13 +593,11 @@ def run_thin_thread(
             transfer_verified=correct,
             claim="Compares unit fractions",
             evidence_ids=claim_evidence_ids,
-            caveats=(
-                ["transfer confirmed on number line only"]
-                if correct
-                else ["transfer attempted but not yet verified"]
-            ),
+            caveats=caveats,
         )
         trace(f"CLAIM: {mastery_outcome.claim!r}  evidence: {claim_evidence_ids}")
+        for caveat in mastery_outcome.caveats:
+            trace(f"CAVEAT: {caveat}")
     else:
         trace("No verified-mastery claim this session (thresholds not met).")
     from_state = context.current

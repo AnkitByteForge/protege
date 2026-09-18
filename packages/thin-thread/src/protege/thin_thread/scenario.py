@@ -206,3 +206,20 @@ def recovery_scenario() -> Scenario:
             TeachBackTurnScript(RESOLVING_EXPLANATION_TEXT, resolves=True),
         ),
     )
+
+
+def never_resolves_scenario() -> Scenario:
+    """The misconception is never resolved within the scripted turns --
+    mirrors what a real NVIDIA smoke run can genuinely produce (a
+    Diagnostician call that abstains or a schema/network failure that
+    degrades to the rule-based fallback, which abstains with no
+    ``selected_distractor`` to map). Exercises the engine's "scenario's
+    scripted turns exhausted without resolving" path and the mastery
+    claim's "not resolved" caveat -- mastery can still be proven (P2's
+    threshold does not require misconception resolution), but the claim
+    must say so honestly.
+    """
+    return Scenario(
+        name="never_resolves",
+        teach_back_turns=(TeachBackTurnScript(STUCK_EXPLANATION_TEXT, resolves=False),),
+    )

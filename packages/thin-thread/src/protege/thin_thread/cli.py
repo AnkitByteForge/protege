@@ -72,6 +72,7 @@ def main(argv: list[str] | None = None) -> int:
         outcome = result.mastery_outcome
         print(f"p_known: {outcome.p_known_before:.2f} -> {outcome.p_known_after:.2f}")
         print(f"misconception posteriors: {result.mastery_outcome.misconception_posteriors}")
+        print(f"caveats: {result.mastery_outcome.caveats}")
     else:
         print("no evidence-backed mastery claim was produced this run.")
     return 0
