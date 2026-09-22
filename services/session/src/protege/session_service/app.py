@@ -11,7 +11,6 @@ orchestrator and persistence layers via the same OTel span.
 """
 
 import logging
-import os
 import time
 from collections.abc import AsyncIterator, Awaitable, Callable
 from contextlib import asynccontextmanager
@@ -23,11 +22,9 @@ from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor, ConsoleSpanExporter
 from opentelemetry.trace.propagation.tracecontext import TraceContextTextMapPropagator
 
-from protege.llm.router import ModelRouter
-from protege.thin_thread.router_setup import build_router
-
 from .errors import register_exception_handlers
 from .logging import configure_logging
+from .router_factory import build_default_model_router
 from .routes.learners import router as learners_router
 from .routes.parents import router as parents_router
 from .routes.sessions import router as sessions_router
@@ -40,50 +37,6 @@ VERSION = "0.1.0"
 
 _tracing_configured = False
 _trace_propagator = TraceContextTextMapPropagator()
-
-
-def _build_default_router(settings: Settings) -> ModelRouter:
-    """The process-wide :class:`~protege.llm.router.ModelRouter` behind
-    Sprout/Diagnostician (roadmap: "the API is a transport over P7" --
-    P10 wires the *existing* P4/P5/P6 stack, never a second LLM client).
-
-    Falls back to the deterministic ``FakeProvider`` when no NVIDIA key is
-    configured, so the service still boots for local development/tests
-    without one -- a route that actually reaches Sprout/the Diagnostician
-    then gets stable canned output rather than a startup crash. Real
-    deployments must set ``NVIDIA_API_KEY``.
-
-    ``protege.thin_thread.router_setup.build_router("nvidia")`` always
-    constructs a bare ``NvidiaProvider()`` (P4/P8 code, out of P10's scope
-    to change), which reads its key directly from ``os.environ`` -- never
-    from this service's own ``Settings``. Every other secret in this app is
-    configured via ``.env``/``Settings`` only, so a key present in
-    ``settings.nvidia_api_key`` (loaded from ``.env``) but never actually
-    exported to the process environment must be exported here first, or
-    ``NvidiaProvider()`` silently can't see it and the app fails to boot
-    the moment a real key is configured the same way every other key is.
-    """
-    if settings.nvidia_api_key and not os.environ.get("NVIDIA_API_KEY"):
-        os.environ["NVIDIA_API_KEY"] = settings.nvidia_api_key
-    if settings.nvidia_api_key or os.environ.get("NVIDIA_API_KEY"):
-        return _as_model_router(build_router("nvidia"))
-    logger.warning(
-        "NVIDIA_API_KEY is not configured -- Sprout/Diagnostician will use the "
-        "deterministic FakeProvider until it is set"
-    )
-    return _as_model_router(build_router("fake"))
-
-
-def _as_model_router(router: object) -> ModelRouter:
-    # `protege.thin_thread` has no `py.typed` marker (pyproject.toml's own
-    # mypy override note: adding one belongs to that package's P8 phase,
-    # not P10) -- `build_router`'s real, documented return type is always
-    # `ModelRouter`, but the type checker sees `Any` across that untyped
-    # boundary. This `isinstance` check makes the guarantee explicit and
-    # verified rather than casting past it.
-    if not isinstance(router, ModelRouter):
-        raise TypeError(f"build_router() returned {type(router)!r}, expected ModelRouter")
-    return router
 
 
 def setup_tracing() -> None:
@@ -124,7 +77,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     # `app.dependency_overrides[deps.get_model_router]` with a
     # `ModelRouter({"nvidia": FakeProvider(...)})`, exactly as
     # `packages/thin-thread`'s own tests do (never a second LLM client).
-    app.state.model_router = _build_default_router(resolved)
+    app.state.model_router = build_default_model_router(resolved)
 
     register_exception_handlers(app)
 

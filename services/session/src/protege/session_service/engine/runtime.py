@@ -105,6 +105,7 @@ from ..errors import IllegalSessionTransitionError, UnprocessableEventError
 from ..repositories.content import ContentRepository
 from ..repositories.events import EventRepository
 from ..repositories.evidence import EvidenceRepository
+from ..repositories.jobs import JobRepository
 from ..repositories.learning_state import LearningStateRepository
 from ..repositories.sessions import SessionRepository
 from .content import (
@@ -116,6 +117,7 @@ from .content import (
 )
 from .context_codec import context_from_dict, context_to_dict
 from .ports import DiagnosticianPortAdapter, SproutPortAdapter
+from .proof import PROOF_ARTIFACT_JOB_TYPE
 
 _ANSWERABLE_STATES = (S.DIAGNOSTIC, S.PRACTICE, S.INDEPENDENT_VERIFY, S.TRANSFER)
 
@@ -718,6 +720,14 @@ async def complete_session(session: AsyncSession, *, session_row: SessionRow) ->
             ),
             learner_row_id=session_row.learner_id,
             session_row_id=session_row.id,
+        )
+        # Roadmap P20: "async job on SESSION_COMPLETED" -- the job handler
+        # (jobs/handlers.py) does the actual Reporter/evidence-bundle work
+        # out of this request's critical path; guarded by the same
+        # `ended_at is None` idempotency check as the event above, so a
+        # second `/complete` call never double-enqueues.
+        await JobRepository(session).enqueue(
+            job_type=PROOF_ARTIFACT_JOB_TYPE, payload={"session_id": str(session_row.id)}
         )
         session_row = await session_repo.get(session_row.id) or session_row
     return await _session_view(session, session_row)

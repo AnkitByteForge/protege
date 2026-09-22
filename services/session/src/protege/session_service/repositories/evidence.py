@@ -89,6 +89,28 @@ class EvidenceRepository:
         )
         return list(result.scalars().all())
 
+    async def list_for_session(
+        self, session_row_id: uuid.UUID, *, learner_row_id: uuid.UUID
+    ) -> list[EvidenceRow]:
+        """Every evidence row recorded during one session (roadmap P20: the
+        Reporter's evidence bundle is scoped to the completed session, not
+        the learner's entire history). Scoped by ``learner_row_id`` too, for
+        the same reason every other lookup in this repository is (see
+        ``EvidenceRow.external_ref``'s docstring) -- defense in depth, since
+        ``session_id`` alone already can't cross learners (each session
+        belongs to exactly one learner), but a scoped query costs nothing
+        and keeps every method in this repository consistently learner-safe.
+        """
+        result = await self._session.execute(
+            select(EvidenceRow)
+            .where(
+                EvidenceRow.session_id == session_row_id,
+                EvidenceRow.learner_id == learner_row_id,
+            )
+            .order_by(EvidenceRow.created_at)
+        )
+        return list(result.scalars().all())
+
     async def resolve_claim(
         self, evidence_ids: Sequence[str], *, learner_row_id: uuid.UUID
     ) -> list[EvidenceTreeNode]:

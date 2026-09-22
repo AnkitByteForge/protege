@@ -33,11 +33,16 @@ export type SessionOut = components["schemas"]["SessionOut"];
 export type SessionEventOut = components["schemas"]["SessionEventOut"];
 export type ItemPromptOut = components["schemas"]["ItemPromptOut"];
 export type LearnerStateOut = components["schemas"]["LearnerStateOut"];
+
 export type NotYetAvailableOut = components["schemas"]["NotYetAvailableOut"];
+export type ProofCardOut = components["schemas"]["ProofCardOut"];
+export type ProofCardResult = ProofCardOut | NotYetAvailableOut;
+
 export type AnswerSubmittedEvent = components["schemas"]["AnswerSubmittedEvent"];
 export type ExplanationGivenEvent = components["schemas"]["ExplanationGivenEvent"];
 export type ManipulativeMovedEvent = components["schemas"]["ManipulativeMovedEvent"];
 export type HintRequestedEvent = components["schemas"]["HintRequestedEvent"];
+
 export type SessionEventRequest =
   AnswerSubmittedEvent | ExplanationGivenEvent | ManipulativeMovedEvent | HintRequestedEvent;
 
@@ -78,14 +83,19 @@ export interface ProtegeApiClientOptions {
 export interface ProtegeApiClient {
   /** `POST /v1/sessions` (roadmap P10). */
   createSession(input: { learnerId: string }): Promise<SessionOut>;
+
   /** `GET /v1/sessions/{id}` -- the rehydration call (roadmap P15 "Rehydration"). */
   getSession(sessionId: string): Promise<SessionOut>;
+
   /** `POST /v1/sessions/{id}/events` -- the one verb that advances the FSM. */
   submitEvent(sessionId: string, event: SessionEventRequest): Promise<SessionEventOut>;
+
   /** `POST /v1/sessions/{id}/complete`. */
   completeSession(sessionId: string): Promise<SessionOut>;
+
   /** `GET /v1/learners/{id}/state` -- authoritative mastery/misconception view. */
   getLearnerState(learnerId: string): Promise<LearnerStateOut>;
+
   /**
    * The same-origin proxy's SSE URL for this session (roadmap P10/P15) --
    * `useSessionStream` passes this straight to `new EventSource(url)`, so
@@ -93,11 +103,31 @@ export interface ProtegeApiClient {
    * the proxy forwards `Last-Event-ID` through to the real stream.
    */
   streamUrl(sessionId: string): string;
+
+  /**
+   * `GET /v1/learners/{id}/proof` (roadmap P20).
+   *
+   * Returns the real parent proof card, or the canonical
+   * `not_yet_available` response before the first completed session.
+   *
+   * The token is accepted here because the P20 parent experience already
+   * models the Clerk session JWT explicitly. The request still goes through
+   * the same-origin proxy rather than talking to the session service directly.
+   */
+  getLearnerProofCard(learnerId: string, options: { token: string }): Promise<ProofCardResult>;
+}
+
+/**
+ * Type guard for the P20 proof-card union.
+ */
+export function isProofCardReady(result: ProofCardResult): result is ProofCardOut {
+  return result.status === "ready";
 }
 
 async function _parseProblem(response: Response, instance: string): Promise<ApiProblem> {
   try {
     const body = (await response.json()) as Partial<ApiProblem>;
+
     if (body && typeof body.child_safe_message === "string") {
       return {
         type: body.type ?? "about:blank",
@@ -112,6 +142,7 @@ async function _parseProblem(response: Response, instance: string): Promise<ApiP
     // Falls through to the generic problem below -- never surfaces the raw
     // parse failure or response body to the child-facing UI.
   }
+
   return {
     type: "about:blank",
     title: response.statusText || "Error",
@@ -135,10 +166,16 @@ export function createProtegeApiClient({
       ...(init.idempotent ? { "Idempotency-Key": crypto.randomUUID() } : {}),
       ...init.headers,
     };
-    const response = await fetchImpl(`${baseUrl}${path}`, { ...init, headers });
+
+    const response = await fetchImpl(`${baseUrl}${path}`, {
+      ...init,
+      headers,
+    });
+
     if (!response.ok) {
       throw new ApiProblemError(await _parseProblem(response, path));
     }
+
     return (await response.json()) as T;
   }
 
@@ -177,8 +214,21 @@ export function createProtegeApiClient({
     streamUrl(sessionId) {
       return `${baseUrl}/sessions/${encodeURIComponent(sessionId)}/stream`;
     },
+
+    async getLearnerProofCard(learnerId, { token }) {
+      const path = `/learners/${encodeURIComponent(learnerId)}/proof`;
+
+      return request<ProofCardResult>(path, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+    },
   };
 }
 
-/** The one instance every component should import -- see the module docstring for why `baseUrl` needs no configuration. */
+/**
+ * The one instance every component should import -- see the module
+ * docstring for why `baseUrl` needs no configuration.
+ */
 export const protegeApi = createProtegeApiClient();

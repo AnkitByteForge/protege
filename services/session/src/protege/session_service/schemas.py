@@ -118,6 +118,64 @@ class LearnerStateOut(BaseModel):
     misconceptions: list[MisconceptionBeliefOut]
 
 
+class EvidenceTreeNodeOut(BaseModel):
+    """One resolved node in a claim's clickable evidence tree (roadmap P20;
+    ARCHITECTURE.md §17 provenance chain: "evidence -> source event ->
+    originating session/turn"). Built fresh on every read from
+    ``EvidenceRepository.resolve_claim`` -- never stored a second time."""
+
+    model_config = ConfigDict(frozen=True)
+
+    evidence_id: str
+    kind: str
+    weight: float
+    payload: dict[str, object]
+    occurred_at: datetime | None
+    event_type: str | None
+    session_id: uuid.UUID | None
+    turn_id: uuid.UUID | None
+
+
+class ProofSentenceOut(BaseModel):
+    model_config = ConfigDict(frozen=True)
+
+    text: str
+    evidence_ids: list[str]
+
+
+class ProofClaimOut(BaseModel):
+    """One ``ProofClaim`` plus its resolved evidence tree (roadmap P20:
+    "every claim expands to its evidence tree"). ``transfer_verified`` is
+    surfaced as its own field, deliberately never folded into ``text`` --
+    roadmap P20: "transfer_verified shown separately"."""
+
+    model_config = ConfigDict(frozen=True)
+
+    claim_id: str
+    text: str
+    threshold_id: str | None
+    sentences: list[ProofSentenceOut]
+    caveats: list[str]
+    transfer_verified: bool
+    evidence: list[EvidenceTreeNodeOut]
+
+
+class ProofCardOut(BaseModel):
+    """The parent proof card (roadmap P20). No score, no percentage, no
+    letter grade appears anywhere in this shape -- only claims, evidence,
+    mandatory caveats, and one concrete action."""
+
+    model_config = ConfigDict(frozen=True)
+
+    status: Literal["ready"] = "ready"
+    learner_id: uuid.UUID
+    session_id: uuid.UUID | None
+    generated_at: datetime
+    duration_minutes: int | None
+    claims: list[ProofClaimOut]
+    tonight_action: str | None
+
+
 class NotYetAvailableOut(BaseModel):
     """Roadmap P10: "If those artifacts do not yet have writers ... return
     the canonical not-yet-available representation instead of fabricating

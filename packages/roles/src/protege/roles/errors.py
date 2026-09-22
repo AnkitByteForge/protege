@@ -55,3 +55,18 @@ class DistractorNotInClosedSetError(DiagnosticianError):
             f"distractor maps to {misconception_code!r}, which is not in the "
             "supplied closed set of misconceptions"
         )
+
+
+class ReporterError(RoleError):
+    """Base class for every P20 Reporter domain error."""
+
+
+class NoEvidenceForProofError(ReporterError):
+    """A proof artifact was requested for a learner/session with no
+    recorded evidence at all -- roadmap P20: "no-evidence proof generation
+    fails closed." Never caught to produce a card anyway; a caller (the
+    P20 job handler) treats this as "nothing to report yet," not a bug."""
+
+    def __init__(self, learner_label: str) -> None:
+        self.learner_label = learner_label
+        super().__init__(f"cannot generate a proof artifact for {learner_label!r}: no evidence")

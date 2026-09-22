@@ -59,6 +59,12 @@ export default function GalleryPage() {
           → Manipulatives gallery (roadmap P13): FractionBar, NumberLine, AreaModel,
           ExplanationCards
         </Link>
+        <Link
+          href="/gallery/proof"
+          className="inline-block w-fit rounded-full border border-sand-300 bg-surface-raised px-4 py-2 font-sans text-sm font-bold text-sky-700 transition-colors hover:border-sky-700"
+        >
+          → Parent proof gallery (roadmap P20): ProofCard, evidence tree, tonight&apos;s action
+        </Link>
       </Stack>
 
       <nav aria-label="Gallery sections" className="mb-10">

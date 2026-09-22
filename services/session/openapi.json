@@ -205,6 +205,87 @@
         "title": "DiagnosisResult",
         "type": "object"
       },
+      "EvidenceTreeNodeOut": {
+        "description": "One resolved node in a claim's clickable evidence tree (roadmap P20;\nARCHITECTURE.md §17 provenance chain: \"evidence -> source event ->\noriginating session/turn\"). Built fresh on every read from\n``EvidenceRepository.resolve_claim`` -- never stored a second time.",
+        "properties": {
+          "event_type": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Event Type"
+          },
+          "evidence_id": {
+            "title": "Evidence Id",
+            "type": "string"
+          },
+          "kind": {
+            "title": "Kind",
+            "type": "string"
+          },
+          "occurred_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Occurred At"
+          },
+          "payload": {
+            "additionalProperties": true,
+            "title": "Payload",
+            "type": "object"
+          },
+          "session_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Session Id"
+          },
+          "turn_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Turn Id"
+          },
+          "weight": {
+            "title": "Weight",
+            "type": "number"
+          }
+        },
+        "required": [
+          "evidence_id",
+          "kind",
+          "weight",
+          "payload",
+          "occurred_at",
+          "event_type",
+          "session_id",
+          "turn_id"
+        ],
+        "title": "EvidenceTreeNodeOut",
+        "type": "object"
+      },
       "ExplanationGivenEvent": {
         "description": "A teach-back / readiness / reflection explanation, in any of the\nfour authored modalities (see :data:`~.session.Explanation`).",
         "properties": {
@@ -528,6 +609,159 @@
           "learner_id"
         ],
         "title": "NotYetAvailableOut",
+        "type": "object"
+      },
+      "ProofCardOut": {
+        "description": "The parent proof card (roadmap P20). No score, no percentage, no\nletter grade appears anywhere in this shape -- only claims, evidence,\nmandatory caveats, and one concrete action.",
+        "properties": {
+          "claims": {
+            "items": {
+              "$ref": "#/components/schemas/ProofClaimOut"
+            },
+            "title": "Claims",
+            "type": "array"
+          },
+          "duration_minutes": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Duration Minutes"
+          },
+          "generated_at": {
+            "format": "date-time",
+            "title": "Generated At",
+            "type": "string"
+          },
+          "learner_id": {
+            "format": "uuid",
+            "title": "Learner Id",
+            "type": "string"
+          },
+          "session_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Session Id"
+          },
+          "status": {
+            "const": "ready",
+            "default": "ready",
+            "title": "Status",
+            "type": "string"
+          },
+          "tonight_action": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tonight Action"
+          }
+        },
+        "required": [
+          "learner_id",
+          "session_id",
+          "generated_at",
+          "duration_minutes",
+          "claims",
+          "tonight_action"
+        ],
+        "title": "ProofCardOut",
+        "type": "object"
+      },
+      "ProofClaimOut": {
+        "description": "One ``ProofClaim`` plus its resolved evidence tree (roadmap P20:\n\"every claim expands to its evidence tree\"). ``transfer_verified`` is\nsurfaced as its own field, deliberately never folded into ``text`` --\nroadmap P20: \"transfer_verified shown separately\".",
+        "properties": {
+          "caveats": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Caveats",
+            "type": "array"
+          },
+          "claim_id": {
+            "title": "Claim Id",
+            "type": "string"
+          },
+          "evidence": {
+            "items": {
+              "$ref": "#/components/schemas/EvidenceTreeNodeOut"
+            },
+            "title": "Evidence",
+            "type": "array"
+          },
+          "sentences": {
+            "items": {
+              "$ref": "#/components/schemas/ProofSentenceOut"
+            },
+            "title": "Sentences",
+            "type": "array"
+          },
+          "text": {
+            "title": "Text",
+            "type": "string"
+          },
+          "threshold_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Threshold Id"
+          },
+          "transfer_verified": {
+            "title": "Transfer Verified",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "claim_id",
+          "text",
+          "threshold_id",
+          "sentences",
+          "caveats",
+          "transfer_verified",
+          "evidence"
+        ],
+        "title": "ProofClaimOut",
+        "type": "object"
+      },
+      "ProofSentenceOut": {
+        "properties": {
+          "evidence_ids": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Evidence Ids",
+            "type": "array"
+          },
+          "text": {
+            "title": "Text",
+            "type": "string"
+          }
+        },
+        "required": [
+          "text",
+          "evidence_ids"
+        ],
+        "title": "ProofSentenceOut",
         "type": "object"
       },
       "SessionCreateIn": {
@@ -1011,7 +1245,7 @@
     },
     "/v1/learners/{learner_id}/proof": {
       "get": {
-        "description": "Parent Proof cards are generated by P20, which has not shipped --\nroadmap P10: \"return the canonical not-yet-available representation\ninstead of fabricating data.\" ``proof_artifacts`` (P9 schema) has no\nwriter yet, so this route never fabricates a card from partial state.",
+        "description": "The parent proof card (roadmap P20): the most recent\n``ProofArtifact`` for this learner, with every claim's evidence tree\nresolved fresh (never a stored second copy -- see\n``repositories/proof.py``). Same authz shape as ``/state`` above:\ntutor/admin bypass ownership (no time-boxed grant ledger exists yet,\nsame disclosed P10 gap ``authz.require_tutor_or_admin`` already\ndocuments); a parent may only reach their own linked learner.\n\nFalls back to the same canonical ``NotYetAvailableOut`` roadmap P10\nalready established -- before any session completes, or if the async\nP20 job has not yet run, there is still nothing to fabricate.",
         "operationId": "get_learner_proof_route_v1_learners__learner_id__proof_get",
         "parameters": [
           {
@@ -1030,7 +1264,15 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/NotYetAvailableOut"
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/ProofCardOut"
+                    },
+                    {
+                      "$ref": "#/components/schemas/NotYetAvailableOut"
+                    }
+                  ],
+                  "title": "Response Get Learner Proof Route V1 Learners  Learner Id  Proof Get"
                 }
               }
             },
