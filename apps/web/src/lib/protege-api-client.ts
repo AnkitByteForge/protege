@@ -38,19 +38,13 @@ export type NotYetAvailableOut = components["schemas"]["NotYetAvailableOut"];
 export type ProofCardOut = components["schemas"]["ProofCardOut"];
 export type ProofCardResult = ProofCardOut | NotYetAvailableOut;
 
-export type AnswerSubmittedEvent =
-  components["schemas"]["AnswerSubmittedEvent"];
-export type ExplanationGivenEvent =
-  components["schemas"]["ExplanationGivenEvent"];
-export type ManipulativeMovedEvent =
-  components["schemas"]["ManipulativeMovedEvent"];
+export type AnswerSubmittedEvent = components["schemas"]["AnswerSubmittedEvent"];
+export type ExplanationGivenEvent = components["schemas"]["ExplanationGivenEvent"];
+export type ManipulativeMovedEvent = components["schemas"]["ManipulativeMovedEvent"];
 export type HintRequestedEvent = components["schemas"]["HintRequestedEvent"];
 
 export type SessionEventRequest =
-  | AnswerSubmittedEvent
-  | ExplanationGivenEvent
-  | ManipulativeMovedEvent
-  | HintRequestedEvent;
+  AnswerSubmittedEvent | ExplanationGivenEvent | ManipulativeMovedEvent | HintRequestedEvent;
 
 /** RFC 9457 `application/problem+json` (roadmap P10 `errors.py`, verbatim shape). */
 export interface ApiProblem {
@@ -62,8 +56,7 @@ export interface ApiProblem {
   child_safe_message: string;
 }
 
-const FALLBACK_CHILD_SAFE_MESSAGE =
-  "Oops! Something went wrong. Let's try that again in a moment.";
+const FALLBACK_CHILD_SAFE_MESSAGE = "Oops! Something went wrong. Let's try that again in a moment.";
 
 export class ApiProblemError extends Error {
   readonly problem: ApiProblem;
@@ -95,10 +88,7 @@ export interface ProtegeApiClient {
   getSession(sessionId: string): Promise<SessionOut>;
 
   /** `POST /v1/sessions/{id}/events` -- the one verb that advances the FSM. */
-  submitEvent(
-    sessionId: string,
-    event: SessionEventRequest,
-  ): Promise<SessionEventOut>;
+  submitEvent(sessionId: string, event: SessionEventRequest): Promise<SessionEventOut>;
 
   /** `POST /v1/sessions/{id}/complete`. */
   completeSession(sessionId: string): Promise<SessionOut>;
@@ -124,25 +114,17 @@ export interface ProtegeApiClient {
    * models the Clerk session JWT explicitly. The request still goes through
    * the same-origin proxy rather than talking to the session service directly.
    */
-  getLearnerProofCard(
-    learnerId: string,
-    options: { token: string },
-  ): Promise<ProofCardResult>;
+  getLearnerProofCard(learnerId: string, options: { token: string }): Promise<ProofCardResult>;
 }
 
 /**
  * Type guard for the P20 proof-card union.
  */
-export function isProofCardReady(
-  result: ProofCardResult,
-): result is ProofCardOut {
+export function isProofCardReady(result: ProofCardResult): result is ProofCardOut {
   return result.status === "ready";
 }
 
-async function _parseProblem(
-  response: Response,
-  instance: string,
-): Promise<ApiProblem> {
+async function _parseProblem(response: Response, instance: string): Promise<ApiProblem> {
   try {
     const body = (await response.json()) as Partial<ApiProblem>;
 
@@ -181,9 +163,7 @@ export function createProtegeApiClient({
   ): Promise<T> {
     const headers: HeadersInit = {
       "Content-Type": "application/json",
-      ...(init.idempotent
-        ? { "Idempotency-Key": crypto.randomUUID() }
-        : {}),
+      ...(init.idempotent ? { "Idempotency-Key": crypto.randomUUID() } : {}),
       ...init.headers,
     };
 
@@ -209,36 +189,26 @@ export function createProtegeApiClient({
     },
 
     async getSession(sessionId) {
-      return request<SessionOut>(
-        `/sessions/${encodeURIComponent(sessionId)}`,
-      );
+      return request<SessionOut>(`/sessions/${encodeURIComponent(sessionId)}`);
     },
 
     async submitEvent(sessionId, event) {
-      return request<SessionEventOut>(
-        `/sessions/${encodeURIComponent(sessionId)}/events`,
-        {
-          method: "POST",
-          idempotent: true,
-          body: JSON.stringify(event),
-        },
-      );
+      return request<SessionEventOut>(`/sessions/${encodeURIComponent(sessionId)}/events`, {
+        method: "POST",
+        idempotent: true,
+        body: JSON.stringify(event),
+      });
     },
 
     async completeSession(sessionId) {
-      return request<SessionOut>(
-        `/sessions/${encodeURIComponent(sessionId)}/complete`,
-        {
-          method: "POST",
-          idempotent: true,
-        },
-      );
+      return request<SessionOut>(`/sessions/${encodeURIComponent(sessionId)}/complete`, {
+        method: "POST",
+        idempotent: true,
+      });
     },
 
     async getLearnerState(learnerId) {
-      return request<LearnerStateOut>(
-        `/learners/${encodeURIComponent(learnerId)}/state`,
-      );
+      return request<LearnerStateOut>(`/learners/${encodeURIComponent(learnerId)}/state`);
     },
 
     streamUrl(sessionId) {
