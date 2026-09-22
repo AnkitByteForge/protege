@@ -31,6 +31,7 @@ from __future__ import annotations
 from collections.abc import Sequence
 from dataclasses import dataclass
 from enum import StrEnum
+from typing import Literal
 
 from protege.contracts import (
     Intervention,
@@ -344,7 +345,7 @@ def generate_report(
     *,
     bundle: EvidenceBundle,
     claim_key: ClaimTemplateKind,
-    audience: str = "parent",
+    audience: Literal["parent", "tutor"] = "parent",
     trace_id: str | None = None,
 ) -> ReporterResult:
     """Generate one ``ReportDraft`` for ``bundle`` (roadmap P20: "Reporter
