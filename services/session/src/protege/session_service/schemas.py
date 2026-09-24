@@ -90,6 +90,19 @@ class SessionCreateIn(BaseModel):
     learner_id: uuid.UUID
 
 
+class LearnerEnsureOut(BaseModel):
+    """``POST /v1/learners/ensure`` (roadmap product-entry milestone): the
+    caller's single default learner, created on first call. Deliberately
+    minimal -- the frontend needs only the id to reach ``/garden``/
+    ``POST /v1/sessions`` and a display label, nothing about the owning
+    parent."""
+
+    model_config = ConfigDict(frozen=True)
+
+    learner_id: uuid.UUID
+    display_name: str
+
+
 class SkillMasteryOut(BaseModel):
     model_config = ConfigDict(frozen=True)
 

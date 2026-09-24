@@ -1,63 +1,50 @@
-import Link from "next/link";
+"use client";
+
+import { useRouter } from "next/navigation";
 import { SoftPanel } from "@/components/primitives/SoftPanel";
+import { PrimaryAction } from "@/components/primitives/Button";
 import { Display, Eyebrow, Text } from "@/components/primitives/Typography";
 import { Stack } from "@/components/primitives/Stack";
 
-const links: { href: string; label: string; note: string }[] = [
-  {
-    href: "/gallery",
-    label: "Design system gallery",
-    note: "Every primitive, motion preset, and state in one place.",
-  },
-  {
-    href: "/gallery/manipulatives",
-    label: "Manipulatives gallery",
-    note: "FractionBar, NumberLine, AreaModel, ExplanationCards — roadmap P13.",
-  },
-  {
-    href: "/world",
-    label: "(child) preview — /world",
-    note: "SceneFrame + sample scene transitions.",
-  },
-  { href: "/home", label: "(parent) preview — /home", note: "Parent-register shell, empty state." },
-  {
-    href: "/briefing",
-    label: "(tutor) preview — /briefing",
-    note: "Tutor-register shell, empty state.",
-  },
-];
-
 /**
- * A local developer index, not a product page. The real experience lives
- * behind the (child)/(parent)/(tutor) route groups; this exists only so a
- * reviewer can find them without knowing the URLs.
+ * The real product landing page (roadmap product-entry milestone; replaces
+ * the former local developer index that used to live here). One job: say
+ * what PROTÉGÉ is, and offer the one way in.
+ *
+ * "Start Learning" navigates to `/start` -- `middleware.ts` gates that
+ * route on a signed-in parent, so an unauthenticated click lands on Clerk's
+ * `/sign-in` first and returns to `/start` afterward. This page never calls
+ * the session API and never creates a session itself; `/start` -> `/garden`
+ * -> the existing `createSession` call still own that entirely.
  */
 export default function Home() {
+  const router = useRouter();
+
   return (
     <main
       id="main"
-      className="mx-auto flex min-h-screen max-w-2xl flex-col justify-center px-6 py-16"
+      className="mx-auto flex min-h-screen max-w-2xl flex-col items-center justify-center px-6 py-16 text-center"
     >
-      <Stack gap="lg">
+      <Stack align="center" gap="lg">
         <div>
-          <Eyebrow>Local development index</Eyebrow>
-          <Display as="h1">PROTÉGÉ</Display>
-          <Text muted className="mt-1">
-            Design system & app shell (roadmap P12). Learn → Teach → Prove.
+          <Eyebrow>PROTÉGÉ</Eyebrow>
+          <Display as="h1" className="mt-1">
+            A warm little world that happens to teach fractions.
+          </Display>
+          <Text muted className="mt-3">
+            Learn it, practice it, explain it, teach Sprout — then prove you really know it.
           </Text>
         </div>
-        <Stack gap="sm">
-          {links.map((l) => (
-            <Link key={l.href} href={l.href} className="block">
-              <SoftPanel elevation="raised" className="transition-colors hover:border-sky-700">
-                <p className="font-sans text-lg font-bold text-ink">{l.label}</p>
-                <Text muted className="text-sm">
-                  {l.note}
-                </Text>
-              </SoftPanel>
-            </Link>
-          ))}
-        </Stack>
+
+        <PrimaryAction size="lg" onClick={() => router.push("/start")}>
+          Start Learning
+        </PrimaryAction>
+
+        <SoftPanel elevation="raised" className="mt-4 max-w-sm">
+          <Text muted className="text-sm">
+            For grown-ups: you&apos;ll sign in first, then hand the device to your child.
+          </Text>
+        </SoftPanel>
       </Stack>
     </main>
   );

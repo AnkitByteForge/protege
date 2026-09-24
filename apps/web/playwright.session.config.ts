@@ -35,14 +35,25 @@ export default defineConfig({
       url: "http://127.0.0.1:8301/healthz",
       reuseExistingServer: false,
       timeout: 60_000,
+      // Real env vars override the repo-root `.env`, so a developer's real
+      // NVIDIA key can't replace the deterministic FakeProvider these
+      // tests' exact-text assertions depend on.
+      env: {
+        NVIDIA_API_KEY: "",
+      },
     },
     {
       command: "npm run build && npm run start -- --port 3112",
       url: "http://127.0.0.1:3112",
       reuseExistingServer: false,
       timeout: 300_000,
+      // Blanked so real Clerk keys in a local `.env.local` can't get baked
+      // into this build; otherwise middleware demands a real Clerk sign-in
+      // the `protege_e2e_token` test identity can't satisfy.
       env: {
         PROTEGE_API_BASE_URL: "http://127.0.0.1:8301",
+        NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: "",
+        CLERK_SECRET_KEY: "",
       },
     },
   ],

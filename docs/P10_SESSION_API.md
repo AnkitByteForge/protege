@@ -8,6 +8,7 @@ transition authority; this document covers only what P10 itself added.
 
 | Method | Path | Purpose |
 |---|---|---|
+| POST | `/v1/learners/ensure` | Product-entry bootstrap: get-or-create the caller's single default learner (idempotent by `clerk_user_id`) |
 | POST | `/v1/sessions` | Start a session for a learner |
 | GET | `/v1/sessions/{id}` | Rehydrate the canonical session state |
 | POST | `/v1/sessions/{id}/events` | Submit one event; the server validates, advances the FSM, persists |
@@ -38,10 +39,16 @@ implementation (`auth.py`).
    in-process signature check, no per-request (or startup) call to Clerk.
    Leaving it blank falls back to the SDK fetching + internally caching the
    JWKS from Clerk's Backend API using `CLERK_SECRET_KEY`.
-3. **Sessions -> Customize session token**: add two custom claims so the
+3. **Sessions -> Customize session token**: add three custom claims so the
    backend can read them without a database round trip per request:
    - `role`: `"parent"` (default if omitted) | `"tutor"` | `"admin"`.
    - `learner_id` (optional, informational only — see "Ownership" below).
+   - `email` (e.g. `{{user.primary_email_address}}`) — read into
+     `Actor.email` (`auth.py`). Used by `POST /v1/learners/ensure` (product-
+     entry milestone) only to satisfy `parents.email`'s NOT NULL/UNIQUE
+     schema constraint the first time a parent row is created for a Clerk
+     identity; never used for authorization or ownership (that is always
+     `clerk_user_id` — see "Ownership" below).
 4. **Authorized parties**: set `CLERK_AUTHORIZED_PARTIES` to your frontend's
    origin(s) (comma-separated) once you have real ones; this guards the
    subdomain-cookie-leaking attack the Clerk docs describe. Empty disables

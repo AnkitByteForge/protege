@@ -59,6 +59,16 @@ class Actor:
     clerk_user_id: str
     role: ActorRole
     claimed_learner_id: str | None
+    email: str | None
+    """The ``email`` custom session-token claim (Clerk dashboard -> Sessions
+    -> Customize session token -- see ``docs/P10_SESSION_API.md``), read the
+    same way as ``role``/``learner_id`` below: verified only in the sense
+    that it rode inside the signature-checked JWT, exactly like every other
+    claim here. Never an ownership/authorization key -- ``authz.py`` resolves
+    every ownership check off ``clerk_user_id`` alone. Its only consumer is
+    ``routes/learners.py``'s ``/v1/learners/ensure``, which needs a real
+    email solely to satisfy ``parents.email``'s NOT NULL/UNIQUE schema
+    constraint the first time a parent row is created for this identity."""
 
 
 @lru_cache(maxsize=8)
@@ -134,8 +144,10 @@ async def get_current_actor(
         raise UnauthorizedError("token missing subject claim")
 
     claimed_learner_id = claims.get("learner_id")
+    email = claims.get("email")
     return Actor(
         clerk_user_id=subject,
         role=_role_from_claims(claims),
         claimed_learner_id=claimed_learner_id if isinstance(claimed_learner_id, str) else None,
+        email=email if isinstance(email, str) else None,
     )

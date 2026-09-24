@@ -92,7 +92,9 @@ export function Sprout({
             animate={{
               opacity: 1,
               scale: 1,
-              y: idle.breathe ? [0, -5, 0] : 0,
+              // Two keyframes only: Motion's spring can't interpolate more,
+              // and the `mirror` repeat below already supplies the return leg.
+              y: idle.breathe ? [0, -5] : 0,
               transition: idle.breathe
                 ? {
                     ...spring.drift,

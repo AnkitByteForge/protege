@@ -102,9 +102,9 @@ export function SessionSceneRouter({
     case "ESCALATE_TO_HUMAN":
       return <EscalateScene />;
     case "COMPLETE":
-      return <CompleteScene />;
+      return <CompleteScene learnerId={payload?.learner_id ?? null} />;
     case "ABANDONED":
-      return <CompleteScene abandoned />;
+      return <CompleteScene abandoned learnerId={payload?.learner_id ?? null} />;
     default:
       // ARRIVAL, SPROUT_TEASE, DISCOVERY, SPROUT_SETUP(_HARD),
       // MASTERY_DECISION, RETRIEVAL_SCHEDULE -- every BEAT_STATES member.

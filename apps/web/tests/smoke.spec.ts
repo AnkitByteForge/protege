@@ -1,9 +1,11 @@
 import { expect, test } from "@playwright/test";
 
-test("app boots and renders the local dev index", async ({ page }) => {
+test("app boots and renders the real product landing page", async ({ page }) => {
   await page.goto("/");
-  await expect(page.getByRole("heading", { name: "PROTÉGÉ" })).toBeVisible();
-  await expect(page.getByRole("link", { name: /design system gallery/i })).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "A warm little world that happens to teach fractions." }),
+  ).toBeVisible();
+  await expect(page.getByRole("button", { name: "Start Learning" })).toBeVisible();
 });
 
 test("(child) world preview renders the SceneFrame shell", async ({ page }) => {

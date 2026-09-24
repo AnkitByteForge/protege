@@ -32,11 +32,11 @@ export function LoadingState({
             key={i}
             aria-hidden
             className="h-3.5 w-3.5 rounded-full bg-sky-500"
-            animate={reduceMotion ? undefined : { y: [0, -8, 0] }}
+            animate={reduceMotion ? undefined : { y: [0, -8] }}
             transition={
               reduceMotion
                 ? undefined
-                : { ...spring.drift, repeat: Infinity, repeatType: "loop", delay: i * 0.15 }
+                : { ...spring.drift, repeat: Infinity, repeatType: "mirror", delay: i * 0.15 }
             }
           />
         ))}
