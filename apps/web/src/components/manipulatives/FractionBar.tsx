@@ -219,7 +219,10 @@ export function FractionBar({
         aria-label={label}
         className="touch-none"
         animate={isAligned && !reduceMotion ? { scale: [1, 1.02, 1] } : { scale: 1 }}
-        transition={spring.settle}
+        // The aligned pulse is three keyframes, which Motion's spring can't interpolate.
+        transition={
+          isAligned && !reduceMotion ? { duration: 0.4, ease: "easeInOut" } : spring.settle
+        }
       >
         <rect
           x={PADDING}
