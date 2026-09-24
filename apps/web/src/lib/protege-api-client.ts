@@ -34,6 +34,7 @@ export type SessionEventOut = components["schemas"]["SessionEventOut"];
 export type ItemPromptOut = components["schemas"]["ItemPromptOut"];
 export type LearnerStateOut = components["schemas"]["LearnerStateOut"];
 
+export type LearnerEnsureOut = components["schemas"]["LearnerEnsureOut"];
 export type NotYetAvailableOut = components["schemas"]["NotYetAvailableOut"];
 export type ProofCardOut = components["schemas"]["ProofCardOut"];
 export type ProofCardResult = ProofCardOut | NotYetAvailableOut;
@@ -81,6 +82,15 @@ export interface ProtegeApiClientOptions {
 }
 
 export interface ProtegeApiClient {
+  /**
+   * `POST /v1/learners/ensure` (roadmap product-entry milestone). Get-or-
+   * creates the signed-in parent's single default learner -- idempotent by
+   * the caller's verified Clerk identity, never by anything this client
+   * supplies. The only way the frontend obtains a real `learnerId` to hand
+   * to `createSession`/`/garden`.
+   */
+  ensureLearner(): Promise<LearnerEnsureOut>;
+
   /** `POST /v1/sessions` (roadmap P10). */
   createSession(input: { learnerId: string }): Promise<SessionOut>;
 
@@ -180,6 +190,13 @@ export function createProtegeApiClient({
   }
 
   return {
+    async ensureLearner() {
+      return request<LearnerEnsureOut>("/learners/ensure", {
+        method: "POST",
+        idempotent: true,
+      });
+    },
+
     async createSession({ learnerId }) {
       return request<SessionOut>("/sessions", {
         method: "POST",

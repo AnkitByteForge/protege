@@ -21,6 +21,31 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/v1/learners/ensure": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * Ensure Learner Route
+     * @description Product-entry bootstrap: get-or-create the signed-in parent's single
+     *     default learner. Ownership/identity is ``actor.clerk_user_id`` alone
+     *     (never a client-supplied id, never ``email``) -- see
+     *     ``LearnerRepository.get_or_create_parent_for_clerk_user``'s docstring.
+     *     Idempotent by construction: a repeat call for the same Clerk user finds
+     *     the existing parent/learner rather than creating new ones.
+     */
+    post: operations["ensure_learner_route_v1_learners_ensure_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/v1/learners/{learner_id}/proof": {
     parameters: {
       query?: never;
@@ -368,6 +393,23 @@ export interface components {
       item_id: string;
       /** Stem */
       stem: string;
+    };
+    /**
+     * LearnerEnsureOut
+     * @description ``POST /v1/learners/ensure`` (roadmap product-entry milestone): the
+     *     caller's single default learner, created on first call. Deliberately
+     *     minimal -- the frontend needs only the id to reach ``/garden``/
+     *     ``POST /v1/sessions`` and a display label, nothing about the owning
+     *     parent.
+     */
+    LearnerEnsureOut: {
+      /** Display Name */
+      display_name: string;
+      /**
+       * Learner Id
+       * Format: uuid
+       */
+      learner_id: string;
     };
     /** LearnerStateOut */
     LearnerStateOut: {
@@ -754,6 +796,37 @@ export interface operations {
           "application/json": {
             [key: string]: string;
           };
+        };
+      };
+    };
+  };
+  ensure_learner_route_v1_learners_ensure_post: {
+    parameters: {
+      query?: never;
+      header: {
+        "Idempotency-Key": string;
+      };
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["LearnerEnsureOut"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
         };
       };
     };

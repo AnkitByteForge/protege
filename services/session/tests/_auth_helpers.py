@@ -7,8 +7,8 @@ instance's signing key, the public half is configured as
 ``Settings.clerk_jwt_key`` (exactly the "Clerk dashboard -> API Keys -> Show
 JWT public key" value in production), and tokens are minted here with the
 private half using the same claim shape a real Clerk session token carries
-(``sub``, ``exp``, ``nbf``, ``iat``, plus the custom ``role``/``learner_id``
-session-token claims this service reads -- see ``auth.py``). This proves the
+(``sub``, ``exp``, ``nbf``, ``iat``, plus the custom ``role``/``learner_id``/
+``email`` session-token claims this service reads -- see ``auth.py``). This proves the
 verification *logic* end-to-end without touching a network or a real account.
 """
 
@@ -53,6 +53,7 @@ def mint_token(
     sub: str | None = None,
     role: str | None = None,
     learner_id: str | None = None,
+    email: str | None = None,
     azp: str | None = None,
     expires_in_s: float = 3600.0,
     not_before_offset_s: float = 0.0,
@@ -71,6 +72,8 @@ def mint_token(
         claims["role"] = role
     if learner_id is not None:
         claims["learner_id"] = learner_id
+    if email is not None:
+        claims["email"] = email
     if azp is not None:
         claims["azp"] = azp
     return jwt.encode(claims, signing_key_pem, algorithm="RS256")

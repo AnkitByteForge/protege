@@ -5,18 +5,21 @@ from __future__ import annotations
 import uuid
 from typing import Any
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Header, Request
 from fastapi.responses import JSONResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from ..auth import Actor, ActorRole, get_current_actor
 from ..authz import get_owned_learner, require_tutor_or_admin
-from ..deps import get_db
+from ..deps import get_app_settings, get_db
+from ..idempotency import hash_request_body, run_idempotent_request
 from ..repositories.evidence import EvidenceRepository
+from ..repositories.learners import LearnerRepository
 from ..repositories.learning_state import LearningStateRepository
 from ..repositories.proof import ProofRepository
 from ..schemas import (
     EvidenceTreeNodeOut,
+    LearnerEnsureOut,
     LearnerStateOut,
     MisconceptionBeliefOut,
     NotYetAvailableOut,
@@ -25,8 +28,47 @@ from ..schemas import (
     ProofSentenceOut,
     SkillMasteryOut,
 )
+from ..settings import Settings
 
 router = APIRouter(tags=["learners"])
+
+
+@router.post("/v1/learners/ensure", response_model=LearnerEnsureOut)
+async def ensure_learner_route(
+    request: Request,
+    idempotency_key: str = Header(..., alias="Idempotency-Key"),
+    actor: Actor = Depends(get_current_actor),
+    settings: Settings = Depends(get_app_settings),
+) -> JSONResponse:
+    """Product-entry bootstrap: get-or-create the signed-in parent's single
+    default learner. Ownership/identity is ``actor.clerk_user_id`` alone
+    (never a client-supplied id, never ``email``) -- see
+    ``LearnerRepository.get_or_create_parent_for_clerk_user``'s docstring.
+    Idempotent by construction: a repeat call for the same Clerk user finds
+    the existing parent/learner rather than creating new ones."""
+    request_hash = hash_request_body(await request.body())
+
+    async def handler(session: AsyncSession) -> tuple[int, dict[str, Any]]:
+        repo = LearnerRepository(session)
+        parent = await repo.get_or_create_parent_for_clerk_user(
+            clerk_user_id=actor.clerk_user_id, email=actor.email
+        )
+        learner = await repo.get_or_create_default_learner(parent_id=parent.id)
+        body = LearnerEnsureOut(
+            learner_id=learner.id, display_name=learner.display_name
+        ).model_dump(mode="json")
+        return 200, body
+
+    status_code, body = await run_idempotent_request(
+        settings=settings,
+        actor_subject=actor.clerk_user_id,
+        method="POST",
+        path=str(request.url.path),
+        idempotency_key=idempotency_key,
+        request_hash=request_hash,
+        handler=handler,
+    )
+    return JSONResponse(status_code=status_code, content=body)
 
 
 @router.get("/v1/learners/{learner_id}/state", response_model=LearnerStateOut)

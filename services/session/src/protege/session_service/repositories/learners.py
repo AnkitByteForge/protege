@@ -28,6 +28,17 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from ..db.append_only import ALLOW_CASCADE_WRITE_GUC
 from ..db.models import Learner, Parent
+from ..errors import EmailClaimMissingError
+
+DEFAULT_LEARNER_DISPLAY_NAME = "Learner"
+"""Placeholder shown until real per-child naming exists (no learner-creation
+UI is in scope for the product-entry milestone) -- deliberately generic
+rather than a fabricated proper name."""
+
+DEFAULT_LEARNER_GRADE_BAND = "3-4"
+"""The one grade band this repo actually has authored content for
+(``content/math/fractions/v1``) -- not an invented value, the real default
+every other seed/test/E2E path in this codebase already uses."""
 
 
 class LearnerRepository:
@@ -90,6 +101,54 @@ class LearnerRepository:
             return learner
         return await self.create_learner(
             parent_id=parent.id, display_name=display_name, grade_band=grade_band
+        )
+
+    async def get_or_create_parent_for_clerk_user(
+        self, *, clerk_user_id: str, email: str | None, consent_version: str = "v1"
+    ) -> Parent:
+        """Idempotent by ``clerk_user_id`` -- the actual ownership key
+        (``authz.py`` resolves every ownership check off this column alone,
+        never off ``email``). Looked up first; a new ``parents`` row is
+        created and linked only when none is linked to this Clerk identity
+        yet.
+
+        ``email`` exists here solely to satisfy ``parents.email``'s NOT
+        NULL/UNIQUE schema constraint on that first creation -- it is never
+        checked, compared, or trusted for authorization. It must be a real
+        value read off the verified Clerk session token's ``email`` custom
+        claim (``auth.py``'s ``Actor.email``); this method never invents one
+        when it is missing, it raises instead."""
+        parent = await self.get_parent_by_clerk_user_id(clerk_user_id)
+        if parent is not None:
+            return parent
+        if not email:
+            raise EmailClaimMissingError(
+                "no email claim on the verified token; cannot create a new parent record "
+                "for this Clerk identity"
+            )
+        parent = await self.create_parent(email=email, consent_version=consent_version)
+        return await self.link_clerk_user_id(parent_id=parent.id, clerk_user_id=clerk_user_id)
+
+    async def get_or_create_default_learner(
+        self,
+        *,
+        parent_id: uuid.UUID,
+        display_name: str = DEFAULT_LEARNER_DISPLAY_NAME,
+        grade_band: str = DEFAULT_LEARNER_GRADE_BAND,
+    ) -> Learner:
+        """The product-entry milestone's one-learner-per-parent default
+        (no multi-child management or learner-creation UI exists yet --
+        disclosed gap, same shape as this class's existing ``get_or_create``
+        test/demo convenience). Looked up first, ordered by creation so a
+        repeat call is stable; created only if this parent has no learner."""
+        result = await self._session.execute(
+            select(Learner).where(Learner.parent_id == parent_id).order_by(Learner.created_at)
+        )
+        learner = result.scalars().first()
+        if learner is not None:
+            return learner
+        return await self.create_learner(
+            parent_id=parent_id, display_name=display_name, grade_band=grade_band
         )
 
     async def delete(self, learner_id: uuid.UUID) -> None:

@@ -129,6 +129,20 @@ class IdempotencyKeyReusedError(ApiError):
     child_safe_message = "That didn't quite work. Let's try again."
 
 
+class EmailClaimMissingError(ApiError):
+    """Raised by ``/v1/learners/ensure`` (roadmap product-entry milestone)
+    only when it is about to create a *new* ``parents`` row and the verified
+    JWT carried no ``email`` custom claim -- never invented/synthesized, per
+    ``AGENTS.md``'s "LLM/server must never fabricate data" spirit applied to
+    identity fields. A repeat caller whose parent already exists never hits
+    this, regardless of whether their token happens to carry the claim."""
+
+    status_code = status.HTTP_400_BAD_REQUEST
+    type_ = "protege:email-claim-missing"
+    title = "Email Claim Missing"
+    child_safe_message = "A grown-up needs to finish signing in first."
+
+
 class RateLimitExceededError(ApiError):
     status_code = status.HTTP_429_TOO_MANY_REQUESTS
     type_ = "protege:rate-limit-exceeded"

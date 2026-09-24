@@ -372,6 +372,26 @@
         "title": "ItemPromptOut",
         "type": "object"
       },
+      "LearnerEnsureOut": {
+        "description": "``POST /v1/learners/ensure`` (roadmap product-entry milestone): the\ncaller's single default learner, created on first call. Deliberately\nminimal -- the frontend needs only the id to reach ``/garden``/\n``POST /v1/sessions`` and a display label, nothing about the owning\nparent.",
+        "properties": {
+          "display_name": {
+            "title": "Display Name",
+            "type": "string"
+          },
+          "learner_id": {
+            "format": "uuid",
+            "title": "Learner Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "learner_id",
+          "display_name"
+        ],
+        "title": "LearnerEnsureOut",
+        "type": "object"
+      },
       "LearnerStateOut": {
         "properties": {
           "learner_id": {
@@ -1241,6 +1261,49 @@
           }
         },
         "summary": "Healthz"
+      }
+    },
+    "/v1/learners/ensure": {
+      "post": {
+        "description": "Product-entry bootstrap: get-or-create the signed-in parent's single\ndefault learner. Ownership/identity is ``actor.clerk_user_id`` alone\n(never a client-supplied id, never ``email``) -- see\n``LearnerRepository.get_or_create_parent_for_clerk_user``'s docstring.\nIdempotent by construction: a repeat call for the same Clerk user finds\nthe existing parent/learner rather than creating new ones.",
+        "operationId": "ensure_learner_route_v1_learners_ensure_post",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "title": "Idempotency-Key",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LearnerEnsureOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Ensure Learner Route",
+        "tags": [
+          "learners"
+        ]
       }
     },
     "/v1/learners/{learner_id}/proof": {
