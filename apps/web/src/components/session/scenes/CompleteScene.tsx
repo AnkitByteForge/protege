@@ -7,8 +7,18 @@ import { Heading, Text } from "@/components/primitives/Typography";
 import { Stack } from "@/components/primitives/Stack";
 import { PrimaryAction } from "@/components/primitives/Button";
 
-export function CompleteScene({ abandoned = false }: { abandoned?: boolean }) {
+export function CompleteScene({
+  abandoned = false,
+  learnerId,
+}: {
+  abandoned?: boolean;
+  /** The server session payload's `learner_id`; never derived client-side. */
+  learnerId: string | null;
+}) {
   const router = useRouter();
+  // Without a server-supplied id, `/start` re-resolves the learner server
+  // side rather than landing on `/garden`'s missing-learner guard.
+  const gardenHref = learnerId ? `/garden?learnerId=${encodeURIComponent(learnerId)}` : "/start";
   return (
     <Stack align="center" gap="md" className="max-w-md text-center">
       <Sprout
@@ -27,7 +37,7 @@ export function CompleteScene({ abandoned = false }: { abandoned?: boolean }) {
             : "Great work today -- Sprout will remember what you taught him."}
         </Text>
       </SoftPanel>
-      <PrimaryAction onClick={() => router.push("/garden")}>Back to the garden</PrimaryAction>
+      <PrimaryAction onClick={() => router.push(gardenHref)}>Back to the garden</PrimaryAction>
     </Stack>
   );
 }
